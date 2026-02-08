@@ -1,0 +1,738 @@
+Folder highlights
+Curriculum materials detail ESC-2-15 unit plans across multiple lessons, focusing on neighborhood vocabulary and route descriptions.
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ESC-2-15 Lesson 6 Jeopardy (WL1+WL2)</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#111a33;
+      --panel2:#0f1730;
+      --card:#16224a;
+      --card2:#101a3a;
+      --accent:#ffd54a;
+      --text:#e9eeff;
+      --muted:#a9b5e6;
+      --danger:#ff6b6b;
+      --ok:#3ddc97;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      background: radial-gradient(1200px 800px at 20% 0%, #182a66 0%, var(--bg) 55%);
+      color:var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    header{
+      padding:18px 18px 10px;
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+    .title{
+      flex: 1 1 420px;
+      min-width: 280px;
+    }
+    h1{
+      font-size:20px;
+      margin:0 0 6px 0;
+      letter-spacing:.2px;
+    }
+    .subtitle{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
+    }
+
+    .controls{
+      flex: 0 0 auto;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    button{
+      background: linear-gradient(180deg, #22377a, #162a60);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 12px;
+      padding:10px 12px;
+      cursor:pointer;
+      box-shadow: var(--shadow);
+      font-weight:600;
+      font-size:13px;
+    }
+    button:hover{ filter:brightness(1.06); }
+    button:active{ transform: translateY(1px); }
+    button.secondary{
+      background: transparent;
+      box-shadow: none;
+      border:1px solid rgba(255,255,255,.18);
+      color: var(--muted);
+      font-weight:600;
+    }
+    button.danger{
+      background: linear-gradient(180deg, #7a2230, #4a1620);
+      border-color: rgba(255,255,255,.12);
+    }
+
+    .scoreboard{
+      margin: 0 18px 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      padding:12px;
+      box-shadow: var(--shadow);
+      display:grid;
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
+      gap:10px;
+    }
+    @media (max-width: 980px){
+      .scoreboard{ grid-template-columns:1fr; }
+    }
+    .team{
+      background: linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.05));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      padding:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+    .team-left{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-width: 140px;
+    }
+    .team-name{
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .team-score{
+      font-size:22px;
+      font-weight:900;
+      color: var(--accent);
+    }
+    .team-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .team-actions button{
+      padding:8px 10px;
+      border-radius: 10px;
+      font-size:12px;
+      box-shadow:none;
+    }
+    .team-actions button.add{ border-color: rgba(61,220,151,.35); }
+    .team-actions button.sub{ border-color: rgba(255,107,107,.35); }
+    .hint{
+      margin: 0 18px 16px;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.35;
+    }
+
+    .board-wrap{
+      margin: 0 18px 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      padding: 12px;
+      box-shadow: var(--shadow);
+      overflow:auto;
+    }
+    .board{
+      display:grid;
+      grid-template-columns: repeat(5, minmax(170px, 1fr));
+      gap:10px;
+      min-width: 900px;
+    }
+    .cat{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      padding:10px 10px;
+      text-align:center;
+      font-weight:900;
+      font-size:14px;
+      letter-spacing:.25px;
+      color: var(--text);
+    }
+    .cell{
+      background: linear-gradient(180deg, var(--card), var(--card2));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 14px 10px;
+      text-align:center;
+      font-weight:950;
+      font-size:24px;
+      color: var(--accent);
+      cursor:pointer;
+      user-select:none;
+      position:relative;
+      min-height: 66px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition: transform .08s ease, filter .08s ease;
+    }
+    .cell:hover{ filter:brightness(1.08); }
+    .cell:active{ transform: translateY(1px); }
+    .cell.used{
+      cursor: not-allowed;
+      filter: grayscale(.9) brightness(.75);
+      color: rgba(255,213,74,.5);
+    }
+    .cell.used::after{
+      content:"USED";
+      position:absolute;
+      top:8px;
+      right:10px;
+      font-size:11px;
+      letter-spacing:.6px;
+      color: rgba(233,238,255,.55);
+      font-weight:900;
+    }
+
+    /* Modal */
+    .modal-backdrop{
+      position: fixed;
+      inset:0;
+      background: rgba(0,0,0,.65);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index: 50;
+    }
+    .modal{
+      width:min(980px, 100%);
+      background: linear-gradient(180deg, rgba(17,26,51,.96), rgba(12,18,38,.96));
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 22px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+      padding: 14px;
+    }
+    .modal-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      padding: 6px 6px 10px;
+    }
+    .pill{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .pill span{
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      color: var(--muted);
+      font-weight:700;
+    }
+    .modal-close{
+      background: transparent;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:none;
+      color: var(--muted);
+      font-weight:800;
+    }
+
+    .modal-body{
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 18px;
+      padding: 14px;
+      min-height: 260px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .stage{
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding: 10px;
+    }
+    .big{
+      font-size: 24px;
+      line-height: 1.35;
+      font-weight: 900;
+      letter-spacing: .15px;
+      white-space: pre-wrap;
+    }
+    .small{
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--muted);
+      font-weight: 650;
+    }
+    .divider{
+      height:1px;
+      background: rgba(255,255,255,.10);
+      margin: 2px 0;
+    }
+    .modal-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      align-items:center;
+      padding: 4px 2px 2px;
+    }
+    .modal-actions .left,
+    .modal-actions .right{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .action{
+      background: linear-gradient(180deg, #24408b, #1a2f6a);
+      border-color: rgba(255,255,255,.14);
+    }
+    .action.alt{
+      background: transparent;
+      box-shadow:none;
+      border:1px solid rgba(255,255,255,.18);
+      color: var(--muted);
+      font-weight:800;
+    }
+    .action.used{
+      background: linear-gradient(180deg, #2a2a2a, #1f1f1f);
+      border-color: rgba(255,255,255,.12);
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 2px 6px;
+      border-radius: 7px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      <h1>Jeopardy · ESC-2-15 Lesson 6 Spiral Review (WL1 + WL2)</h1>
+      <div class="subtitle">
+        Click a dollar value to open. In the pop-up: <b>Show Answer</b> reveals the answer (2-step). <b>Auto-lock</b>: once opened, the tile is immediately marked used.
+        Keyboard: <span class="kbd">Esc</span> closes, <span class="kbd">A</span> toggles answer.
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="secondary" id="toggleSound" title="Optional: tiny click sound (off by default)">Sound: Off</button>
+      <button class="secondary" id="exportBtn" title="Download a JSON backup of scores + used cells">Export State</button>
+      <button class="danger" id="resetBtn" title="Reset used cells + scores">Reset All</button>
+    </div>
+  </header>
+
+  <section class="scoreboard" aria-label="Scoreboard">
+    <div class="team" data-team="0">
+      <div class="team-left">
+        <div class="team-name" contenteditable="true" spellcheck="false">Team A</div>
+        <div class="team-score" id="score0">0</div>
+      </div>
+      <div class="team-actions">
+        <button class="sub" data-delta="-100">-100</button>
+        <button class="sub" data-delta="-200">-200</button>
+        <button class="add" data-delta="100">+100</button>
+        <button class="add" data-delta="200">+200</button>
+      </div>
+    </div>
+
+    <div class="team" data-team="1">
+      <div class="team-left">
+        <div class="team-name" contenteditable="true" spellcheck="false">Team B</div>
+        <div class="team-score" id="score1">0</div>
+      </div>
+      <div class="team-actions">
+        <button class="sub" data-delta="-100">-100</button>
+        <button class="sub" data-delta="-200">-200</button>
+        <button class="add" data-delta="100">+100</button>
+        <button class="add" data-delta="200">+200</button>
+      </div>
+    </div>
+
+    <div class="team" data-team="2">
+      <div class="team-left">
+        <div class="team-name" contenteditable="true" spellcheck="false">Team C</div>
+        <div class="team-score" id="score2">0</div>
+      </div>
+      <div class="team-actions">
+        <button class="sub" data-delta="-100">-100</button>
+        <button class="sub" data-delta="-200">-200</button>
+        <button class="add" data-delta="100">+100</button>
+        <button class="add" data-delta="200">+200</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="hint">
+    Teacher tip: award points only after the team answers correctly. You can also subtract for incorrect answers if you want (use the - buttons).
+  </div>
+
+  <section class="board-wrap" aria-label="Jeopardy Board">
+    <div class="board" id="board"></div>
+  </section>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" id="backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-top">
+        <div class="pill" aria-label="Question meta">
+          <span id="modalCat">Category</span>
+          <span id="modalVal">$0</span>
+          <span id="modalStep">Step: Question</span>
+        </div>
+        <button class="modal-close" id="closeBtn" aria-label="Close">Close ✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="stage">
+          <div>
+            <div class="big" id="modalTitle">Question</div>
+            <div class="divider"></div>
+            <div class="small" id="modalSub">Click “Show Answer” (or press A) to reveal. Click again to hide.</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="stage" id="qaStage">
+          <div class="big" id="modalText"></div>
+        </div>
+
+        <div class="modal-actions">
+          <div class="left">
+            <button class="action alt" id="showBtn">Show Answer</button>
+            <button class="action used" id="usedBtn" title="Optional: already auto-locked when opened">Mark Used</button>
+          </div>
+          <div class="right">
+            <button class="action alt" id="backToQBtn">Back to Question</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/**
+ * ESC-2-15 Lesson 6 Jeopardy
+ * Updated behavior (Promethean-friendly):
+ * - SINGLE click opens modal
+ * - AUTO-LOCK: once opened, the tile is immediately marked USED (cannot be reopened)
+ * - In modal: "Show Answer" toggles Answer (2-step reveal)
+ * - Scores tracked with buttons
+ * - State saved to localStorage (used + scores + team names)
+ */
+
+const DATA = {
+  categories: [
+    "Word Study",
+    "Sentence Meaning",
+    "Fix the Sentence",
+    "Build a Sentence",
+    "Sentence Challenge"
+  ],
+  values: [100, 200, 300, 400, 500],
+  clues: [
+    // Category 1 — Word Study
+    [
+      { q: "Which word is a place?\nA. 地铁  B. 商场  C. 走路", a: "商场" },
+      { q: "Which word means transportation?\nA. 左面  B. 公共汽车  C. 时间", a: "公共汽车" },
+      { q: "Which word does NOT belong?\n学校  公园  走路  商场", a: "走路" },
+      { q: "Choose TWO place words:\n地铁站  十五分钟  电影院  走路", a: "地铁站、电影院" },
+      { q: "Sort into TWO groups:\n地铁 / 半小时 / 公共汽车 / 大约", a: "交通方式：地铁、公共汽车\n时间：半小时、大约" },
+    ],
+    // Category 2 — Sentence Meaning
+    [
+      { q: "Which sentence makes sense?\nA. 我坐地铁上学。\nB. 我上学坐地铁在。", a: "A" },
+      { q: "Which sentence talks about location?\nA. 我先走路，然后坐地铁。\nB. 商场在学校的后面。", a: "B" },
+      { q: "Which sentence talks about time?\nA. 路上大约二十分钟。\nB. 公园在小区附近。", a: "A" },
+      { q: "Which sentence includes distance information?\nA. 我家离学校不远。\nB. 我坐公共汽车上学。", a: "A" },
+      { q: "Explain in English:\n从我家到电影院，我先走路，然后坐地铁，路上大约二十分钟。", a: "From my home to the movie theater, I first walk and then take the subway. It takes about twenty minutes." },
+    ],
+    // Category 3 — Fix the Sentence
+    [
+      { q: "Fix the word order:\n❌ 我地铁坐上学。", a: "✅ 我坐地铁上学。" },
+      { q: "Fix ONE mistake:\n❌ 商场在小区左面。", a: "✅ 商场在小区的左面。" },
+      { q: "Fix the sentence:\n❌ 我家离学校很分钟。", a: "✅ 我家离学校很近。\n(或：路上大约十五分钟。)" },
+      { q: "Fix the sentence:\n❌ 我先坐地铁，然后走路上学。", a: "✅ 我先走路，然后坐地铁上学。" },
+      { q: "Fix TWO problems:\n❌ 从我家学校怎么走去？", a: "✅ 从我家到学校怎么走？" },
+    ],
+    // Category 4 — Build a Sentence
+    [
+      { q: "Make a sentence using:\n在……附近", a: "Example: 学校在我家附近。" },
+      { q: "Make a sentence using:\n离 + 不远", a: "Example: 我家离学校不远。" },
+      { q: "Make a sentence using:\n先……然后……", a: "Example: 我先走路，然后坐地铁。" },
+      { q: "Make a sentence using:\n路上 + 大约 + 时间", a: "Example: 路上大约二十分钟。" },
+      { q: "Make ONE sentence using ALL:\n先……然后…… + 地铁 + 上学", a: "Example: 我先走路，然后坐地铁上学。" },
+    ],
+    // Category 5 — Sentence Challenge
+    [
+      { q: "Choose the correct sentence:\nA. 我在学校去。\nB. 我去学校。", a: "B" },
+      { q: "Fill in the blank:\n从我家 ___ 学校怎么走？", a: "到" },
+      { q: "Combine into ONE sentence:\n走路 / 五分钟 / 到学校", a: "走路五分钟就到学校。" },
+      { q: "Make a sentence using:\n从……到…… + 交通方式", a: "Example: 从我家到商场，我坐地铁。" },
+      { q: "🔥 Full challenge — Make ONE complete sentence using ALL:\n从……到…… + 先……然后…… + 路上大约……分钟", a: "Example: 从我家到电影院，我先走路，然后坐地铁，路上大约二十分钟。" },
+    ],
+  ]
+};
+
+// ---------- State ----------
+const STORAGE_KEY = "esc_2_15_jeopardy_state_v1";
+let state = {
+  used: {},
+  scores: [0,0,0],
+  teamNames: ["Team A","Team B","Team C"],
+  sound: false
+};
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const parsed = JSON.parse(raw);
+    if(parsed && typeof parsed === "object"){
+      state = { ...state, ...parsed };
+    }
+  }catch(e){}
+}
+function saveState(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+}
+loadState();
+
+// ---------- Sound ----------
+let audioCtx = null;
+function clickSound(){
+  if(!state.sound) return;
+  try{
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = "sine";
+    o.frequency.value = 520;
+    g.gain.value = 0.03;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start();
+    setTimeout(()=>{ o.stop(); }, 60);
+  }catch(e){}
+}
+
+// ---------- Board Rendering ----------
+const boardEl = document.getElementById("board");
+function keyFor(catIdx, rowIdx){ return `${catIdx}-${rowIdx}`; }
+
+function renderBoard(){
+  boardEl.innerHTML = "";
+
+  for(let c=0; c<5; c++){
+    const cat = document.createElement("div");
+    cat.className = "cat";
+    cat.textContent = DATA.categories[c];
+    boardEl.appendChild(cat);
+  }
+
+  for(let r=0; r<5; r++){
+    for(let c=0; c<5; c++){
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      const k = keyFor(c,r);
+      const used = !!state.used[k];
+      if(used) cell.classList.add("used");
+      cell.dataset.cat = c;
+      cell.dataset.row = r;
+      cell.textContent = `$${DATA.values[r]}`;
+
+      // SINGLE CLICK to open; USED tiles cannot open
+      cell.addEventListener("click", () => {
+        const nowUsed = !!state.used[k];
+        if(nowUsed) return;
+        clickSound();
+        openModal(c, r);
+      });
+
+      boardEl.appendChild(cell);
+    }
+  }
+}
+
+// ---------- Scores ----------
+function setScore(teamIdx, val){
+  state.scores[teamIdx] = val;
+  document.getElementById(`score${teamIdx}`).textContent = String(val);
+  saveState();
+}
+function bumpScore(teamIdx, delta){
+  setScore(teamIdx, state.scores[teamIdx] + delta);
+}
+function initScores(){
+  for(let i=0;i<3;i++){
+    setScore(i, Number(state.scores[i] || 0));
+  }
+  document.querySelectorAll(".team").forEach(teamEl=>{
+    const idx = Number(teamEl.dataset.team);
+    const nameEl = teamEl.querySelector(".team-name");
+    nameEl.textContent = state.teamNames[idx] || `Team ${String.fromCharCode(65+idx)}`;
+    nameEl.addEventListener("input", ()=>{
+      state.teamNames[idx] = nameEl.textContent.trim() || `Team ${String.fromCharCode(65+idx)}`;
+      saveState();
+    });
+    teamEl.querySelectorAll("button[data-delta]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        clickSound();
+        bumpScore(idx, Number(btn.dataset.delta));
+      });
+    });
+  });
+}
+
+// ---------- Modal Logic (two-step reveal) + AUTO-LOCK ----------
+const backdrop = document.getElementById("backdrop");
+const closeBtn = document.getElementById("closeBtn");
+const showBtn  = document.getElementById("showBtn");
+const usedBtn  = document.getElementById("usedBtn");
+const backToQBtn = document.getElementById("backToQBtn");
+const modalCat = document.getElementById("modalCat");
+const modalVal = document.getElementById("modalVal");
+const modalStep = document.getElementById("modalStep");
+const modalText = document.getElementById("modalText");
+
+let current = { c:null, r:null, showingAnswer:false };
+
+function openModal(c,r){
+  // ✅ AUTO-LOCK immediately when opened
+  const k = keyFor(c,r);
+  state.used[k] = true;
+  saveState();
+  renderBoard();
+
+  current = { c, r, showingAnswer:false };
+  modalCat.textContent = DATA.categories[c];
+  modalVal.textContent = `$${DATA.values[r]}`;
+  modalStep.textContent = "Step: Question";
+  showBtn.textContent = "Show Answer";
+  modalText.textContent = DATA.clues[c][r].q;
+  backdrop.style.display = "flex";
+  usedBtn.textContent = "Mark Used";
+}
+
+function closeModal(){
+  backdrop.style.display = "none";
+  current = { c:null, r:null, showingAnswer:false };
+}
+
+function toggleAnswer(forceToQuestion=false){
+  if(current.c===null) return;
+  if(forceToQuestion){
+    current.showingAnswer = false;
+  } else {
+    current.showingAnswer = !current.showingAnswer;
+  }
+  if(current.showingAnswer){
+    modalStep.textContent = "Step: Answer";
+    showBtn.textContent = "Hide Answer";
+    modalText.textContent = DATA.clues[current.c][current.r].a;
+  } else {
+    modalStep.textContent = "Step: Question";
+    showBtn.textContent = "Show Answer";
+    modalText.textContent = DATA.clues[current.c][current.r].q;
+  }
+}
+
+// kept as optional manual action (already auto-locked)
+function markUsed(){
+  if(current.c===null) return;
+  const k = keyFor(current.c, current.r);
+  state.used[k] = true;
+  saveState();
+  renderBoard();
+  closeModal();
+}
+
+closeBtn.addEventListener("click", ()=>{ clickSound(); closeModal(); });
+showBtn.addEventListener("click", ()=>{ clickSound(); toggleAnswer(false); });
+backToQBtn.addEventListener("click", ()=>{ clickSound(); toggleAnswer(true); });
+usedBtn.addEventListener("click", ()=>{ clickSound(); markUsed(); });
+
+backdrop.addEventListener("click", (e)=>{
+  if(e.target === backdrop){ closeModal(); }
+});
+
+// keyboard shortcuts
+document.addEventListener("keydown", (e)=>{
+  if(backdrop.style.display !== "flex") return;
+  if(e.key === "Escape"){ closeModal(); }
+  if(e.key.toLowerCase() === "a"){ toggleAnswer(false); }
+});
+
+// ---------- Reset / Export ----------
+document.getElementById("resetBtn").addEventListener("click", ()=>{
+  const ok = confirm("Reset all used cells and scores?");
+  if(!ok) return;
+  state.used = {};
+  state.scores = [0,0,0];
+  saveState();
+  initScores();
+  renderBoard();
+});
+
+document.getElementById("exportBtn").addEventListener("click", ()=>{
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    state,
+    note: "ESC-2-15 Jeopardy backup (used cells + scores + team names)"
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "esc_2_15_jeopardy_state.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+// Sound toggle
+const soundBtn = document.getElementById("toggleSound");
+function renderSoundBtn(){
+  soundBtn.textContent = `Sound: ${state.sound ? "On" : "Off"}`;
+}
+soundBtn.addEventListener("click", ()=>{
+  state.sound = !state.sound;
+  saveState();
+  renderSoundBtn();
+  clickSound();
+});
+
+// ---------- Init ----------
+renderSoundBtn();
+renderBoard();
+initScores();
+</script>
+</body>
+</html>
