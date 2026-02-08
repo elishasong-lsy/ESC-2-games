@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Game 3</title>
+</head>
+<body>
+  <h1>Game 3：Jeopardy（占位版）</h1>
+  <p>这里之后我们会放真正的 Jeopardy 游戏。</p>
+  <p><a href="index.html">← 返回菜单</a></p>
+</body>
+</html>
