@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ESC-2-14 Furniture — Sentence Unscramble</title>
+  <style>
+    :root{
+      --bg:#0b1b3a;
+      --panel:rgba(255,255,255,0.06);
+      --border:rgba(255,255,255,0.14);
+      --text:#ffffff;
+      --muted:#c9d3ff;
+      --gold:#f6c343;
+      --ok:#57ff9a;
+      --bad:#ff5a5a;
+      --chip:#102e63;
+      --chip2:#0c2554;
+    }
+    *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans",sans-serif;}
+    body{
+      margin:0;
+      background:linear-gradient(180deg,var(--bg), #050c1a);
+      color:var(--text);
+      min-height:100vh;
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    header{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px 14px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      backdrop-filter: blur(6px);
+    }
+    header .title{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    header h1{
+      margin:0;
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+    header .sub{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
+    .controls{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    button{
+      background:rgba(255,255,255,0.08);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,0.18);
+      border-radius:12px;
+      padding:8px 10px;
+      font-weight:800;
+      cursor:pointer;
+      user-select:none;
+    }
+    button:hover{background:rgba(255,255,255,0.12);}
+    button:active{transform:translateY(1px);}
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.16);
+      background:rgba(255,255,255,0.06);
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+    }
+    .pill strong{color:var(--gold);}
+    main{
+      width:100%;
+      max-width:1100px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:12px;
+    }
+    @media (max-width: 900px){
+      main{grid-template-columns: 1fr;}
+    }
+
+    .panel{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+    }
+    .panel h2{
+      margin:0 0 8px 0;
+      font-size:14px;
+      color:var(--muted);
+      letter-spacing:1px;
+      text-transform:uppercase;
+    }
+
+    .promptBox{
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:14px;
+      padding:12px;
+      background:rgba(0,0,0,0.18);
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-height:120px;
+    }
+    .promptCn{
+      font-size:28px;
+      font-weight:900;
+      line-height:1.2;
+      text-align:center;
+    }
+    .promptPy, .promptEn{
+      text-align:center;
+      font-size:14px;
+      font-weight:800;
+      color:var(--muted);
+    }
+    .hidden{display:none !important;}
+
+    .statusRow{
+      margin-top:10px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .msg{
+      font-size:13px;
+      font-weight:800;
+      color:var(--muted);
+      line-height:1.35;
+    }
+    .msg.ok{color:var(--ok);}
+    .msg.bad{color:var(--bad);}
+
+    .answerArea{
+      margin-top:12px;
+      border:1px dashed rgba(255,255,255,0.22);
+      border-radius:14px;
+      padding:10px;
+      min-height:86px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-content:flex-start;
+      background:rgba(255,255,255,0.03);
+    }
+
+    .bankArea{
+      margin-top:10px;
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:14px;
+      padding:10px;
+      min-height:120px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-content:flex-start;
+      background:rgba(0,0,0,0.12);
+    }
+
+    .chip{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:linear-gradient(180deg,var(--chip),var(--chip2));
+      font-weight:900;
+      cursor:pointer;
+      user-select:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .chip:active{transform:translateY(1px);}
+    .chip.dragging{opacity:.4;}
+    .chip .x{
+      display:none;
+      font-weight:900;
+      opacity:.9;
+      color:rgba(255,255,255,0.8);
+    }
+    .answerArea .chip .x{
+      display:inline;
+    }
+
+    .sideGrid{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .mini{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
+    .key{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .key .krow{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.12);
+      background:rgba(255,255,255,0.05);
+      font-size:12px;
+      color:var(--muted);
+      font-weight:800;
+    }
+
+    .bigBtn{
+      padding:10px 12px;
+      font-size:14px;
+      font-weight:900;
+      border-radius:14px;
+    }
+    .primary{border-color:rgba(246,195,67,0.55);}
+    .danger{border-color:rgba(255,90,90,0.45);}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      <h1>ESC-2-14 Furniture — Sentence Unscramble (Text 1 + Text 2)</h1>
+      <div class="sub">
+        Students can play independently or you can project for whole-class.
+        Build the sentence by <b>clicking</b> word chips (or <b>drag</b> them) → Check → Reveal if needed.
+      </div>
+    </div>
+    <div class="controls">
+      <span class="pill">Progress: <strong id="prog">1</strong>/<strong id="total">15</strong></span>
+      <button id="togglePinyinBtn">Pinyin: ON</button>
+      <button id="toggleEnglishBtn">English: ON</button>
+      <button id="shuffleBtn">Shuffle</button>
+      <button id="prevBtn">Prev</button>
+      <button id="nextBtn">Next</button>
+      <button id="resetAllBtn" class="danger">Reset All</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left: Game -->
+    <section class="panel">
+      <h2>Build the sentence</h2>
+
+      <div class="promptBox">
+        <div class="promptCn" id="promptCn">Loading…</div>
+        <div class="promptPy" id="promptPy"></div>
+        <div class="promptEn" id="promptEn"></div>
+      </div>
+
+      <div class="statusRow">
+        <div class="msg" id="msg">Click chips to build the sentence. (Tap again to remove.)</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
+          <button id="clearBtn" class="bigBtn">Clear</button>
+          <button id="checkBtn" class="bigBtn primary">Check</button>
+          <button id="revealBtn" class="bigBtn">Reveal Answer</button>
+        </div>
+      </div>
+
+      <div style="margin-top:10px;color:var(--muted);font-weight:900;font-size:12px;">Your sentence (Answer Area)</div>
+      <div class="answerArea" id="answerArea"></div>
+
+      <div style="margin-top:10px;color:var(--muted);font-weight:900;font-size:12px;">Word bank (scrambled chips)</div>
+      <div class="bankArea" id="bankArea"></div>
+
+      <div class="mini" style="margin-top:10px;">
+        Tip for class mode: pick a student to come up and drag chips into place. For iPads/Chromebooks, clicking chips works best.
+      </div>
+    </section>
+
+    <!-- Right: Teacher info -->
+    <aside class="sideGrid">
+      <section class="panel">
+        <h2>Teacher shortcuts</h2>
+        <div class="key">
+          <div class="krow"><span>Shuffle chips</span><span><b>Shuffle</b></span></div>
+          <div class="krow"><span>Show/Hide Pinyin</span><span><b>Pinyin: ON/OFF</b></span></div>
+          <div class="krow"><span>Show/Hide English</span><span><b>English: ON/OFF</b></span></div>
+          <div class="krow"><span>Reveal answer</span><span><b>Reveal Answer</b></span></div>
+          <div class="krow"><span>Reset everything</span><span><b>Reset All</b></span></div>
+        </div>
+        <div class="mini" style="margin-top:10px;">
+          Optional: Turn English OFF to make it more immersive. Turn Pinyin OFF for stronger readers.
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Scoring idea (optional)</h2>
+        <div class="mini">
+          • 1st try correct = 2 points<br/>
+          • After one hint or one check = 1 point<br/>
+          • After reveal = 0 points<br/>
+          (You can do this informally—no need to build scorekeeping unless you want.)
+        </div>
+      </section>
+    </aside>
+  </main>
+
+<script>
+  // ---------- Dataset (15 sentences) ----------
+  const SENTENCES = [
+    {
+      id: 1,
+      cn: "我的卧室里有一张床。",
+      py: "Wǒ de wòshì lǐ yǒu yì zhāng chuáng.",
+      en: "There is a bed in my bedroom.",
+      tokens: ["我的","卧室里","有","一张","床"]
+    },
+    {
+      id: 2,
+      cn: "沙发在客厅里。",
+      py: "Shāfā zài kètīng lǐ.",
+      en: "The sofa is in the living room.",
+      tokens: ["沙发","在","客厅里"]
+    },
+    {
+      id: 3,
+      cn: "家里有一个厨房。",
+      py: "Jiā lǐ yǒu yí gè chúfáng.",
+      en: "There is a kitchen at home.",
+      tokens: ["家里","有","一个","厨房"]
+    },
+    {
+      id: 4,
+      cn: "你的书桌在哪里？",
+      py: "Nǐ de shūzhuō zài nǎlǐ?",
+      en: "Where is your desk?",
+      tokens: ["你的","书桌","在哪里"]
+    },
+    {
+      id: 5,
+      cn: "电脑在书桌上面。",
+      py: "Diànnǎo zài shūzhuō shàngmiàn.",
+      en: "The computer is on top of the desk.",
+      tokens: ["电脑","在","书桌","上面"]
+    },
+    {
+      id: 6,
+      cn: "书包在书桌下面。",
+      py: "Shūbāo zài shūzhuō xiàmiàn.",
+      en: "The schoolbag is under the desk.",
+      tokens: ["书包","在","书桌","下面"]
+    },
+    {
+      id: 7,
+      cn: "椅子在书桌旁边。",
+      py: "Yǐzi zài shūzhuō pángbiān.",
+      en: "The chair is next to the desk.",
+      tokens: ["椅子","在","书桌","旁边"]
+    },
+    {
+      id: 8,
+      cn: "衣柜在卧室里。",
+      py: "Yīguì zài wòshì lǐ.",
+      en: "The wardrobe is in the bedroom.",
+      tokens: ["衣柜","在","卧室里"]
+    },
+    {
+      id: 9,
+      cn: "我的卧室在楼上。",
+      py: "Wǒ de wòshì zài lóushàng.",
+      en: "My bedroom is upstairs.",
+      tokens: ["我的","卧室","在","楼上"]
+    },
+    {
+      id: 10,
+      cn: "客厅在楼下。",
+      py: "Kètīng zài lóuxià.",
+      en: "The living room is downstairs.",
+      tokens: ["客厅","在","楼下"]
+    },
+    {
+      id: 11,
+      cn: "我的卧室比弟弟的卧室大。",
+      py: "Wǒ de wòshì bǐ dìdi de wòshì dà.",
+      en: "My bedroom is bigger than my younger brother's bedroom.",
+      tokens: ["我的","卧室","比","弟弟的","卧室","大"]
+    },
+    {
+      id: 12,
+      cn: "妹妹的衣柜比姐姐的衣柜高。",
+      py: "Mèimei de yīguì bǐ jiějie de yīguì gāo.",
+      en: "The younger sister's wardrobe is taller than the older sister's wardrobe.",
+      tokens: ["妹妹的","衣柜","比","姐姐的","衣柜","高"]
+    },
+    {
+      id: 13,
+      cn: "这个房间不算大，但是很舒服。",
+      py: "Zhège fángjiān bú suàn dà, dànshì hěn shūfu.",
+      en: "This room is not very big, but it is very comfortable.",
+      tokens: ["这个","房间","不算","大","但是","很","舒服"]
+    },
+    {
+      id: 14,
+      cn: "里面有一个沙发。",
+      py: "Lǐmiàn yǒu yí gè shāfā.",
+      en: "Inside, there is a sofa.",
+      tokens: ["里面","有","一个","沙发"]
+    },
+    {
+      id: 15,
+      cn: "这个房间的家具不算多。",
+      py: "Zhège fángjiān de jiājù bú suàn duō.",
+      en: "This room does not have a lot of furniture.",
+      tokens: ["这个","房间的","家具","不算","多"]
+    }
+  ];
+
+  // ---------- State ----------
+  const STORAGE_KEY = "esc214_unscramble_state_v1";
+  let state = loadState() || {
+    idx: 0,
+    showPinyin: true,
+    showEnglish: true
+  };
+
+  const els = {
+    promptCn: document.getElementById("promptCn"),
+    promptPy: document.getElementById("promptPy"),
+    promptEn: document.getElementById("promptEn"),
+    bank: document.getElementById("bankArea"),
+    answer: document.getElementById("answerArea"),
+    msg: document.getElementById("msg"),
+    prog: document.getElementById("prog"),
+    total: document.getElementById("total"),
+    togglePinyinBtn: document.getElementById("togglePinyinBtn"),
+    toggleEnglishBtn: document.getElementById("toggleEnglishBtn")
+  };
+
+  els.total.textContent = String(SENTENCES.length);
+
+  function saveState(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    }catch(e){ return null; }
+  }
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  function setMessage(text, type=""){
+    els.msg.classList.remove("ok","bad");
+    if(type) els.msg.classList.add(type);
+    els.msg.textContent = text;
+  }
+
+  function render(){
+    const item = SENTENCES[state.idx];
+
+    els.prog.textContent = String(state.idx + 1);
+
+    els.promptCn.textContent = `Sentence ${item.id}: Unscramble it!`;
+    els.promptPy.textContent = item.py;
+    els.promptEn.textContent = item.en;
+
+    els.promptPy.classList.toggle("hidden", !state.showPinyin);
+    els.promptEn.classList.toggle("hidden", !state.showEnglish);
+
+    els.togglePinyinBtn.textContent = `Pinyin: ${state.showPinyin ? "ON" : "OFF"}`;
+    els.toggleEnglishBtn.textContent = `English: ${state.showEnglish ? "ON" : "OFF"}`;
+
+    // Clear areas
+    els.bank.innerHTML = "";
+    els.answer.innerHTML = "";
+    setMessage("Click chips to build the sentence. (Tap again to remove.)");
+
+    // Build bank chips (shuffled)
+    const tokens = shuffle(item.tokens);
+
+    tokens.forEach(t => {
+      els.bank.appendChild(makeChip(t, "bank"));
+    });
+
+    // Enable drop zones
+    enableDropZone(els.answer, "answer");
+    enableDropZone(els.bank, "bank");
+    saveState();
+  }
+
+  function makeChip(text, origin){
+    const chip = document.createElement("div");
+    chip.className = "chip";
+    chip.draggable = true;
+    chip.dataset.text = text;
+    chip.dataset.origin = origin;
+
+    chip.innerHTML = `<span>${escapeHtml(text)}</span><span class="x">×</span>`;
+
+    // Click behavior: move between bank <-> answer
+    chip.addEventListener("click", (e)=>{
+      // avoid double triggering when dragging ends
+      if(chip.classList.contains("dragging")) return;
+
+      const inAnswer = chip.parentElement === els.answer;
+      if(inAnswer){
+        els.bank.appendChild(chip);
+      }else{
+        els.answer.appendChild(chip);
+      }
+    });
+
+    // Drag behavior
+    chip.addEventListener("dragstart", (e)=>{
+      chip.classList.add("dragging");
+      e.dataTransfer.setData("text/plain", text);
+      e.dataTransfer.setData("origin", chip.parentElement === els.answer ? "answer" : "bank");
+      // store a reference id
+      chip.dataset.dragId = String(Date.now()) + Math.random().toString(16).slice(2);
+      e.dataTransfer.setData("dragId", chip.dataset.dragId);
+    });
+    chip.addEventListener("dragend", ()=>{
+      chip.classList.remove("dragging");
+    });
+
+    return chip;
+  }
+
+  function enableDropZone(zoneEl, zoneName){
+    zoneEl.addEventListener("dragover", (e)=>{
+      e.preventDefault();
+    });
+    zoneEl.addEventListener("drop", (e)=>{
+      e.preventDefault();
+      const dragText = e.dataTransfer.getData("text/plain");
+      const dragId = e.dataTransfer.getData("dragId");
+
+      // find the element being dragged by matching dragId
+      const chips = document.querySelectorAll(".chip");
+      let dragged = null;
+      chips.forEach(c=>{
+        if(c.dataset.dragId === dragId) dragged = c;
+      });
+      if(!dragged){
+        // fallback: find by text in currently dragging
+        dragged = document.querySelector(".chip.dragging");
+      }
+      if(!dragged) return;
+
+      // move it
+      zoneEl.appendChild(dragged);
+    }, { once:false });
+  }
+
+  function currentAnswerTokens(){
+    return Array.from(els.answer.querySelectorAll(".chip")).map(c=>c.dataset.text);
+  }
+
+  function checkAnswer(){
+    const item = SENTENCES[state.idx];
+    const ans = currentAnswerTokens();
+    const correct = item.tokens;
+
+    if(ans.length === 0){
+      setMessage("Build the sentence first.", "bad");
+      return;
+    }
+    if(ans.length !== correct.length){
+      setMessage(`You used ${ans.length} chips. You need ${correct.length}.`, "bad");
+      return;
+    }
+    const isCorrect = ans.every((t,i)=>t === correct[i]);
+
+    if(isCorrect){
+      setMessage("✅ Correct! Great job.", "ok");
+    }else{
+      setMessage("❌ Not quite. Try Shuffle or Clear, then try again.", "bad");
+    }
+  }
+
+  function revealAnswer(){
+    const item = SENTENCES[state.idx];
+    // move all chips back to bank first
+    Array.from(els.answer.querySelectorAll(".chip")).forEach(c=>els.bank.appendChild(c));
+
+    // Now rebuild answer in correct order
+    // We need to pick chips from bank matching each token
+    const bankChips = () => Array.from(els.bank.querySelectorAll(".chip"));
+    item.tokens.forEach(tok=>{
+      const chip = bankChips().find(c=>c.dataset.text === tok);
+      if(chip) els.answer.appendChild(chip);
+    });
+
+    setMessage("Answer revealed. ✅", "ok");
+  }
+
+  function clearAnswer(){
+    Array.from(els.answer.querySelectorAll(".chip")).forEach(c=>els.bank.appendChild(c));
+    setMessage("Cleared. Build it again.");
+  }
+
+  function shuffleBank(){
+    const chips = Array.from(els.bank.querySelectorAll(".chip"));
+    const shuffled = shuffle(chips);
+    els.bank.innerHTML = "";
+    shuffled.forEach(c=>els.bank.appendChild(c));
+    setMessage("Shuffled.");
+  }
+
+  function prev(){
+    if(state.idx > 0){
+      state.idx -= 1;
+      render();
+    }
+  }
+  function next(){
+    if(state.idx < SENTENCES.length - 1){
+      state.idx += 1;
+      render();
+    }
+  }
+
+  function resetAll(){
+    if(!confirm("Reset progress + settings?")) return;
+    state = { idx: 0, showPinyin: true, showEnglish: true };
+    saveState();
+    render();
+  }
+
+  function escapeHtml(str){
+    return String(str)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  // ---------- Wire controls ----------
+  document.getElementById("checkBtn").addEventListener("click", checkAnswer);
+  document.getElementById("revealBtn").addEventListener("click", revealAnswer);
+  document.getElementById("clearBtn").addEventListener("click", clearAnswer);
+  document.getElementById("shuffleBtn").addEventListener("click", shuffleBank);
+  document.getElementById("prevBtn").addEventListener("click", prev);
+  document.getElementById("nextBtn").addEventListener("click", next);
+  document.getElementById("resetAllBtn").addEventListener("click", resetAll);
+
+  els.togglePinyinBtn.addEventListener("click", ()=>{
+    state.showPinyin = !state.showPinyin;
+    saveState();
+    render();
+  });
+  els.toggleEnglishBtn.addEventListener("click", ()=>{
+    state.showEnglish = !state.showEnglish;
+    saveState();
+    render();
+  });
+
+  // keyboard shortcuts (nice for projector)
+  document.addEventListener("keydown", (e)=>{
+    if(e.key === "ArrowLeft") prev();
+    if(e.key === "ArrowRight") next();
+    if(e.key.toLowerCase() === "c") clearAnswer();
+    if(e.key.toLowerCase() === "s") shuffleBank();
+    if(e.key.toLowerCase() === "r") revealAnswer();
+    if(e.key.toLowerCase() === "k") checkAnswer();
+  });
+
+  // init
+  render();
+</script>
+<!-- SIMPLE SCORE PANEL -->
+<div style="
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #0f172a;
+  color: white;
+  padding: 14px 18px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+  font-family: system-ui;
+  z-index: 9999;
+">
+  <div style="font-size:14px; opacity:.8;">Score</div>
+  <div id="simpleScore" style="font-size:28px; font-weight:800;">0</div>
+
+  <div style="margin-top:8px; display:flex; gap:6px;">
+    <button onclick="addPoint()" style="padding:4px 8px;">+1</button>
+    <button onclick="addTwo()" style="padding:4px 8px;">+2</button>
+    <button onclick="resetScore()" style="padding:4px 8px;">Reset</button>
+  </div>
+</div>
+<script>
+  let score = 0;
+
+  function updateScore() {
+    document.getElementById("simpleScore").innerText = score;
+  }
+
+  function addPoint() {
+    score += 1;
+    updateScore();
+  }
+
+  function addTwo() {
+    score += 2;
+    updateScore();
+  }
+
+  function resetScore() {
+    score = 0;
+    updateScore();
+  }
+</script>
+</body>
+</html>
