@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ESC-2-14 Furniture — Jeopardy (WL1+WL2 Spiral Review)</title>
+  <style>
+    :root{
+      --bg:#0b1b3a;
+      --panel:#0f2a5a;
+      --tile:#10306a;
+      --tile2:#0c275a;
+      --gold:#f6c343;
+      --white:#ffffff;
+      --muted:#c9d3ff;
+      --danger:#ff5a5a;
+      --ok:#57ff9a;
+    }
+    *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans",sans-serif;}
+    body{
+      margin:0;
+      background:linear-gradient(180deg,var(--bg), #050c1a);
+      color:var(--white);
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      padding:14px;
+    }
+    header{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:14px;
+      backdrop-filter: blur(6px);
+    }
+    header .title{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    header h1{
+      margin:0;
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+    header .sub{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.3;
+    }
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    button, .pill{
+      background:rgba(255,255,255,0.08);
+      color:var(--white);
+      border:1px solid rgba(255,255,255,0.18);
+      border-radius:12px;
+      padding:8px 10px;
+      font-weight:600;
+      cursor:pointer;
+      user-select:none;
+    }
+    button:hover{background:rgba(255,255,255,0.12);}
+    button:active{transform:translateY(1px);}
+    .pill{
+      cursor:default;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 12px;
+    }
+    .scoreboard{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .team{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.16);
+      background:rgba(255,255,255,0.06);
+      min-width:180px;
+      justify-content:space-between;
+    }
+    .team .name{font-weight:800; letter-spacing:.3px;}
+    .team .score{font-variant-numeric:tabular-nums; font-weight:900; color:var(--gold);}
+    .team .btns{display:flex; gap:6px;}
+    .team .btns button{padding:6px 9px; border-radius:10px; font-weight:900;}
+    .team .btns .plus{border-color:rgba(87,255,154,0.5);}
+    .team .btns .minus{border-color:rgba(255,90,90,0.5);}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap:10px;
+      width:100%;
+      max-width:1200px;
+      margin:0 auto;
+    }
+    .cat{
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:14px;
+      padding:10px 10px 12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      min-height:520px;
+    }
+    .cat h2{
+      margin:0;
+      font-size:14px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      color:var(--muted);
+      text-align:center;
+    }
+    .tile{
+      flex:1;
+      background:linear-gradient(180deg,var(--tile),var(--tile2));
+      border:1px solid rgba(255,255,255,0.14);
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:26px;
+      font-weight:900;
+      color:var(--gold);
+      cursor:pointer;
+      user-select:none;
+      min-height:76px;
+      position:relative;
+      overflow:hidden;
+    }
+    .tile.used{
+      opacity:.35;
+      cursor:not-allowed;
+      filter:saturate(.6);
+    }
+    .tile .lock{
+      position:absolute;
+      bottom:8px;
+      right:10px;
+      font-size:11px;
+      color:rgba(255,255,255,0.7);
+      font-weight:700;
+      display:none;
+    }
+    .tile:hover .lock{display:block;}
+    .hint{
+      max-width:1200px;
+      margin:0 auto;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+      opacity:.95;
+    }
+
+    /* Modal */
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.62);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:50;
+    }
+    .overlay.show{display:flex;}
+    .modal{
+      width:min(980px, 100%);
+      background:rgba(15, 26, 58, 0.96);
+      border:1px solid rgba(255,255,255,0.18);
+      border-radius:18px;
+      padding:16px;
+      box-shadow:0 18px 80px rgba(0,0,0,0.55);
+    }
+    .modalTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .meta{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .meta .tagRow{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:rgba(255,255,255,0.06);
+      color:var(--muted);
+      font-size:12px;
+      font-weight:700;
+    }
+    .tag strong{color:var(--gold);}
+    .closeBtn{
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.16);
+      color:var(--white);
+      border-radius:12px;
+      padding:8px 10px;
+      font-weight:900;
+      cursor:pointer;
+    }
+    .card{
+      margin-top:12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.14);
+      overflow:hidden;
+    }
+    .face{
+      padding:18px 18px 16px;
+      background:rgba(255,255,255,0.06);
+      min-height:210px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:10px;
+    }
+    .big{
+      font-size:34px;
+      line-height:1.2;
+      font-weight:900;
+      letter-spacing:.2px;
+      text-align:center;
+    }
+    .big .cn{display:block;}
+    .big .en{
+      display:block;
+      margin-top:10px;
+      font-size:18px;
+      font-weight:700;
+      color:var(--muted);
+    }
+    .answer{
+      padding:16px 18px 18px;
+      background:rgba(0,0,0,0.18);
+      display:none;
+      border-top:1px solid rgba(255,255,255,0.12);
+    }
+    .answer.show{display:block;}
+    .answer .label{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:1px;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+    .answer .content{
+      font-size:28px;
+      font-weight:900;
+      text-align:center;
+      line-height:1.25;
+    }
+    .answer .content .en{
+      display:block;
+      margin-top:8px;
+      font-size:16px;
+      font-weight:700;
+      color:var(--muted);
+    }
+
+    .modalBottom{
+      margin-top:12px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .note{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
+    .actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .actions button{
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:900;
+    }
+    .actions .reveal{border-color:rgba(246,195,67,0.55);}
+    .actions .markUsed{border-color:rgba(255,255,255,0.22);}
+    .actions .resetTile{border-color:rgba(255,90,90,0.35);}
+
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr; max-width:720px;}
+      .cat{min-height:auto;}
+      .tile{min-height:70px;}
+      .big{font-size:28px;}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      <h1>ESC-2-14 Furniture — Jeopardy (WL1 + WL2 Spiral Review)</h1>
+      <div class="sub">Template behavior: <b>single click</b> a tile to open · in the card: click <b>Reveal Answer</b> (2nd step) · mark used when done · 3 teams scoreboard included.</div>
+    </div>
+
+    <div class="controls">
+      <div class="scoreboard" id="scoreboard"></div>
+      <button id="resetAllBtn" title="Reset board + scores">Reset All</button>
+    </div>
+  </header>
+
+  <div class="hint">
+    Tip: Tiles open with a <b>single click</b>. Inside the card, you control when to reveal the answer.
+  </div>
+
+  <main class="grid" id="grid"></main>
+
+  <!-- Modal -->
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modalTop">
+        <div class="meta">
+          <div class="tagRow">
+            <span class="tag">Category: <strong id="mCat"></strong></span>
+            <span class="tag">Value: <strong id="mVal"></strong></span>
+            <span class="tag">Step: <strong id="mStep">Question</strong></span>
+          </div>
+          <div class="note" id="mHelp">Show the question first. When ready, click “Reveal Answer”.</div>
+        </div>
+        <button class="closeBtn" id="closeBtn">Close</button>
+      </div>
+
+      <div class="card" id="card">
+        <div class="face" id="face">
+          <div class="big" id="qText"></div>
+        </div>
+        <div class="answer" id="ansBox">
+          <div class="label">Answer</div>
+          <div class="content" id="aText"></div>
+        </div>
+      </div>
+
+      <div class="modalBottom">
+        <div class="note">
+          Controls: <b>Reveal Answer</b> = step 2 · <b>Mark Used</b> greys out the tile · You can close any time.
+        </div>
+        <div class="actions">
+          <button class="reveal" id="revealBtn">Reveal Answer</button>
+          <button class="markUsed" id="usedBtn">Mark Used</button>
+          <button class="resetTile" id="resetTileBtn">Reset This Tile</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/**
+ * ESC-2-14 Furniture — Jeopardy FINAL (5 categories x 5 clues)
+ * Includes: 有/是, 里面有/外面是, 不算…但是…, 楼上/楼下/几层,
+ * positions, measure words 台/个/张/把, 比 + 多, translation item.
+ */
+
+const TEAMS = [
+  { id: "t1", name: "Team 1", score: 0 },
+  { id: "t2", name: "Team 2", score: 0 },
+  { id: "t3", name: "Team 3", score: 0 }
+];
+
+const BOARD = [
+  {
+    category: "Rooms & Layout",
+    clues: [
+      { value: 100, q_cn: "这个房间一般有沙发和茶几。", q_en: "This room usually has a sofa and a coffee table.", a_cn: "客厅。", a_en: "Living room." },
+      { value: 200, q_cn: "哪个房间常常在楼上？", q_en: "Which room is often upstairs?", a_cn: "卧室。", a_en: "Bedroom." },
+      { value: 300, q_cn: "用一句话回答：你的房子有几层？", q_en: "Answer in one sentence: How many floors does your house have?", a_cn: "我的房子有一层 / 两层。", a_en: "My house has one / two floors." },
+      { value: 400, q_cn: "造句：卧室 ｜ 楼上 ｜ 客厅 ｜ 楼下", q_en: "Make a sentence using: bedroom / upstairs / living room / downstairs", a_cn: "（参考）我的卧室在楼上，客厅在楼下。", a_en: "(Example) My bedroom is upstairs, and the living room is downstairs." },
+      { value: 500, q_cn: "完成句子：这个厨房不算大，但是 ________。", q_en: "Complete the sentence: This kitchen is not very big, but ________.", a_cn: "（示例）很干净 / 很舒服 / 很亮。", a_en: "(Examples) very clean / comfortable / bright." }
+    ]
+  },
+  {
+    category: "Sentence Patterns",
+    clues: [
+      { value: 100, q_cn: "补全句子：客厅里面 ___ 一个沙发。", q_en: "Fill in the blank: In the living room, there ___ a sofa.", a_cn: "有。", a_en: "yǒu (have/there is)." },
+      { value: 200, q_cn: "补全句子：客厅的外面 ___ 阳台。", q_en: "Fill in the blank: Outside the living room ___ the balcony.", a_cn: "是。", a_en: "shì (is)." },
+      { value: 300, q_cn: "选对的句子：A. 客厅里面有一个沙发。 B. 客厅里面是一个沙发。", q_en: "Choose the correct sentence: A) There is a sofa in the living room. B) The living room is a sofa.", a_cn: "A。", a_en: "A." },
+      { value: 400, q_cn: "选对的句子：A. 厨房的外面有阳台。 B. 厨房的外面是阳台。", q_en: "Choose the correct sentence: A) Outside the kitchen there is a balcony. B) Outside the kitchen is the balcony.", a_cn: "B。", a_en: "B." },
+      { value: 500, q_cn: "用“不算……但是……”造句（关于房间）。", q_en: 'Make a sentence using "not very... but..." (about a room).', a_cn: "（示例）不算大，但是很舒服。", a_en: "(Example) Not very big, but very comfortable." }
+    ]
+  },
+  {
+    category: "Positions",
+    clues: [
+      { value: 100, q_cn: "书包在书桌的下面。“下面”是什么意思？", q_en: 'The schoolbag is "xiàmiàn" the desk. What does "下面" mean?', a_cn: "under。", a_en: "under" },
+      { value: 200, q_cn: "选择 make sense：书包在书桌的下面，是什么意思？\nA. 在书桌上面\nB. 在书桌下面\nC. 在书桌旁边", q_en: "Choose what makes sense: The schoolbag is under the desk.\nA) on the desk\nB) under the desk\nC) next to the desk", a_cn: "B。", a_en: "B." },
+      { value: 300, q_cn: "判断正误并改错：电脑在书桌的下面。", q_en: "True or false, then correct: The computer is under the desk.", a_cn: "错。电脑在书桌的上面。", a_en: "False. The computer is on top of the desk." },
+      { value: 400, q_cn: "用“旁边”造句。", q_en: 'Make a sentence using "next to".', a_cn: "（示例）椅子在书桌旁边。", a_en: "(Example) The chair is next to the desk." },
+      { value: 500, q_cn: "说一句话：同时包含“在楼上/楼下” + “一个家具”。", q_en: "Say one sentence that includes upstairs/downstairs + one piece of furniture.", a_cn: "（示例）卧室在楼上，里面有一张床。", a_en: "(Example) The bedroom is upstairs, and there is a bed inside." }
+    ]
+  },
+  {
+    category: "Measure Words",
+    clues: [
+      { value: 100, q_cn: "一 ___ 沙发", q_en: "One ___ sofa", a_cn: "张。", a_en: "zhāng" },
+      { value: 200, q_cn: "一 ___ 椅子", q_en: "One ___ chair", a_cn: "把。", a_en: "bǎ" },
+      { value: 300, q_cn: "下面哪一个不对？\nA. 一张床\nB. 一把椅子\nC. 一把床", q_en: "Which one is NOT correct?\nA) a bed (zhāng)\nB) a chair (bǎ)\nC) a bed (bǎ)", a_cn: "C。", a_en: "C." },
+      { value: 400, q_cn: "选对的一组：\nA. 一张床 / 一把椅子 / 一台电脑\nB. 一个床 / 一张椅子 / 一台电脑", q_en: "Choose the correct set:\nA) bed(zhāng) / chair(bǎ) / computer(tái)\nB) bed(gè) / chair(zhāng) / computer(tái)", a_cn: "A。", a_en: "A." },
+      { value: 500, q_cn: "用两个不同量词造句。", q_en: "Make a sentence using TWO different measure words.", a_cn: "（示例）卧室里有一张床和一把椅子。", a_en: "(Example) There is a bed and a chair in the bedroom." }
+    ]
+  },
+  {
+    category: "Comparisons 比",
+    clues: [
+      { value: 100, q_cn: "补全句子：我的卧室 ___ 弟弟的卧室大。", q_en: "Fill in the blank: My bedroom ___ my younger brother's bedroom is big.", a_cn: "比。", a_en: "bǐ" },
+      { value: 200, q_cn: "选对的句子：\nA. 我的房间比他的房间大。\nB. 我的房间他的房间大。", q_en: "Choose the correct sentence:\nA) My room is bigger than his.\nB) My room his room big.", a_cn: "A。", a_en: "A." },
+      { value: 300, q_cn: "用“比”造句（关于家具）。", q_en: "Make a 'bǐ' sentence about furniture.", a_cn: "（示例）红沙发比绿沙发新。", a_en: "(Example) The red sofa is newer than the green sofa." },
+      { value: 400, q_cn: "判断正误并改错：这个房间的家具比那个房间。", q_en: "True or false, then correct: This room's furniture compares to that room.", a_cn: "错。这个房间的家具比那个房间多。", a_en: "False. This room has more furniture than that room." },
+      { value: 500, q_cn: "翻译成中文：This room has more furniture than that room.", q_en: "Translate into Chinese: This room has more furniture than that room.", a_cn: "这个房间的家具比那个房间多。", a_en: "This room has more furniture than that room." }
+    ]
+  }
+];
+
+// ---------- State persistence ----------
+const STORAGE_KEY = "esc214_jeopardy_state_v1";
+let state = loadState() || {
+  used: {},
+  scores: { t1:0, t2:0, t3:0 }
+};
+
+// ---------- Build UI ----------
+const gridEl = document.getElementById("grid");
+const scoreboardEl = document.getElementById("scoreboard");
+
+function buildScoreboard(){
+  scoreboardEl.innerHTML = "";
+  TEAMS.forEach(t=>{
+    const wrap = document.createElement("div");
+    wrap.className = "team";
+    wrap.innerHTML = `
+      <div class="name">${t.name}</div>
+      <div class="score" id="score-${t.id}">$${state.scores[t.id] ?? 0}</div>
+      <div class="btns">
+        <button class="plus" data-team="${t.id}" data-delta="100">+100</button>
+        <button class="minus" data-team="${t.id}" data-delta="-100">-100</button>
+      </div>
+    `;
+    scoreboardEl.appendChild(wrap);
+  });
+
+  scoreboardEl.querySelectorAll("button").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const team = btn.dataset.team;
+      const delta = Number(btn.dataset.delta);
+      state.scores[team] = (state.scores[team] ?? 0) + delta;
+      saveState();
+      updateScores();
+    });
+  });
+}
+function updateScores(){
+  TEAMS.forEach(t=>{
+    const el = document.getElementById(`score-${t.id}`);
+    if(el) el.textContent = `$${state.scores[t.id] ?? 0}`;
+  });
+}
+
+function buildBoard(){
+  gridEl.innerHTML = "";
+  BOARD.forEach((cat, cIdx)=>{
+    const col = document.createElement("section");
+    col.className = "cat";
+    const h2 = document.createElement("h2");
+    h2.textContent = cat.category;
+    col.appendChild(h2);
+
+    cat.clues.forEach((clue, rIdx)=>{
+      const tile = document.createElement("div");
+      tile.className = "tile";
+      tile.dataset.c = cIdx;
+      tile.dataset.r = rIdx;
+
+      const key = `${cIdx}-${rIdx}`;
+      if(state.used[key]) tile.classList.add("used");
+
+      tile.innerHTML = `
+        <div>$${clue.value}</div>
+        <div class="lock">click</div>
+      `;
+
+      // OPEN on single click (Promethean-friendly)
+      tile.addEventListener("click", ()=>{
+        if(tile.classList.contains("used")) return;
+        openClue(cIdx, rIdx);
+      });
+
+      col.appendChild(tile);
+    });
+
+    gridEl.appendChild(col);
+  });
+}
+
+// ---------- Modal logic ----------
+const overlay = document.getElementById("overlay");
+const closeBtn = document.getElementById("closeBtn");
+const revealBtn = document.getElementById("revealBtn");
+const usedBtn = document.getElementById("usedBtn");
+const resetTileBtn = document.getElementById("resetTileBtn");
+const mCat = document.getElementById("mCat");
+const mVal = document.getElementById("mVal");
+const mStep = document.getElementById("mStep");
+const qText = document.getElementById("qText");
+const aText = document.getElementById("aText");
+const ansBox = document.getElementById("ansBox");
+
+let current = { cIdx:null, rIdx:null, revealed:false };
+
+function openClue(cIdx, rIdx){
+  const clue = BOARD[cIdx].clues[rIdx];
+  current = { cIdx, rIdx, revealed:false };
+
+  mCat.textContent = BOARD[cIdx].category;
+  mVal.textContent = `$${clue.value}`;
+  mStep.textContent = "Question";
+
+  qText.innerHTML = `
+    <span class="cn">${escapeHtml(clue.q_cn).replace(/\n/g,"<br/>")}</span>
+    <span class="en">${escapeHtml(clue.q_en).replace(/\n/g,"<br/>")}</span>
+  `;
+
+  aText.innerHTML = `
+    <span>${escapeHtml(clue.a_cn).replace(/\n/g,"<br/>")}</span>
+    <span class="en">${escapeHtml(clue.a_en).replace(/\n/g,"<br/>")}</span>
+  `;
+
+  ansBox.classList.remove("show");
+  overlay.classList.add("show");
+  overlay.setAttribute("aria-hidden","false");
+}
+
+function closeModal(){
+  overlay.classList.remove("show");
+  overlay.setAttribute("aria-hidden","true");
+}
+
+closeBtn.addEventListener("click", closeModal);
+overlay.addEventListener("click", (e)=>{
+  if(e.target === overlay) closeModal();
+});
+document.addEventListener("keydown", (e)=>{
+  if(e.key === "Escape" && overlay.classList.contains("show")) closeModal();
+});
+
+revealBtn.addEventListener("click", ()=>{
+  if(current.cIdx === null) return;
+  const isShowing = ansBox.classList.contains("show");
+  ansBox.classList.toggle("show");
+  mStep.textContent = isShowing ? "Question" : "Answer";
+});
+
+usedBtn.addEventListener("click", ()=>{
+  if(current.cIdx === null) return;
+  const key = `${current.cIdx}-${current.rIdx}`;
+  state.used[key] = true;
+  saveState();
+  buildBoard();
+  closeModal();
+});
+
+resetTileBtn.addEventListener("click", ()=>{
+  if(current.cIdx === null) return;
+  const key = `${current.cIdx}-${current.rIdx}`;
+  delete state.used[key];
+  saveState();
+  buildBoard();
+  closeModal();
+});
+
+// ---------- Reset all ----------
+document.getElementById("resetAllBtn").addEventListener("click", ()=>{
+  if(!confirm("Reset ALL tiles + scores?")) return;
+  state = { used:{}, scores:{ t1:0, t2:0, t3:0 } };
+  saveState();
+  buildBoard();
+  updateScores();
+});
+
+// ---------- Storage helpers ----------
+function saveState(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(err){}
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(err){
+    return null;
+  }
+}
+
+// ---------- Utils ----------
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+// init
+buildScoreboard();
+buildBoard();
+updateScores();
+</script>
+</body>
+</html>
