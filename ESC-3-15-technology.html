@@ -161,21 +161,20 @@
   <script>
     // ✅ 只用“组词/词组”，你后面按这个格式继续加
     const vocabulary = [
-      { ch: "打字",   py: "dǎ zì",       en: "type" },
-      { ch: "收发邮件", py: "shōu fā yóu jiàn", en: "send/receive mail" },
-      { ch: "电子邮件", py: "diàn zǐ yóu jiàn", en: "email" },
-      { ch: "社交软件", py: "shè jiāo ruǎn jiàn", en: "social apps" },
-      { ch: "离不开", py: "lí bù kāi",   en: "can't live without" },
-      { ch: "不用",   py: "bú yòng",     en: "no need to" },
-      { ch: "好处",   py: "hǎo chù",     en: "advantage" },
-      { ch: "坏处",   py: "huài chù",    en: "disadvantage" },
-      { ch: "视力",   py: "shì lì",      en: "eyesight" },
-      { ch: "户外活动", py: "hù wài huó dòng", en: "outdoor activities" },
-      { ch: "方便",   py: "fāng biàn",   en: "convenient" },
-      { ch: "今后",   py: "jīn hòu",     en: "from now on" },
+      { ch: "打字",     py: "dǎ zì",               en: "type" },
+      { ch: "收发邮件", py: "shōu fā yóu jiàn",   en: "send/receive mail" },
+      { ch: "电子邮件", py: "diàn zǐ yóu jiàn",   en: "email" },
+      { ch: "社交软件", py: "shè jiāo ruǎn jiàn",  en: "social apps" },
+      { ch: "离不开",   py: "lí bù kāi",          en: "can't live without" },
+      { ch: "不用",     py: "bú yòng",            en: "no need to" },
+      { ch: "好处",     py: "hǎo chù",            en: "advantage" },
+      { ch: "坏处",     py: "huài chù",           en: "disadvantage" },
+      { ch: "视力",     py: "shì lì",             en: "eyesight" },
+      { ch: "户外活动", py: "hù wài huó dòng",     en: "outdoor activities" },
+      { ch: "方便",     py: "fāng biàn",          en: "convenient" },
+      { ch: "今后",     py: "jīn hòu",            en: "from now on" },
     ];
 
-    // 三种模式：转盘显示 wheelField；左侧选项是 optionField；右侧提示框显示 boxField
     const MODES = [
       { wheelField: 'py', optionField: 'ch', boxField: 'en', tip: "看拼音 选汉字" },
       { wheelField: 'ch', optionField: 'py', boxField: 'en', tip: "看汉字 选拼音" },
@@ -199,25 +198,20 @@
     const optionBtns = document.querySelectorAll('.option-btn');
     const tipEl = document.getElementById('game-mode-tip');
 
-    // 工具：规范化角度到 [0,360)
     function normDeg(d){
       return ((d % 360) + 360) % 360;
     }
 
-    // ✅ 关键修复：根据最终角度反算指针指向的扇区 index
+    // ✅ 修复：根据最终角度反算“指针(12点方向)落在哪个扇区”
+    // Canvas 扇区绘制从 3 点钟方向开始 (0°在右侧)，顺时针增加。
+    // 指针在 12 点钟方向 = 270°。
     function getIndexAtPointer(rotationDeg){
       const n = vocabulary.length;
-      const angleStep = 360 / n;
+      const step = 360 / n;
 
-      // rotationDeg 是 canvas 的 CSS rotate（顺时针为正）
-      // 指针在 12 点方向。我们要算“指针处对应的盘面角度”：
-      // 盘面被顺时针转了 rotationDeg，相当于指针相对盘面是逆时针 rotationDeg。
-      // 再把 12 点方向映射到 0 度基准（我们绘制扇区从 0 度在右侧开始，所以要 +90 度对齐到上方）
-      const pointerAngle = normDeg(90 - normDeg(rotationDeg)); // 0度=右侧；90度=上方
-
-      // 扇区 i 覆盖 [i*step, (i+1)*step)
-      const idx = Math.floor(pointerAngle / angleStep);
-      return idx;
+      const pointerAngle = normDeg(270 - normDeg(rotationDeg));
+      const eps = 1e-6;
+      return Math.floor((pointerAngle + eps) / step) % n;
     }
 
     function drawWheel(){
@@ -242,7 +236,6 @@
         ctx.lineWidth = 2;
         ctx.stroke();
 
-        // 文本
         ctx.save();
         ctx.translate(radius, radius);
         ctx.rotate(start + angleStep/2);
@@ -255,7 +248,6 @@
         ctx.restore();
       });
 
-      // 中心点
       ctx.beginPath();
       ctx.arc(radius, radius, 10, 0, Math.PI*2);
       ctx.fillStyle = "#FFD700";
@@ -296,7 +288,6 @@
       targetWordEl.innerText = w[currentMode.boxField];
       targetSubEl.innerText = "根据转盘结果选择对应的项";
 
-      // 生成选项（正确 + 3 个干扰）
       const correct = w[currentMode.optionField];
       let opts = [correct];
       while(opts.length < 4){
@@ -342,11 +333,8 @@
       if(isSpinning) return;
       if(usedIndices.size >= vocabulary.length) return;
 
-      // 随机模式
       currentMode = MODES[Math.floor(Math.random()*MODES.length)];
       tipEl.innerText = currentMode.tip;
-
-      // 重新绘制（让转盘上的文字随模式变化）
       drawWheel();
 
       if(!startTime) startTimer();
@@ -355,8 +343,7 @@
       spinBtn.disabled = true;
       disableOptions(true);
 
-      // ✅ 随机旋转角度（不预设 index）
-      const extraRounds = 5 + Math.random()*2; // 5~7圈
+      const extraRounds = 5 + Math.random()*2;
       const randomOffset = Math.random()*360;
       currentRotation = currentRotation + extraRounds*360 + randomOffset;
 
@@ -366,10 +353,9 @@
         isSpinning = false;
         spinBtn.disabled = false;
 
-        // ✅ 动画结束后反算 index，并且避免重复
         let idx = getIndexAtPointer(currentRotation);
 
-        // 如果抽到已用过的词，就顺时针找下一个未用词（保证每词只出现一次）
+        // 避免重复：顺时针找下一个未用词
         if(usedIndices.has(idx)){
           const n = vocabulary.length;
           let k = 0;
@@ -385,7 +371,6 @@
     });
 
     window.onload = ()=>{
-      // 初始化
       document.getElementById('progress-text').innerText = `0/${vocabulary.length}`;
       drawWheel();
       disableOptions(true);
