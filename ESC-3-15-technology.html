@@ -16,9 +16,11 @@
       overflow-x:hidden;
     }
 
-    /* ✅ 改：左侧按钮的字体（拼音更清楚，汉字也清晰） */
+    /* ✅ 左侧按钮字体：拼音/汉字更清楚 */
     .chinese-font{
-      font-family: "Noto Sans SC", "Microsoft YaHei", Arial, Helvetica, sans-serif;
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Arial, Helvetica, sans-serif;
+      font-weight: 800;
+      letter-spacing: .3px;
     }
 
     .wheel-outer{
@@ -58,7 +60,7 @@
       transition: all .18s;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
       border-bottom-width:4px;
-      letter-spacing: 0.5px; /* ✅ 拼音更好认 */
+      letter-spacing: 0.5px;
     }
     .option-btn:hover:not(:disabled){
       transform: translateY(-2px);
@@ -158,17 +160,17 @@
   <script>
     const vocabulary = [
       { ch: "打字",     py: "dǎ zì",               en: "type" },
-      { ch: "收发邮件", py: "shōu fā yóu jiàn",   en: "send/receive mail" },
-      { ch: "电子邮件", py: "diàn zǐ yóu jiàn",   en: "email" },
+      { ch: "收发邮件", py: "shōu fā yóu jiàn",    en: "send/receive mail" },
+      { ch: "电子邮件", py: "diàn zǐ yóu jiàn",    en: "email" },
       { ch: "社交软件", py: "shè jiāo ruǎn jiàn",  en: "social apps" },
-      { ch: "离不开",   py: "lí bù kāi",          en: "can't live without" },
-      { ch: "不用",     py: "bú yòng",            en: "no need to" },
-      { ch: "好处",     py: "hǎo chù",            en: "advantage" },
-      { ch: "坏处",     py: "huài chù",           en: "disadvantage" },
-      { ch: "视力",     py: "shì lì",             en: "eyesight" },
-      { ch: "户外活动", py: "hù wài huó dòng",     en: "outdoor activities" },
-      { ch: "方便",     py: "fāng biàn",          en: "convenient" },
-      { ch: "今后",     py: "jīn hòu",            en: "from now on" },
+      { ch: "离不开",   py: "lí bù kāi",           en: "can't live without" },
+      { ch: "不用",     py: "bú yòng",             en: "no need to" },
+      { ch: "好处",     py: "hǎo chù",             en: "advantage" },
+      { ch: "坏处",     py: "huài chù",            en: "disadvantage" },
+      { ch: "视力",     py: "shì lì",              en: "eyesight" },
+      { ch: "户外活动", py: "hù wài huó dòng",      en: "outdoor activities" },
+      { ch: "方便",     py: "fāng biàn",           en: "convenient" },
+      { ch: "今后",     py: "jīn hòu",             en: "from now on" },
     ];
 
     const MODES = [
@@ -198,14 +200,10 @@
       return ((d % 360) + 360) % 360;
     }
 
-    // ✅ Spin 落点对齐：指针在 12 点方向 = 270°
-    function getIndexAtPointer(rotationDeg){
-      const n = vocabulary.length;
-      const step = 360 / n;
-      const pointerAngle = normDeg(270 - normDeg(rotationDeg));
-      const eps = 1e-6;
-      return Math.floor((pointerAngle + eps) / step) % n;
-    }
+    // ✅ 指针在 12 点方向。
+    // canvas 扇区从 3 点钟方向开始(0°)；CSS rotate 正角度=顺时针。
+    // pointerAngle = POINTER_AT_DEG - rotationDeg
+    const POINTER_AT_DEG = 270;
 
     function drawWheel(){
       const n = vocabulary.length;
@@ -236,7 +234,7 @@
         ctx.fillStyle = "#fff";
 
         const text = item[currentMode.wheelField];
-        ctx.font = text.length > 8 ? "bold 14px Arial" : (text.length > 4 ? "bold 18px Arial" : "bold 22px Arial");
+        ctx.font = text.length > 10 ? "bold 14px Arial" : (text.length > 6 ? "bold 18px Arial" : "bold 22px Arial");
         ctx.fillText(text, radius - 30, 8);
         ctx.restore();
       });
@@ -322,41 +320,50 @@
       }
     }
 
+    // ✅ 彻底修复：先选一个未出现过的词 nextIndex，然后让转盘精确停在该扇区
     spinBtn.addEventListener('click', ()=>{
       if(isSpinning) return;
       if(usedIndices.size >= vocabulary.length) return;
 
+      // 1) 随机切换模式
       currentMode = MODES[Math.floor(Math.random()*MODES.length)];
       tipEl.innerText = currentMode.tip;
       drawWheel();
 
       if(!startTime) startTimer();
 
+      // 2) 先选一个“没出现过”的词
+      let nextIndex;
+      do {
+        nextIndex = Math.floor(Math.random()*vocabulary.length);
+      } while (usedIndices.has(nextIndex));
+
+      const n = vocabulary.length;
+      const step = 360 / n;
+
+      // 3) 目标：指针角 pointerAngle 落在 nextIndex 扇区中心
+      // pointerAngle = POINTER_AT_DEG - rotation
+      const jitter = (Math.random() - 0.5) * (step * 0.6); // 约±0.3格
+      const pointerAngleTarget = (nextIndex * step) + (step/2) + jitter;
+      const baseRotationTarget = POINTER_AT_DEG - pointerAngleTarget;
+
+      const extraRounds = 5 + Math.random()*2;
+      const rotationTarget = (extraRounds * 360) + baseRotationTarget;
+
+      // 4) 开转
       isSpinning = true;
       spinBtn.disabled = true;
       disableOptions(true);
 
-      const extraRounds = 5 + Math.random()*2;
-      const randomOffset = Math.random()*360;
-      currentRotation = currentRotation + extraRounds*360 + randomOffset;
-
+      currentRotation = rotationTarget;
       canvas.style.transform = `rotate(${currentRotation}deg)`;
 
       setTimeout(()=>{
         isSpinning = false;
         spinBtn.disabled = false;
 
-        let idx = getIndexAtPointer(currentRotation);
-        if(usedIndices.has(idx)){
-          const n = vocabulary.length;
-          let k = 0;
-          while(k < n && usedIndices.has(idx)){
-            idx = (idx + 1) % n;
-            k++;
-          }
-        }
-
-        currentIndex = idx;
+        // ✅ 直接用 nextIndex（不再做“用过就+1”）
+        currentIndex = nextIndex;
         setupQuestion();
       }, 4100);
     });
