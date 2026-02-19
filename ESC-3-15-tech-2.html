@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>飞鱼制作 - 词汇大转盘 (New Words 2)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap');
+
+        body {
+            background: linear-gradient(135deg, #1a0505 0%, #000000 100%);
+            color: #fff;
+            font-family: 'Noto Sans SC', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .btn-text { font-weight: 700; letter-spacing: 0.5px; }
+
+        .wheel-outer {
+            position: relative;
+            width: 100%;
+            max-width: 520px;
+            aspect-ratio: 1/1;
+            margin: 0 auto;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8), 0 0 20px rgba(255,215,0,0.2);
+            transition: transform 4s cubic-bezier(0.2, 0, 0.2, 1);
+            border: 6px solid #444;
+            background: #000;
+        }
+
+        /* 顶部指针 */
+        .pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 44px;
+            height: 55px;
+            background: #FFD700;
+            clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
+            z-index: 50;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+        }
+
+        .option-btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-bottom-width: 4px;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            filter: brightness(1.2);
+        }
+
+        .correct { background-color: #16a34a !important; border-color: #14532d !important; animation: pulse 0.5s; }
+        .wrong { background-color: #dc2626 !important; border-color: #7f1d1d !important; animation: shake 0.4s; }
+
+        @keyframes shake { 0%, 100% { transform: translateX(0) } 25% { transform: translateX(-4px) } 75% { transform: translateX(4px) } }
+        @keyframes pulse { 0% { transform: scale(1) } 50% { transform: scale(1.05) } 100% { transform: scale(1) } }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 220px 1fr 220px;
+            gap: 24px;
+            align-items: center;
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body class="p-2 md:p-6">
+    <div class="max-w-7xl mx-auto">
+        <!-- 数据栏 -->
+        <div class="flex justify-between items-center mb-8 bg-black/40 p-4 rounded-2xl border border-white/10 shadow-lg">
+            <div class="flex gap-6 text-sm">
+                <p>⏱️ <span id="timer" class="font-mono text-yellow-400">00:00</span></p>
+                <p>🏆 得分: <span id="score" class="font-bold text-green-400">0</span></p>
+            </div>
+            <div class="flex gap-6 text-sm items-center">
+                <p>🎯 正确率: <span id="accuracy" class="text-blue-400">0%</span></p>
+                <p>📈 进度: <span id="progress-text" class="text-purple-400">0/17</span></p>
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <!-- 左侧：选项 -->
+            <div id="options-container" class="order-2 lg:order-1 flex flex-col gap-4">
+                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest text-center lg:text-left">选择选项 OPTIONS</p>
+                <button class="option-btn w-full py-3 px-4 rounded-xl text-lg bg-blue-600 text-white btn-text border-blue-900 disabled:opacity-30" onclick="checkAnswer(0)">-</button>
+                <button class="option-btn w-full py-3 px-4 rounded-xl text-lg bg-purple-600 text-white btn-text border-purple-900 disabled:opacity-30" onclick="checkAnswer(1)">-</button>
+                <button class="option-btn w-full py-3 px-4 rounded-xl text-lg bg-teal-600 text-white btn-text border-teal-900 disabled:opacity-30" onclick="checkAnswer(2)">-</button>
+                <button class="option-btn w-full py-3 px-4 rounded-xl text-lg bg-orange-600 text-white btn-text border-orange-900 disabled:opacity-30" onclick="checkAnswer(3)">-</button>
+            </div>
+
+            <!-- 中间：大转盘 -->
+            <div class="order-1 lg:order-2 flex flex-col items-center">
+                <div class="wheel-outer">
+                    <div class="pointer"></div>
+                    <canvas id="wheel" width="600" height="600"></canvas>
+                    <button id="spin-btn" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-white text-black text-xl font-black rounded-full shadow-2xl border-4 border-yellow-500 hover:scale-110 active:scale-95 transition-transform z-30">
+                        SPIN
+                    </button>
+                </div>
+                <div class="mt-8 text-center">
+                    <h1 class="text-3xl text-yellow-500 font-black tracking-tighter">飞鱼制作 - 词汇大转盘</h1>
+                    <p id="game-mode-tip" class="text-white/40 text-xs mt-2 uppercase tracking-widest italic font-bold">点击 SPIN 开始挑战</p>
+                </div>
+            </div>
+
+            <!-- 右侧：提示框 -->
+            <div class="order-3 flex flex-col gap-4">
+                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest text-center lg:text-right">提示框 HINT</p>
+                <div class="bg-white p-6 rounded-2xl shadow-2xl text-center border-4 border-yellow-500 min-h-[140px] flex flex-col justify-center">
+                    <h2 id="target-word" class="text-2xl md:text-3xl font-black text-red-700 leading-tight">READY?</h2>
+                    <p id="target-sub" class="text-gray-400 text-[10px] mt-2 italic font-medium">根据转盘结果选择对应项</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-12 bg-black/40 h-4 rounded-full overflow-hidden border border-white/10 p-1">
+            <div id="progress-bar" class="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600 h-full rounded-full transition-all duration-1000" style="width:0%"></div>
+        </div>
+    </div>
+
+    <!-- 结算模态框 -->
+    <div id="result-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white text-black p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl border-8 border-yellow-500">
+            <h2 class="text-4xl font-black mb-4 text-red-600">挑战成功!</h2>
+            <div class="space-y-4 mb-8 text-lg">
+                <div class="flex justify-between border-b pb-1"><span>最终得分:</span> <span id="final-score" class="font-bold">0</span></div>
+                <div class="flex justify-between border-b pb-1"><span>正确率:</span> <span id="final-accuracy" class="font-bold text-blue-600">0%</span></div>
+                <div class="flex justify-between border-b pb-1"><span>总时间:</span> <span id="final-time" class="font-bold text-green-600">00:00</span></div>
+            </div>
+            <button onclick="location.reload()" class="w-full py-4 bg-black text-yellow-400 text-xl font-black rounded-2xl hover:bg-gray-800 transition">
+                重新挑战
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 更新为 New Words 2 的词汇
+        const vocabulary = [
+            { ch: "智能", py: "zhì néng", en: "Smart" },
+            { ch: "带来", py: "dài lái", en: "Bring" },
+            { ch: "短信", py: "duǎn xìn", en: "Text message" },
+            { ch: "查", py: "chá", en: "Look up" },
+            { ch: "资料", py: "zī liào", en: "Information" },
+            { ch: "新闻", py: "xīn wén", en: "News" },
+            { ch: "订", py: "dìng", en: "Order" },
+            { ch: "外卖", py: "wài mài", en: "Takeaway" },
+            { ch: "相机", py: "xiàng jī", en: "Camera" },
+            { ch: "拍照", py: "pāi zhào", en: "Take photo" },
+            { ch: "闹钟", py: "nào zhōng", en: "Alarm clock" },
+            { ch: "计算器", py: "jì suàn qì", en: "Calculator" },
+            { ch: "越来越", py: "yuè lái yuè", en: "More and more" },
+            { ch: "笔", py: "bǐ", en: "Pen" },
+            { ch: "手机", py: "shǒu jī", en: "Mobile phone" },
+            { ch: "好事", py: "hǎo shì", en: "Good thing" },
+            { ch: "坏事", py: "huài shì", en: "Bad thing" }
+        ];
+
+        const MODES = [
+            { wheel: 'py', option: 'ch', box: 'en', tip: "看拼音 选汉字" },
+            { wheel: 'ch', option: 'py', box: 'en', tip: "看汉字 选拼音" },
+            { wheel: 'en', option: 'ch', box: 'py', tip: "看英文 选汉字" }
+        ];
+
+        let score = 0, totalAnswered = 0, correctCount = 0;
+        let isSpinning = false, startTime = null, timerInterval = null;
+        let usedIndices = new Set(), currentMode = MODES[0], currentIndex = -1, currentOptions = [];
+        let currentRotation = 0; 
+
+        const canvas = document.getElementById('wheel');
+        const ctx = canvas.getContext('2d');
+        const spinBtn = document.getElementById('spin-btn');
+        const targetWordEl = document.getElementById('target-word');
+        const optionBtns = document.querySelectorAll('.option-btn');
+        const tipEl = document.getElementById('game-mode-tip');
+
+        function drawWheel() {
+            const n = vocabulary.length;
+            const radius = canvas.width / 2;
+            const angleStep = (2 * Math.PI) / n;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            vocabulary.forEach((item, i) => {
+                const start = i * angleStep;
+                const end = start + angleStep;
+
+                ctx.beginPath();
+                ctx.moveTo(radius, radius);
+                ctx.arc(radius, radius, radius, start, end);
+                const hue = (i * 360 / n);
+                ctx.fillStyle = `hsl(${hue}, 60%, 40%)`;
+                ctx.fill();
+                ctx.strokeStyle = "rgba(255,255,255,0.25)";
+                ctx.stroke();
+
+                ctx.save();
+                ctx.translate(radius, radius);
+                ctx.rotate(start + angleStep / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = "#fff";
+                const text = item[currentMode.wheel];
+                ctx.font = "bold 20px Arial";
+                ctx.fillText(text, radius - 40, 8);
+                ctx.restore();
+            });
+
+            ctx.beginPath();
+            ctx.arc(radius, radius, 12, 0, Math.PI * 2);
+            ctx.fillStyle = "#FFD700";
+            ctx.fill();
+        }
+
+        spinBtn.addEventListener('click', () => {
+            if (isSpinning || usedIndices.size >= vocabulary.length) return;
+
+            currentMode = MODES[Math.floor(Math.random() * MODES.length)];
+            tipEl.innerText = currentMode.tip;
+            drawWheel();
+
+            if (!startTime) startTimer();
+
+            let nextIndex;
+            do { nextIndex = Math.floor(Math.random() * vocabulary.length); } while (usedIndices.has(nextIndex));
+            currentIndex = nextIndex;
+
+            const n = vocabulary.length;
+            const angleStep = 360 / n;
+            
+            const targetSectorCenter = (currentIndex * angleStep) + (angleStep / 2);
+            const targetBaseRotation = (270 - targetSectorCenter + 360) % 360;
+            
+            const rounds = 5 + Math.floor(Math.random() * 2);
+            const currentBase = currentRotation % 360;
+            let additionalRotation = (targetBaseRotation - currentBase + 360) % 360;
+            
+            if (additionalRotation < 60) additionalRotation += 360;
+            currentRotation += (rounds * 360) + additionalRotation;
+
+            isSpinning = true;
+            spinBtn.disabled = true;
+            disableOptions(true);
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(() => {
+                isSpinning = false;
+                spinBtn.disabled = false;
+                setupQuestion();
+            }, 4100);
+        });
+
+        function setupQuestion() {
+            const w = vocabulary[currentIndex];
+            targetWordEl.innerText = w[currentMode.box];
+
+            const correct = w[currentMode.option];
+            let opts = [correct];
+            while (opts.length < 4) {
+                const r = vocabulary[Math.floor(Math.random() * vocabulary.length)][currentMode.option];
+                if (!opts.includes(r)) opts.push(r);
+            }
+            currentOptions = opts.sort(() => Math.random() - 0.5);
+
+            optionBtns.forEach((btn, i) => {
+                btn.innerText = currentOptions[i];
+                btn.classList.remove('correct', 'wrong');
+                btn.disabled = false;
+            });
+        }
+
+        function checkAnswer(i) {
+            const selected = currentOptions[i];
+            const correct = vocabulary[currentIndex][currentMode.option];
+            totalAnswered++;
+            disableOptions(true);
+
+            if (selected === correct) {
+                correctCount++;
+                score += 10;
+                optionBtns[i].classList.add('correct');
+                usedIndices.add(currentIndex);
+            } else {
+                optionBtns[i].classList.add('wrong');
+                const ci = currentOptions.indexOf(correct);
+                if (ci !== -1) optionBtns[ci].classList.add('correct');
+            }
+
+            updateStats();
+            if (usedIndices.size >= vocabulary.length) setTimeout(showGameOver, 1200);
+        }
+
+        function startTimer() {
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                document.getElementById('timer').innerText = `${Math.floor(elapsed / 60).toString().padStart(2, '0')}:${(elapsed % 60).toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function disableOptions(d) { optionBtns.forEach(b => b.disabled = d); }
+
+        function updateStats() {
+            document.getElementById('score').innerText = score;
+            const acc = totalAnswered === 0 ? 0 : Math.round((correctCount / totalAnswered) * 100);
+            document.getElementById('accuracy').innerText = acc + '%';
+            document.getElementById('progress-text').innerText = `${usedIndices.size}/${vocabulary.length}`;
+            document.getElementById('progress-bar').style.width = `${(usedIndices.size / vocabulary.length) * 100}%`;
+        }
+
+        function showGameOver() {
+            clearInterval(timerInterval);
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('final-accuracy').innerText = document.getElementById('accuracy').innerText;
+            document.getElementById('final-time').innerText = document.getElementById('timer').innerText;
+            document.getElementById('result-modal').classList.remove('hidden');
+        }
+
+        window.onload = () => {
+            drawWheel();
+            disableOptions(true);
+            updateStats();
+        };
+    </script>
+</body>
+</html>
