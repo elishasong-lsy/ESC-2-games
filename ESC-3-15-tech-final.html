@@ -16,17 +16,12 @@
             overflow-x: hidden;
         }
 
-        /* 侧边栏按钮文字 */
-        .btn-text {
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
+        .btn-text { font-weight: 700; letter-spacing: 0.5px; }
 
-        /* 转盘容器：放大并保持比例 */
         .wheel-outer {
             position: relative;
             width: 100%;
-            max-width: 540px;
+            max-width: 520px;
             aspect-ratio: 1/1;
             margin: 0 auto;
         }
@@ -37,11 +32,11 @@
             border-radius: 50%;
             box-shadow: 0 0 50px rgba(0,0,0,0.8), 0 0 20px rgba(255,215,0,0.2);
             transition: transform 4s cubic-bezier(0.2, 0, 0.2, 1);
-            border: 6px solid #333;
+            border: 6px solid #444;
             background: #000;
         }
 
-        /* 指针：放在正上方 12 点钟位置 */
+        /* 顶部指针 */
         .pointer {
             position: absolute;
             top: -15px;
@@ -55,7 +50,6 @@
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
         }
 
-        /* 按钮交互效果 */
         .option-btn {
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             border-bottom-width: 4px;
@@ -72,29 +66,25 @@
         @keyframes shake { 0%, 100% { transform: translateX(0) } 25% { transform: translateX(-4px) } 75% { transform: translateX(4px) } }
         @keyframes pulse { 0% { transform: scale(1) } 50% { transform: scale(1.05) } 100% { transform: scale(1) } }
 
-        /* 布局：强制三列 */
         .main-layout {
             display: grid;
-            grid-template-columns: 200px 1fr 200px;
+            grid-template-columns: 220px 1fr 220px;
             gap: 24px;
             align-items: center;
         }
 
         @media (max-width: 1024px) {
             .main-layout { grid-template-columns: 1fr; }
-            .order-mobile-1 { order: 1; }
-            .order-mobile-2 { order: 2; }
-            .order-mobile-3 { order: 3; }
         }
     </style>
 </head>
 
 <body class="p-2 md:p-6">
     <div class="max-w-7xl mx-auto">
-        <!-- 顶部信息栏 -->
+        <!-- 数据栏 -->
         <div class="flex justify-between items-center mb-8 bg-black/40 p-4 rounded-2xl border border-white/10 shadow-lg">
             <div class="flex gap-6 text-sm">
-                <p>⏱️ 时间: <span id="timer" class="font-mono text-yellow-400">00:00</span></p>
+                <p>⏱️ <span id="timer" class="font-mono text-yellow-400">00:00</span></p>
                 <p>🏆 得分: <span id="score" class="font-bold text-green-400">0</span></p>
             </div>
             <div class="flex gap-6 text-sm items-center">
@@ -104,42 +94,41 @@
         </div>
 
         <div class="main-layout">
-            <!-- 左侧：选项列 -->
-            <div id="options-container" class="order-mobile-2 flex flex-col gap-4">
-                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-[0.2em] text-center lg:text-left">选择选项 Options</p>
+            <!-- 左侧：选项 -->
+            <div id="options-container" class="order-2 lg:order-1 flex flex-col gap-4">
+                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest text-center lg:text-left">选择选项 OPTIONS</p>
                 <button class="option-btn w-full py-3 px-4 rounded-xl text-lg bg-blue-600 text-white btn-text border-blue-900 disabled:opacity-30" onclick="checkAnswer(0)">-</button>
                 <button class="option-btn w-full py-3 px-4 rounded-xl text-lg bg-purple-600 text-white btn-text border-purple-900 disabled:opacity-30" onclick="checkAnswer(1)">-</button>
                 <button class="option-btn w-full py-3 px-4 rounded-xl text-lg bg-teal-600 text-white btn-text border-teal-900 disabled:opacity-30" onclick="checkAnswer(2)">-</button>
                 <button class="option-btn w-full py-3 px-4 rounded-xl text-lg bg-orange-600 text-white btn-text border-orange-900 disabled:opacity-30" onclick="checkAnswer(3)">-</button>
             </div>
 
-            <!-- 中间：核心转盘 -->
-            <div class="order-mobile-1 flex flex-col items-center">
+            <!-- 中间：大转盘 -->
+            <div class="order-1 lg:order-2 flex flex-col items-center">
                 <div class="wheel-outer">
                     <div class="pointer"></div>
                     <canvas id="wheel" width="600" height="600"></canvas>
-                    <button id="spin-btn" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-white text-black text-xl font-black rounded-full shadow-[0_0_40px_rgba(255,255,255,0.3)] border-4 border-yellow-500 hover:scale-110 active:scale-95 transition-transform z-30">
+                    <button id="spin-btn" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-white text-black text-xl font-black rounded-full shadow-2xl border-4 border-yellow-500 hover:scale-110 active:scale-95 transition-transform z-30">
                         SPIN
                     </button>
                 </div>
-                <div class="mt-10 text-center">
+                <div class="mt-8 text-center">
                     <h1 class="text-3xl text-yellow-500 font-black tracking-tighter">飞鱼制作 - 词汇大转盘</h1>
-                    <p id="game-mode-tip" class="text-white/40 text-xs mt-2 uppercase tracking-widest italic">准备开始挑战</p>
+                    <p id="game-mode-tip" class="text-white/40 text-xs mt-2 uppercase tracking-widest italic font-bold">点击 SPIN 开始挑战</p>
                 </div>
             </div>
 
             <!-- 右侧：提示框 -->
-            <div class="order-mobile-3 flex flex-col gap-4">
-                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-[0.2em] text-center lg:text-right">提示框 Hint</p>
-                <div class="bg-white p-6 rounded-2xl shadow-2xl text-center border-4 border-yellow-500 min-h-[150px] flex flex-col justify-center">
+            <div class="order-3 flex flex-col gap-4">
+                <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest text-center lg:text-right">提示框 HINT</p>
+                <div class="bg-white p-6 rounded-2xl shadow-2xl text-center border-4 border-yellow-500 min-h-[140px] flex flex-col justify-center">
                     <h2 id="target-word" class="text-2xl md:text-3xl font-black text-red-700 leading-tight">READY?</h2>
-                    <p id="target-sub" class="text-gray-400 text-[10px] mt-3 italic font-medium">点击转盘开始</p>
+                    <p id="target-sub" class="text-gray-400 text-[10px] mt-2 italic font-medium">根据转盘结果选择对应项</p>
                 </div>
             </div>
         </div>
 
-        <!-- 底部进度条 -->
-        <div class="mt-12 bg-black/40 h-4 rounded-full overflow-hidden border border-white/10 p-1 shadow-inner">
+        <div class="mt-12 bg-black/40 h-4 rounded-full overflow-hidden border border-white/10 p-1">
             <div id="progress-bar" class="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600 h-full rounded-full transition-all duration-1000" style="width:0%"></div>
         </div>
     </div>
@@ -154,7 +143,7 @@
                 <div class="flex justify-between border-b pb-1"><span>总时间:</span> <span id="final-time" class="font-bold text-green-600">00:00</span></div>
             </div>
             <button onclick="location.reload()" class="w-full py-4 bg-black text-yellow-400 text-xl font-black rounded-2xl hover:bg-gray-800 transition">
-                重新开始
+                重新挑战
             </button>
         </div>
     </div>
@@ -186,7 +175,7 @@
         let score = 0, totalAnswered = 0, correctCount = 0;
         let isSpinning = false, startTime = null, timerInterval = null;
         let usedIndices = new Set(), currentMode = MODES[0], currentIndex = -1, currentOptions = [];
-        let totalRotation = 0;
+        let currentRotation = 0; // 累计旋转角度
 
         const canvas = document.getElementById('wheel');
         const ctx = canvas.getContext('2d');
@@ -212,7 +201,7 @@
                 const hue = (i * 360 / n);
                 ctx.fillStyle = `hsl(${hue}, 60%, 40%)`;
                 ctx.fill();
-                ctx.strokeStyle = "rgba(255,255,255,0.2)";
+                ctx.strokeStyle = "rgba(255,255,255,0.25)";
                 ctx.stroke();
 
                 ctx.save();
@@ -235,36 +224,44 @@
         spinBtn.addEventListener('click', () => {
             if (isSpinning || usedIndices.size >= vocabulary.length) return;
 
-            // 1. 立即锁定模式
+            // 1. 立即锁定模式并重新绘图
             currentMode = MODES[Math.floor(Math.random() * MODES.length)];
             tipEl.innerText = currentMode.tip;
             drawWheel();
 
             if (!startTime) startTimer();
 
-            // 2. 选择题目（不重复）
+            // 2. 选择题目
             let nextIndex;
             do { nextIndex = Math.floor(Math.random() * vocabulary.length); } while (usedIndices.has(nextIndex));
             currentIndex = nextIndex;
 
-            // 3. 计算旋转角度
+            // 3. 精确计算旋转角度（累加式）
             const n = vocabulary.length;
             const angleStep = 360 / n;
-            const extraRounds = 5 + Math.random() * 2;
             
-            // 关键：指针在 12 点钟位置，对应弧度是 270 度
-            // 转盘每个扇区的角度中点是 i * step + step/2
-            // 我们需要把这个点转到 270 度
+            // 指针在 270度 (12点方向)
+            // 目标扇区的中点在 (index * step + step/2)
             const targetSectorCenter = (currentIndex * angleStep) + (angleStep / 2);
-            const baseRotation = 270 - targetSectorCenter;
             
-            totalRotation = (extraRounds * 360) + baseRotation;
+            // 计算需要旋转到的目标基础角度 (使得 targetSectorCenter 旋转到 270度)
+            const targetBaseRotation = (270 - targetSectorCenter + 360) % 360;
+            
+            // 累加旋转，确保转盘始终向前转且圈数足够
+            const rounds = 5 + Math.floor(Math.random() * 2);
+            const currentBase = currentRotation % 360;
+            let additionalRotation = (targetBaseRotation - currentBase + 360) % 360;
+            
+            // 如果 additionalRotation 太小，多加一圈增加视觉效果
+            if (additionalRotation < 60) additionalRotation += 360;
+            
+            currentRotation += (rounds * 360) + additionalRotation;
 
             // 4. 执行动画
             isSpinning = true;
             spinBtn.disabled = true;
             disableOptions(true);
-            canvas.style.transform = `rotate(${totalRotation}deg)`;
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
 
             setTimeout(() => {
                 isSpinning = false;
@@ -276,7 +273,6 @@
         function setupQuestion() {
             const w = vocabulary[currentIndex];
             targetWordEl.innerText = w[currentMode.box];
-            document.getElementById('target-sub').innerText = "根据转盘结果选择对应项";
 
             const correct = w[currentMode.option];
             let opts = [correct];
