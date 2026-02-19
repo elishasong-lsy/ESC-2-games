@@ -3,144 +3,126 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>中文小游戏入口（Game Hub）</title>
+  <title>中文小游戏入口</title>
   <style>
     :root{
-      --bg1:#081226;
-      --bg2:#050a16;
-      --panel: rgba(255,255,255,.06);
-      --border: rgba(255,255,255,.12);
-      --text:#e9eeff;
-      --muted:#a9b5e6;
+      --bg:#070a12;
+      --panel:#0e1630;
+      --card:#101b3d;
+      --border: rgba(255,255,255,.14);
+      --text:#f2f5ff;
+      --muted: rgba(242,245,255,.72);
       --accent:#ffd54a;
-      --shadow: 0 18px 60px rgba(0,0,0,.45);
-      --radius: 18px;
+      --btn:#26c6da;
+      --btn2:#7c4dff;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --r:18px;
     }
     *{box-sizing:border-box;}
     body{
       margin:0;
       font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans",sans-serif;
       color:var(--text);
-      background: radial-gradient(1200px 800px at 20% 0%, #1a2b66 0%, var(--bg1) 55%, var(--bg2) 100%);
+      background:
+        radial-gradient(1000px 700px at 15% 0%, #223a86 0%, #0b1430 45%, var(--bg) 100%);
       min-height:100vh;
-      padding:22px 16px 40px;
+      padding:18px 14px 34px;
     }
-    .wrap{max-width:1200px;margin:0 auto;}
+    .wrap{max-width:1100px;margin:0 auto;}
     .top{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
       border:1px solid var(--border);
-      border-radius: 22px;
-      padding:18px 18px;
+      border-radius: 20px;
+      padding:16px 16px;
       box-shadow: var(--shadow);
       display:flex;
       justify-content:space-between;
-      gap:12px;
+      gap:10px;
       flex-wrap:wrap;
-      align-items:flex-start;
+      align-items:center;
     }
-    h1{margin:0 0 6px 0;font-size:22px;letter-spacing:.2px;}
-    .sub{margin:0;color:var(--muted);font-size:13px;line-height:1.35;}
-    .chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center;}
-    .chip{
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      padding:10px 12px;
-      border-radius: 999px;
-      color:var(--muted);
-      font-weight:800;
-      font-size:13px;
-      white-space:nowrap;
-    }
-    .chip b{color:var(--accent);}
+    h1{margin:0;font-size:20px;letter-spacing:.2px;}
+    .sub{margin:0;color:var(--muted);font-size:12.5px;}
     .grid{
-      margin-top:16px;
+      margin-top:14px;
       display:grid;
-      grid-template-columns: repeat(4, minmax(260px, 1fr));
-      gap:14px;
+      grid-template-columns: repeat(4, minmax(220px, 1fr));
+      gap:12px;
     }
-    @media (max-width: 1100px){ .grid{grid-template-columns: repeat(2, minmax(260px, 1fr));} }
-    @media (max-width: 640px){ .grid{grid-template-columns: 1fr;} }
+    @media (max-width: 980px){ .grid{grid-template-columns: repeat(2, minmax(220px, 1fr));} }
+    @media (max-width: 620px){ .grid{grid-template-columns: 1fr;} }
 
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.12));
       border:1px solid var(--border);
-      border-radius: 22px;
+      border-radius: 18px;
       box-shadow: var(--shadow);
-      padding:16px;
+      padding:14px 14px 12px;
       display:flex;
       flex-direction:column;
-      gap:12px;
-      min-height: 280px;
+      gap:10px;
+      min-height: 120px; /* ✅ 卡片更小 */
     }
-    .tags{display:flex;gap:10px;flex-wrap:wrap;}
-    .tag{
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      color:var(--muted);
-      font-weight:900;
-      font-size:13px;
-    }
-    .tag b{color:var(--accent);}
-    .title2{
-      margin:0;
-      font-size:22px;
-      font-weight:950;
-      letter-spacing:.2px;
-    }
-    .desc{
-      margin:0;
-      color:var(--muted);
-      line-height:1.45;
-      font-weight:650;
-      font-size:14px;
-    }
-    .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;}
-    .btn{
-      cursor:pointer;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.08);
-      color:var(--text);
-      font-weight:900;
-      padding:10px 14px;
-      font-size:14px;
-      text-decoration:none;
+
+    .unit{
       display:inline-flex;
       align-items:center;
-      justify-content:center;
-      min-width:120px;
-    }
-    .btn:hover{filter:brightness(1.06);}
-    .btn.secondary{
-      background: transparent;
-      color:var(--muted);
-      border:1px solid rgba(255,255,255,.18);
-    }
-    .linkbox{
-      border:1px dashed rgba(255,255,255,.22);
-      border-radius:14px;
-      padding:10px 12px;
-      color:var(--muted);
+      gap:8px;
+      font-size:12px;
       font-weight:800;
-      font-size:13px;
-      line-height:1.35;
-      word-break:break-all;
+      color:rgba(255,255,255,.85);
+      letter-spacing:.2px;
     }
-    .linkbox span{color:var(--accent);}
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255,213,74,.18);
+      flex:0 0 auto;
+    }
+
+    .title{
+      margin:0;
+      font-size:18px;
+      font-weight:950;
+      letter-spacing:.2px;
+      line-height:1.2;
+    }
+
+    .btnrow{margin-top:auto;}
+    .btn{
+      display:inline-flex;
+      width:100%;
+      justify-content:center;
+      align-items:center;
+      padding:11px 12px;
+      border-radius: 14px;
+      font-weight:950;
+      text-decoration:none;
+      color:#061018;
+      background: linear-gradient(90deg, var(--btn), #80deea);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 12px 30px rgba(0,0,0,.35);
+      transition: transform .12s, filter .12s;
+      cursor:pointer;
+    }
+    .btn:hover{filter:brightness(1.05);}
+    .btn:active{transform: translateY(1px);}
+
+    /* ✅ 让不同类游戏更“显眼”：给卡片加一个左边色条 */
+    .bar{
+      height:4px;
+      border-radius:999px;
+      background: linear-gradient(90deg, var(--btn2), var(--accent));
+      opacity:.95;
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="top">
       <div>
-        <h1>中文小游戏入口（Game Hub）</h1>
-        <p class="sub">直接点进入游戏即可。当前以 <b>GitHub Pages</b> 为主链接（更稳定）。</p>
-      </div>
-      <div class="chips">
-        <div class="chip">主链接： <b>GitHub Pages</b></div>
-        <div class="chip">单个游戏： <b>可单独发链接</b></div>
+        <h1>中文小游戏入口</h1>
+        <p class="sub">点击“进入游戏”会自动在新窗口打开。</p>
       </div>
     </div>
 
@@ -148,74 +130,22 @@
   </div>
 
   <script>
-    // ✅ 开关：如果你以后重新连回 Netlify，把这里改成 true 就会显示 Netlify 备用链接
-    const SHOW_NETLIFY_LINK = false;
-    const NETLIFY_BASE = "https://chinese-games.netlify.app/";
-
-    // ✅ 只要在这里加一条，就能自动生成卡片 + 按钮 + 直接链接
+    // ✅ 只保留最必要信息：unit + title + file
     const GAMES = [
-      // ===== 你原来的游戏（保留） =====
-      {
-        unit: "ESC-2-6",
-        type: "汉字拼拼乐",
-        skill: "词汇组合",
-        title: "汉字拼拼乐（生病单元词汇）",
-        desc: "从两边各选一个字，拼出正确词汇。拼对得分，全部完成通关。",
-        file: "ESC_2_6.html",
-        mode: "Independent"
-      },
-      {
-        unit: "ESC-2-14",
-        type: "Jeopardy",
-        mode: "Whole-class",
-        title: "Furniture Jeopardy（WL1 + WL2 Spiral Review）",
-        desc: "单击格子打开题卡 → 在题卡内点击 Reveal Answer → 标记已用。内置三队计分。",
-        file: "ESC_2_14.html"
-      },
-      {
-        unit: "ESC-2-14",
-        type: "Unscramble",
-        mode: "Independent",
-        title: "Sentence Unscramble（Text 1 + Text 2）",
-        desc: "点/拖动词语卡片组成句子 → Check → 必要时 Reveal。可开关拼音与英文。",
-        file: "ESC_2_14_unscramble.html"
-      },
-      {
-        unit: "ESC-2-15",
-        type: "Jeopardy",
-        mode: "Whole-class",
-        title: "Neighborhood Jeopardy（Lesson 6 Spiral Review · WL1 + WL2）",
-        desc: "单击金额打开题卡（自动锁格）→ Show Answer 两步显示答案。三队计分，支持导出状态。",
-        file: "ESC_2_15.html"
-      },
+      { unit:"ESC-2-6",  title:"汉字拼拼乐（生病单元词汇）", file:"ESC_2_6.html" },
+      { unit:"ESC-2-14", title:"Furniture Jeopardy（WL1 + WL2）", file:"ESC_2_14.html" },
+      { unit:"ESC-2-14", title:"Sentence Unscramble（Text 1 + Text 2）", file:"ESC_2_14_unscramble.html" },
+      { unit:"ESC-2-15", title:"Neighborhood Jeopardy（Lesson 6 Spiral Review）", file:"ESC_2_15.html" },
 
-      // ===== ✅ 新增：ESC-3-15 Technology Wheels 两个文件 =====
-      {
-        unit: "ESC-3-15",
-        type: "Wheels of Words",
-        skill: "Vocabulary Recognition",
-        mode: "Independent / Whole-class",
-        title: "Technology Wheels – Version 2",
-        desc: "词汇大转盘：随机模式（英文/拼音/汉字）→ 选择正确匹配。适合小班复习与热身。",
-        file: "ESC-3-15-tech-2.html"
-      },
-      {
-        unit: "ESC-3-15",
-        type: "Wheels of Words",
-        skill: "Vocabulary Recognition",
-        mode: "Independent / Whole-class",
-        title: "Technology Wheels – Final",
-        desc: "最终版词汇大转盘：更稳定的落点与匹配逻辑，用于 WL1 + WL2 复习。",
-        file: "ESC-3-15-tech-final.html"
-      }
+      // ✅ 你最新的两份（按你说明的 WL1/WL2）
+      { unit:"ESC-3-15", title:"Technology Wheels（WL1 / final版）", file:"ESC-3-15-tech-final.html" },
+      { unit:"ESC-3-15", title:"Technology Wheels（WL2 / tech-2版）", file:"ESC-3-15-tech-2.html" },
     ];
 
     const grid = document.getElementById("grid");
+    const base = new URL("./", location.href).href; // 当前文件夹
 
-    // ✅ 关键：不管你的网址是否带 index.html，这个都能正确得到“当前文件夹”
-    const githubBase = new URL("./", location.href).href;
-
-    function escHtml(s){
+    function esc(s){
       return String(s)
         .replaceAll("&","&amp;")
         .replaceAll("<","&lt;")
@@ -224,43 +154,21 @@
         .replaceAll("'","&#039;");
     }
 
-    function cardHTML(g){
-      const githubUrl = githubBase + g.file;
-      const netlifyUrl = NETLIFY_BASE + g.file;
-
+    function card(g){
+      const url = base + g.file;
       return `
         <div class="card">
-          <div class="tags">
-            <div class="tag">Unit: <b>${escHtml(g.unit)}</b></div>
-            <div class="tag">Type: <b>${escHtml(g.type)}</b></div>
-            ${g.skill ? `<div class="tag">Skill: <b>${escHtml(g.skill)}</b></div>` : ``}
-            ${g.mode ? `<div class="tag">Mode: <b>${escHtml(g.mode)}</b></div>` : ``}
-          </div>
-
-          <div>
-            <div class="title2">${escHtml(g.title)}</div>
-            <p class="desc">${escHtml(g.desc)}</p>
-          </div>
-
+          <div class="bar"></div>
+          <div class="unit"><span class="dot"></span>${esc(g.unit)}</div>
+          <h2 class="title">${esc(g.title)}</h2>
           <div class="btnrow">
-            <a class="btn" href="${githubUrl}">进入游戏</a>
-            <a class="btn secondary" href="${githubUrl}" target="_blank" rel="noopener">新窗口打开</a>
-          </div>
-
-          <div class="linkbox">
-            直接链接（GitHub Pages）：<br/>
-            <span>${escHtml(githubUrl)}</span>
-            ${
-              SHOW_NETLIFY_LINK
-              ? `<br/><br/>备用链接（Netlify）：<br/><span>${escHtml(netlifyUrl)}</span>`
-              : ``
-            }
+            <a class="btn" href="${esc(url)}" target="_blank" rel="noopener">进入游戏</a>
           </div>
         </div>
       `;
     }
 
-    grid.innerHTML = GAMES.map(cardHTML).join("");
+    grid.innerHTML = GAMES.map(card).join("");
   </script>
 </body>
 </html>
