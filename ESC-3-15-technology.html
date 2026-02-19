@@ -6,7 +6,7 @@
   <title>飞鱼制作 - 词汇大转盘</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;600;800&display=swap');
 
     body{
       background: linear-gradient(135deg, #2d0a0a 0%, #000000 100%);
@@ -15,7 +15,11 @@
       min-height: 100vh;
       overflow-x:hidden;
     }
-    .chinese-font{ font-family:'Ma Shan Zheng', cursive, serif; }
+
+    /* ✅ 改：左侧按钮的字体（拼音更清楚，汉字也清晰） */
+    .chinese-font{
+      font-family: "Noto Sans SC", "Microsoft YaHei", Arial, Helvetica, sans-serif;
+    }
 
     .wheel-outer{
       position:relative;
@@ -54,6 +58,7 @@
       transition: all .18s;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
       border-bottom-width:4px;
+      letter-spacing: 0.5px; /* ✅ 拼音更好认 */
     }
     .option-btn:hover:not(:disabled){
       transform: translateY(-2px);
@@ -67,7 +72,6 @@
 
     .modal{ background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
 
-    /* 更像截图：大屏固定三列；小屏堆叠但顺序稳定 */
     .layout{
       display:grid;
       grid-template-columns: 240px 1fr 240px;
@@ -83,7 +87,6 @@
 <body class="p-2 md:p-4">
   <div class="max-w-7xl mx-auto">
 
-    <!-- 顶部信息 -->
     <div class="flex justify-between items-center mb-6 bg-white/5 p-3 rounded-2xl border border-white/10">
       <div class="flex gap-4 md:gap-8 text-xs md:text-sm">
         <p>⏱️ <span id="timer" class="font-mono text-yellow-400">00:00</span></p>
@@ -95,10 +98,8 @@
       </div>
     </div>
 
-    <!-- 主区 -->
     <div class="layout">
 
-      <!-- 左：选项 -->
       <div id="options-container" class="flex flex-col gap-3">
         <div class="text-center lg:text-left mb-1 text-gray-400 text-[10px] uppercase font-bold tracking-widest">选择选项 Options</div>
         <button class="option-btn w-full py-3 px-4 rounded-xl text-xl bg-indigo-600 text-white font-bold chinese-font border-indigo-900 disabled:opacity-30" onclick="checkAnswer(0)">-</button>
@@ -107,7 +108,6 @@
         <button class="option-btn w-full py-3 px-4 rounded-xl text-xl bg-orange-600 text-white font-bold chinese-font border-orange-900 disabled:opacity-30" onclick="checkAnswer(3)">-</button>
       </div>
 
-      <!-- 中：转盘 -->
       <div class="flex flex-col items-center">
         <div class="wheel-outer">
           <div class="pointer"></div>
@@ -127,7 +127,6 @@
         </div>
       </div>
 
-      <!-- 右：提示 -->
       <div class="flex flex-col gap-3">
         <div class="text-center lg:text-right mb-1 text-gray-400 text-[10px] uppercase font-bold tracking-widest">提示 Hint</div>
         <div class="bg-white p-6 rounded-2xl shadow-2xl text-center border-4 border-yellow-500 flex flex-col justify-center min-h-[140px]">
@@ -137,13 +136,11 @@
       </div>
     </div>
 
-    <!-- 进度条 -->
     <div class="mt-12 bg-black/40 h-4 rounded-full overflow-hidden border border-white/10 p-1">
       <div id="progress-bar" class="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600 h-full rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(245,158,11,0.5)]" style="width:0%"></div>
     </div>
   </div>
 
-  <!-- 结算 -->
   <div id="result-modal" class="fixed inset-0 modal hidden flex items-center justify-center p-4 z-50">
     <div class="bg-white text-black p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl border-8 border-yellow-500">
       <h2 class="text-4xl font-black mb-4 text-red-600">挑战成功!</h2>
@@ -159,7 +156,6 @@
   </div>
 
   <script>
-    // ✅ 只用“组词/词组”，你后面按这个格式继续加
     const vocabulary = [
       { ch: "打字",     py: "dǎ zì",               en: "type" },
       { ch: "收发邮件", py: "shōu fā yóu jiàn",   en: "send/receive mail" },
@@ -187,7 +183,7 @@
     let currentMode = MODES[0];
     let currentIndex = -1;
     let currentOptions = [];
-    let currentRotation = 0; // 记录最终旋转角度（度）
+    let currentRotation = 0;
 
     const canvas = document.getElementById('wheel');
     const ctx = canvas.getContext('2d');
@@ -202,13 +198,10 @@
       return ((d % 360) + 360) % 360;
     }
 
-    // ✅ 修复：根据最终角度反算“指针(12点方向)落在哪个扇区”
-    // Canvas 扇区绘制从 3 点钟方向开始 (0°在右侧)，顺时针增加。
-    // 指针在 12 点钟方向 = 270°。
+    // ✅ Spin 落点对齐：指针在 12 点方向 = 270°
     function getIndexAtPointer(rotationDeg){
       const n = vocabulary.length;
       const step = 360 / n;
-
       const pointerAngle = normDeg(270 - normDeg(rotationDeg));
       const eps = 1e-6;
       return Math.floor((pointerAngle + eps) / step) % n;
@@ -354,8 +347,6 @@
         spinBtn.disabled = false;
 
         let idx = getIndexAtPointer(currentRotation);
-
-        // 避免重复：顺时针找下一个未用词
         if(usedIndices.has(idx)){
           const n = vocabulary.length;
           let k = 0;
