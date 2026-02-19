@@ -145,13 +145,6 @@
     </div>
 
     <div class="grid" id="grid"></div>
-
-    <!-- 使用提示已隐藏：学生看不到 -->
-    <!--
-    <div class="tips">
-      使用提示：以后每增加一个新游戏...
-    </div>
-    -->
   </div>
 
   <script>
@@ -161,6 +154,7 @@
 
     // ✅ 只要在这里加一条，就能自动生成卡片 + 按钮 + 直接链接
     const GAMES = [
+      // ===== 你原来的游戏（保留） =====
       {
         unit: "ESC-2-6",
         type: "汉字拼拼乐",
@@ -193,6 +187,26 @@
         title: "Neighborhood Jeopardy（Lesson 6 Spiral Review · WL1 + WL2）",
         desc: "单击金额打开题卡（自动锁格）→ Show Answer 两步显示答案。三队计分，支持导出状态。",
         file: "ESC_2_15.html"
+      },
+
+      // ===== ✅ 新增：ESC-3-15 Technology Wheels 两个文件 =====
+      {
+        unit: "ESC-3-15",
+        type: "Wheels of Words",
+        skill: "Vocabulary Recognition",
+        mode: "Independent / Whole-class",
+        title: "Technology Wheels – Version 2",
+        desc: "词汇大转盘：随机模式（英文/拼音/汉字）→ 选择正确匹配。适合小班复习与热身。",
+        file: "ESC-3-15-tech-2.html"
+      },
+      {
+        unit: "ESC-3-15",
+        type: "Wheels of Words",
+        skill: "Vocabulary Recognition",
+        mode: "Independent / Whole-class",
+        title: "Technology Wheels – Final",
+        desc: "最终版词汇大转盘：更稳定的落点与匹配逻辑，用于 WL1 + WL2 复习。",
+        file: "ESC-3-15-tech-final.html"
       }
     ];
 
