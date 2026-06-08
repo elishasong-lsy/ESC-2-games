@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>ESC-2-2 爱好｜大鱼吃小鱼（WL2）</title>
+
+  <style>
+    :root{
+      --text:#f4f7ff;
+      --muted:#c7d1ff;
+      --panel:rgba(15,23,42,.95);
+      --border:rgba(255,255,255,.20);
+      --accent:#ffd54a;
+      --good:#63ffb0;
+      --bad:#ff5f86;
+    }
+
+    *{box-sizing:border-box;}
+
+    html,body{
+      height:100%;
+      margin:0;
+      background:#020617;
+      overflow:hidden;
+    }
+
+    body{
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,"Noto Sans",sans-serif;
+      color:var(--text);
+      user-select:none;
+    }
+
+    #ocean-bg{
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(circle at 50% 0%, #1e3a5f 0%, #0f2741 36%, #020617 100%);
+      z-index:1;
+    }
+
+    .bubble{
+      position:absolute;
+      width:12px;
+      height:12px;
+      border:1px solid rgba(255,255,255,.35);
+      border-radius:50%;
+      opacity:.4;
+      animation:rise 12s linear infinite;
+    }
+
+    @keyframes rise{
+      from{transform:translateY(110vh) scale(.7);}
+      to{transform:translateY(-20vh) scale(1.3);}
+    }
+
+    .hud{
+      position:fixed;
+      top:10px;
+      left:10px;
+      right:10px;
+      display:flex;
+      gap:12px;
+      z-index:100;
+    }
+
+    .card{
+      background:var(--panel);
+      backdrop-filter:blur(15px);
+      -webkit-backdrop-filter:blur(15px);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:15px 20px;
+      box-shadow:0 15px 40px rgba(0,0,0,.6);
+    }
+
+    .left{flex:1; min-width:0;}
+    .right{width:235px; text-align:right;}
+
+    .promptBig{
+      font-size:34px;
+      font-weight:900;
+      color:var(--accent);
+      letter-spacing:1px;
+      line-height:1.15;
+      text-shadow:0 4px 10px rgba(0,0,0,.5);
+      overflow-wrap:anywhere;
+    }
+
+    .hint{
+      font-size:14px;
+      color:var(--muted);
+      margin-top:5px;
+      font-weight:600;
+    }
+
+    .progress{
+      display:flex;
+      gap:6px;
+      margin-top:12px;
+      flex-wrap:wrap;
+      min-height:40px;
+    }
+
+    .tok{
+      padding:5px 11px;
+      border-radius:10px;
+      background:rgba(0,0,0,.5);
+      font-size:19px;
+      border:1px solid var(--border);
+      transition:all .3s;
+      font-weight:bold;
+    }
+
+    .tok.done{
+      color:var(--good);
+      border-color:var(--good);
+      opacity:.45;
+    }
+
+    .tok.now{
+      border-color:var(--accent);
+      color:var(--accent);
+      box-shadow:0 0 20px rgba(255,213,74,.7);
+      transform:scale(1.12);
+    }
+
+    .modebar{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      background:rgba(255,255,255,.08);
+      border:1px solid var(--border);
+      color:white;
+      padding:7px 13px;
+      border-radius:10px;
+      font-size:14px;
+      cursor:pointer;
+      font-weight:bold;
+      transition:all .2s;
+    }
+
+    .btn:hover{background:rgba(255,255,255,.15);}
+    .btn.on{
+      background:var(--accent);
+      color:#000;
+      border-color:var(--accent);
+      box-shadow:0 0 15px rgba(255,213,74,.4);
+    }
+
+    #bigFish{
+      position:absolute;
+      width:350px;
+      height:180px;
+      left:50%;
+      top:68%;
+      transform:translate(-50%,-50%);
+      z-index:50;
+      transition:all .5s cubic-bezier(.175,.885,.32,1.275);
+      pointer-events:none;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    #bigFish .emoji{
+      font-size:160px;
+      transform:scaleX(-1);
+      filter:drop-shadow(0 20px 35px rgba(0,0,0,.7));
+    }
+
+    .smallFish{
+      position:absolute;
+      min-width:92px;
+      height:54px;
+      padding:0 12px;
+      background:rgba(255,255,255,.11);
+      border-radius:40px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      z-index:20;
+      transition:opacity .3s, transform .2s, background .2s;
+      border:1px solid rgba(255,255,255,.25);
+      white-space:nowrap;
+    }
+
+    .smallFish:hover{
+      transform:scale(1.13);
+      background:rgba(255,255,255,.24);
+    }
+
+    .smallFish::after{
+      content:"";
+      position:absolute;
+      width:18px;
+      height:25px;
+      background:inherit;
+      top:13px;
+      z-index:-1;
+      border:inherit;
+    }
+
+    .facing-right::after{
+      right:-12px;
+      clip-path:polygon(0 50%,100% 0,100% 100%);
+    }
+
+    .facing-left::after{
+      left:-12px;
+      clip-path:polygon(100% 50%,0 0,0 100%);
+    }
+
+    .smallFish .char{
+      font-size:20px;
+      font-weight:900;
+      color:white;
+      text-shadow:0 2px 5px #000;
+      pointer-events:none;
+    }
+
+    .smallFish.good{
+      background:rgba(99,255,176,.45);
+      border-color:var(--good);
+    }
+
+    .smallFish.bad{
+      background:rgba(255,95,134,.45);
+      border-color:var(--bad);
+      animation:shake .25s linear 2;
+    }
+
+    @keyframes shake{
+      0%,100%{transform:translateX(0);}
+      50%{transform:translateX(8px);}
+    }
+
+    .overlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      z-index:200;
+      background:rgba(0,0,0,.92);
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+    }
+
+    @media (max-width:760px){
+      .hud{flex-direction:column;}
+      .right{width:auto; text-align:left;}
+      .promptBig{font-size:27px;}
+      #bigFish .emoji{font-size:120px;}
+      #bigFish{width:270px;}
+    }
+  </style>
+</head>
+
+<body>
+<div id="ocean-bg">
+  <div class="bubble" style="left:8%;animation-delay:-3s"></div>
+  <div class="bubble" style="left:21%;animation-delay:-8s;width:18px;height:18px"></div>
+  <div class="bubble" style="left:69%;animation-delay:-5s"></div>
+  <div class="bubble" style="left:87%;animation-delay:-10s;width:20px;height:20px"></div>
+
+  <div id="bigFish"><span class="emoji">🐟</span></div>
+  <div id="fish-container" style="position:absolute;inset:0;"></div>
+</div>
+
+<div class="hud">
+  <div class="card left">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+      <h1 style="font-size:13px;margin:0;opacity:.72;font-weight:800;">
+        ESC-2-2 Hobbies 爱好｜Word List 2 大鱼吃小鱼
+      </h1>
+
+      <div class="modebar">
+        <button class="btn on" id="btnWord">词语对拼音</button>
+        <button class="btn" id="btnChar">单字对拼音</button>
+        <button class="btn" id="btnSent">句子（拼音）</button>
+        <button class="btn" id="btnTranslate">翻译挑战</button>
+      </div>
+    </div>
+
+    <div class="prompt" style="margin-top:10px;">
+      <div id="promptBig" class="promptBig">---</div>
+      <div id="hint" class="hint">准备开始……</div>
+      <div id="progress" class="progress"></div>
+    </div>
+  </div>
+
+  <div class="card right">
+    <div style="font-size:22px;font-weight:900;color:var(--accent);">
+      得分：<span id="score">0</span>
+    </div>
+
+    <div style="font-size:15px;opacity:.86;font-weight:bold;">
+      ❤️ 生命：<span id="lives">3</span>
+    </div>
+
+    <div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;">
+      <button class="btn" id="btnPause" style="background:rgba(0,0,0,.4);">暂停</button>
+      <button class="btn" id="btnReset" style="background:rgba(0,0,0,.4);">重置</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <h2 style="font-size:56px;color:white;margin-bottom:35px;text-shadow:0 5px 15px black;">
+    游戏结束
+  </h2>
+  <button
+    class="btn"
+    style="padding:15px 50px;font-size:24px;background:var(--accent);color:black;"
+    onclick="location.reload()"
+  >
+    重新挑战
+  </button>
+</div>
+
+<script>
+const WORDS = [
+  {p:"bù tóng", zh:"不同", en:"not the same"},
+  {p:"tán", zh:"弹", en:"play keyboard instruments or zithers"},
+  {p:"gāng", zh:"钢", en:"steel"},
+  {p:"qín", zh:"琴", en:"musical instrument"},
+  {p:"gāng qín", zh:"钢琴", en:"piano"},
+  {p:"tán gāng qín", zh:"弹钢琴", en:"play the piano"},
+  {p:"lā", zh:"拉", en:"play a string instrument"},
+  {p:"tí", zh:"提", en:"carry; lift"},
+  {p:"xiǎo tí qín", zh:"小提琴", en:"violin"},
+  {p:"lā xiǎo tí qín", zh:"拉小提琴", en:"play the violin"},
+  {p:"zhōng", zh:"钟", en:"time; clock"},
+  {p:"fēn zhōng", zh:"分钟", en:"minute"},
+  {p:"shí", zh:"时", en:"hour"},
+  {p:"xiǎo shí", zh:"小时", en:"hour"},
+  {p:"huà", zh:"画", en:"draw; paint"},
+  {p:"huàr", zh:"画儿", en:"drawing; painting"},
+  {p:"guó huà", zh:"国画", en:"traditional Chinese painting"},
+  {p:"huà huàr", zh:"画画儿", en:"draw or paint"},
+  {p:"yóu", zh:"油", en:"oil"},
+  {p:"yóu huà", zh:"油画", en:"oil painting"},
+  {p:"cǎi", zh:"彩", en:"colour"},
+  {p:"shuǐ cǎi huà", zh:"水彩画", en:"watercolour painting"},
+  {p:"xiǎng", zh:"想", en:"want; would like"}
+];
+
+const CHARS = [
+  {p:"bù", zh:"不"},
+  {p:"tóng", zh:"同"},
+  {p:"tán", zh:"弹"},
+  {p:"gāng", zh:"钢"},
+  {p:"qín", zh:"琴"},
+  {p:"lā", zh:"拉"},
+  {p:"tí", zh:"提"},
+  {p:"xiǎo", zh:"小"},
+  {p:"zhōng", zh:"钟"},
+  {p:"fēn", zh:"分"},
+  {p:"shí", zh:"时"},
+  {p:"huà", zh:"画"},
+  {p:"guó", zh:"国"},
+  {p:"yóu", zh:"油"},
+  {p:"cǎi", zh:"彩"},
+  {p:"shuǐ", zh:"水"},
+  {p:"xiǎng", zh:"想"}
+];
+
+const SENTENCES = [
+  {
+    p:"wǒ hé jiějie yǒu bù tóng de àihào",
+    en:"My older sister and I have different hobbies.",
+    tokens:["我","和","姐姐","有","不同","的","爱好"]
+  },
+  {
+    p:"wǒ jiějie xǐhuan tán gāngqín、lā xiǎotíqín",
+    en:"My older sister likes playing the piano and the violin.",
+    tokens:["我","姐姐","喜欢","弹钢琴","、","拉小提琴"]
+  },
+  {
+    p:"tā měitiān dōu tán sìshíwǔ fēnzhōng de gāngqín",
+    en:"She plays the piano for forty-five minutes every day.",
+    tokens:["她","每天","都","弹","四十五分钟","的","钢琴"]
+  },
+  {
+    p:"tā měitiān lā bàn ge xiǎoshí de xiǎotíqín",
+    en:"She plays the violin for half an hour every day.",
+    tokens:["她","每天","拉","半个小时","的","小提琴"]
+  },
+  {
+    p:"wǒ xǐhuan huà huàr",
+    en:"I like drawing and painting.",
+    tokens:["我","喜欢","画画儿"]
+  },
+  {
+    p:"wǒ měitiān dōu huà yí ge xiǎoshí huàr",
+    en:"I draw for one hour every day.",
+    tokens:["我","每天","都","画","一个小时","画儿"]
+  },
+  {
+    p:"yóuhuà、shuǐcǎihuà，wǒ dōu xǐhuan huà",
+    en:"I like painting both oil paintings and watercolours.",
+    tokens:["油画","、","水彩画","，","我","都","喜欢","画"]
+  },
+  {
+    p:"wǒ hái xiǎng xué guóhuà",
+    en:"I also want to learn traditional Chinese painting.",
+    tokens:["我","还","想","学","国画"]
+  }
+];
+
+const POOL = [
+  "我","和","姐姐","她","有","不同","的","爱好","喜欢","弹钢琴","拉小提琴",
+  "每天","都","弹","拉","四十五分钟","半个小时","钢琴","小提琴","画画儿",
+  "画","一个小时","画儿","油画","水彩画","国画","还","想","学","、","，"
+];
+
+let score=0;
+let lives=3;
+let mode="word";
+let running=true;
+let paused=false;
+let fishEls=[];
+let target=null;
+let sentence=null;
+let sIndex=0;
+
+const $ = id => document.getElementById(id);
+
+function updateHUD(){
+  $("score").innerText=score;
+  $("lives").innerText=lives;
+}
+
+function shuffle(arr){
+  return [...arr].sort(()=>Math.random()-.5);
+}
+
+function spawnFish(label){
+  const el=document.createElement("div");
+  el.className="smallFish";
+  el.innerHTML=`<span class="char">${label}</span>`;
+
+  const safeTop=Math.max(275, document.querySelector(".hud").getBoundingClientRect().bottom + 20);
+  const x=Math.random()*(window.innerWidth-220)+80;
+  const y=Math.random()*Math.max(120, window.innerHeight-safeTop-90)+safeTop;
+
+  el.style.left=x+"px";
+  el.style.top=y+"px";
+
+  const vx=(Math.random()-.5)*115;
+  const vy=(Math.random()-.5)*70;
+
+  if(vx>0) el.classList.add("facing-left");
+  else el.classList.add("facing-right");
+
+  const obj={el,label,x,y,vx,vy,alive:true};
+
+  el.onclick=e=>{
+    e.stopPropagation();
+    eatFish(obj);
+  };
+
+  $("fish-container").appendChild(el);
+  fishEls.push(obj);
+}
+
+function clearFish(){
+  fishEls.forEach(f=>f.el.remove());
+  fishEls=[];
+}
+
+function newRound(){
+  clearFish();
+  $("progress").innerHTML="";
+
+  if(mode==="word"){
+    target=WORDS[Math.floor(Math.random()*WORDS.length)];
+    $("promptBig").innerText=target.p;
+    $("hint").innerText=`找出正确的中文词语小鱼｜${target.en}`;
+
+    const distract=shuffle(
+      WORDS.filter(w=>w.zh!==target.zh)
+    ).slice(0,5).map(w=>w.zh);
+
+    shuffle([target.zh,...distract]).forEach(spawnFish);
+  }
+
+  else if(mode==="char"){
+    target=CHARS[Math.floor(Math.random()*CHARS.length)];
+    $("promptBig").innerText=target.p;
+    $("hint").innerText="找出对应拼音的单字小鱼";
+
+    const distract=shuffle(
+      CHARS.filter(c=>c.zh!==target.zh)
+    ).slice(0,5).map(c=>c.zh);
+
+    shuffle([target.zh,...distract]).forEach(spawnFish);
+  }
+
+  else if(mode==="sent"){
+    sentence=SENTENCES[Math.floor(Math.random()*SENTENCES.length)];
+    sIndex=0;
+    $("promptBig").innerText=sentence.p;
+    $("hint").innerText="按照拼音顺序吃掉正确的词语";
+    renderSentProgress();
+    spawnSentFish();
+  }
+
+  else if(mode==="translate"){
+    sentence=SENTENCES[Math.floor(Math.random()*SENTENCES.length)];
+    sIndex=0;
+    $("promptBig").innerText=sentence.en;
+    $("hint").innerText="根据英文翻译，按顺序吃掉正确的中文词语";
+    renderSentProgress();
+    spawnSentFish();
+  }
+}
+
+function spawnSentFish(){
+  clearFish();
+
+  const need=sentence.tokens[sIndex];
+  const distract=shuffle(
+    POOL.filter(item=>item!==need)
+  ).slice(0,5);
+
+  shuffle([need,...distract]).forEach(spawnFish);
+}
+
+function renderSentProgress(){
+  const box=$("progress");
+  box.innerHTML="";
+
+  sentence.tokens.forEach((token,index)=>{
+    const span=document.createElement("span");
+    span.className="tok";
+
+    if(index<sIndex) span.classList.add("done");
+    if(index===sIndex) span.classList.add("now");
+
+    span.innerText=token;
+    box.appendChild(span);
+  });
+}
+
+function eatFish(fish){
+  if(!running || paused || !fish.alive) return;
+
+  const isSentenceMode=(mode==="sent" || mode==="translate");
+  const correct=isSentenceMode ? sentence.tokens[sIndex] : target.zh;
+  const big=$("bigFish");
+
+  big.style.left=fish.x+"px";
+  big.style.top=fish.y+"px";
+  big.style.transform="translate(-50%,-50%) scale(1.1)";
+
+  if(fish.label===correct){
+    fish.alive=false;
+    fish.el.classList.add("good");
+    score+=10;
+    updateHUD();
+
+    setTimeout(()=>{
+      fish.el.style.opacity="0";
+      big.style.transform="translate(-50%,-50%) scale(1)";
+
+      if(isSentenceMode){
+        sIndex++;
+
+        if(sIndex>=sentence.tokens.length){
+          score+=50;
+          updateHUD();
+          setTimeout(newRound,250);
+        }else{
+          renderSentProgress();
+          spawnSentFish();
+        }
+      }else{
+        newRound();
+      }
+    },400);
+  }else{
+    fish.el.classList.add("bad");
+    lives--;
+    updateHUD();
+
+    if(lives<=0){
+      running=false;
+      $("overlay").style.display="flex";
+    }
+
+    setTimeout(()=>{
+      big.style.left="50%";
+      big.style.top="68%";
+      big.style.transform="translate(-50%,-50%)";
+      fish.el.classList.remove("bad");
+    },500);
+  }
+}
+
+function tick(){
+  if(running && !paused){
+    const safeTop=Math.max(275, document.querySelector(".hud").getBoundingClientRect().bottom + 20);
+
+    fishEls.forEach(f=>{
+      if(!f.alive) return;
+
+      f.x+=f.vx*.016;
+      f.y+=f.vy*.016;
+
+      if(f.x<55 || f.x>window.innerWidth-145){
+        f.vx*=-1;
+        f.el.classList.toggle("facing-left");
+        f.el.classList.toggle("facing-right");
+      }
+
+      if(f.y<safeTop || f.y>window.innerHeight-80){
+        f.vy*=-1;
+      }
+
+      f.el.style.left=f.x+"px";
+      f.el.style.top=f.y+"px";
+    });
+  }
+
+  requestAnimationFrame(tick);
+}
+
+function switchBtn(id){
+  document.querySelectorAll(".modebar .btn")
+    .forEach(button=>button.classList.remove("on"));
+
+  $(id).classList.add("on");
+}
+
+$("btnWord").onclick=()=>{
+  mode="word";
+  switchBtn("btnWord");
+  newRound();
+};
+
+$("btnChar").onclick=()=>{
+  mode="char";
+  switchBtn("btnChar");
+  newRound();
+};
+
+$("btnSent").onclick=()=>{
+  mode="sent";
+  switchBtn("btnSent");
+  newRound();
+};
+
+$("btnTranslate").onclick=()=>{
+  mode="translate";
+  switchBtn("btnTranslate");
+  newRound();
+};
+
+$("btnPause").onclick=()=>{
+  paused=!paused;
+  $("btnPause").innerText=paused ? "继续" : "暂停";
+};
+
+$("btnReset").onclick=()=>location.reload();
+
+updateHUD();
+newRound();
+tick();
+</script>
+</body>
+</html>
