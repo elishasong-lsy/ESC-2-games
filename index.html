@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>中文小游戏入口</title>
+  <title>ESC-2&3中文小游戏</title>
 
   <style>
     :root{
@@ -223,7 +223,7 @@
 
     <div class="top">
       <div>
-        <h1>中文小游戏入口</h1>
+        <h1>ESC-2&3中文小游戏</h1>
 
         <p class="sub">
           点击“进入游戏”，游戏会自动在新窗口打开。
@@ -252,7 +252,7 @@
 
       {
         unit:"ESC-2-3",
-        title:"Leisure 休闲｜单字拼图游戏",
+        title:"Leisure 休闲｜单字拼图游戏（Word List 1）",
         file:"ESC_2_3_1.html"
       },
 
@@ -296,7 +296,15 @@
 
     const grid = document.getElementById("grid");
 
-    const base = new URL("./", location.href).href;
+    // Safe base URL resolution to prevent crashes in sandboxed / blob-based preview environments
+    let base = "./";
+    try {
+      if (window.location && location.href && !location.href.startsWith('blob:')) {
+        base = new URL("./", location.href).href;
+      }
+    } catch (e) {
+      base = "./";
+    }
 
     function esc(text){
       return String(text)
@@ -330,7 +338,6 @@
               href="${esc(url)}"
               target="_blank"
               rel="noopener"
-              onfocus="blur()"
             >
               进入游戏
             </a>
