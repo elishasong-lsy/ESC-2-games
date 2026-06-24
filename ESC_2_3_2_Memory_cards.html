@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESC_2_3_2_Memory_Games</title>
-    <!-- Tailwind CSS for modern aesthetics -->
+    <title>ESC_2_3_2_Memory_cards</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Card flip 3D mechanics - Bulletproof Safari & Mobile support */
@@ -33,7 +32,7 @@
             -webkit-backface-visibility: hidden; /* Critical prefix for iOS Safari */
             backface-visibility: hidden;
             border-radius: 1rem; /* rounded-2xl */
-            overflow: hidden; /* Securely clip card edges here, NOT on the parent wrapper */
+            overflow: hidden; /* Securely clip card edges here */
         }
         .card-back {
             z-index: 2;
@@ -55,7 +54,6 @@
 </head>
 <body class="bg-amber-50 min-h-screen font-sans text-slate-800 flex flex-col select-none">
 
-    <!-- Header Panel -->
     <header class="bg-amber-700/90 border-b-4 border-amber-800 py-4 px-6 sticky top-0 z-30 shadow-md backdrop-blur-sm">
         <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-white">
             <div class="flex items-center gap-3">
@@ -63,12 +61,11 @@
                     🃏
                 </div>
                 <div>
-                    <h1 class="text-xl font-black tracking-wide">ESC_2_3_2_Memory_Games</h1>
+                    <h1 class="text-xl font-black tracking-wide">ESC_2_3_2_Memory_cards</h1>
                     <p class="text-xs text-amber-200">Unit 1: Leisure 休闲 (记忆力词汇大作战)</p>
                 </div>
             </div>
             
-            <!-- Global Reset Button -->
             <button onclick="initGame()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-amber-950 font-black rounded-xl transition-all shadow-md active:scale-95 text-sm flex items-center gap-1.5 border-b-4 border-amber-600 active:border-b-0">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18"></path></svg>
                 重新开始
@@ -76,43 +73,33 @@
         </div>
     </header>
 
-    <!-- Main Workspace -->
     <main class="flex-1 max-w-5xl w-full mx-auto p-4 md:p-6 flex flex-col gap-6">
 
-        <!-- Dashboard / Status Bar -->
         <section class="bg-amber-100/80 border-2 border-amber-200 p-4 rounded-2xl flex flex-col sm:flex-row gap-4 items-center justify-between text-slate-700 font-bold shadow-sm">
             <div class="flex items-center gap-6">
-                <!-- Count-up timer -->
                 <div class="flex items-center gap-2">
                     <span class="text-xs text-amber-800 uppercase tracking-wider">时间 / Time</span>
                     <span id="timer-text" class="text-xl font-black font-mono text-amber-950 bg-white px-3 py-1 rounded-lg border border-amber-200">00:00</span>
                 </div>
-                <!-- Progress Percentage -->
                 <div class="flex items-center gap-2">
                     <span class="text-xs text-amber-800 uppercase tracking-wider">匹配进度 / Match</span>
                     <span id="progress-percent" class="text-xl font-black font-mono text-emerald-700 bg-white px-3 py-1 rounded-lg border border-amber-200">0%</span>
                 </div>
             </div>
-            <!-- Progress Bar Graphical representation -->
             <div class="w-full sm:w-1/3 bg-slate-200 h-3 rounded-full overflow-hidden border border-amber-200">
                 <div id="progress-bar-fill" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%"></div>
             </div>
         </section>
 
-        <!-- Dynamic Game Workspace Container -->
         <section class="bg-amber-900/10 border-4 border-amber-700/20 p-6 rounded-3xl min-h-[480px] flex flex-col items-center justify-center relative shadow-inner">
-            <!-- Confetti Overlay -->
             <canvas id="confetti-canvas" class="absolute inset-0 pointer-events-none z-40 w-full h-full"></canvas>
 
-            <!-- Active Card Matrix Grid (5 columns on desktop, 4 on mobile to accommodate 20 cards) -->
             <div id="card-grid" class="grid grid-cols-4 md:grid-cols-5 gap-3 md:gap-4 w-full max-w-3xl perspective-1000">
-                <!-- Dynamic cards populated here -->
-            </div>
+                </div>
         </section>
 
     </main>
 
-    <!-- Victory Modal Dialog -->
     <div id="victory-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 transition-opacity opacity-0 pointer-events-none">
         <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-4 border-amber-400 transform scale-95 transition-transform flex flex-col items-center gap-5">
             <div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center text-4xl animate-bounce">
@@ -183,11 +170,10 @@
                 osc.start(now);
                 osc.stop(now + 0.05);
             } else if (type === 'match') {
-                // High double chime
                 const osc1 = audioCtx.createOscillator();
                 const gain1 = audioCtx.createGain();
                 osc1.type = 'sine';
-                osc1.frequency.setValueAtTime(523.25, now); // C5
+                osc1.frequency.setValueAtTime(523.25, now);
                 gain1.gain.setValueAtTime(0.08, now);
                 gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
                 osc1.connect(gain1);
@@ -198,7 +184,7 @@
                 const osc2 = audioCtx.createOscillator();
                 const gain2 = audioCtx.createGain();
                 osc2.type = 'sine';
-                osc2.frequency.setValueAtTime(659.25, now + 0.07); // E5
+                osc2.frequency.setValueAtTime(659.25, now + 0.07);
                 gain2.gain.setValueAtTime(0.08, now + 0.07);
                 gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
                 osc2.connect(gain2);
@@ -206,7 +192,6 @@
                 osc2.start(now + 0.07);
                 osc2.stop(now + 0.22);
             } else if (type === 'error') {
-                // Mismatch buzz sound
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = 'triangle';
@@ -281,7 +266,7 @@
             particles.forEach(p => {
                 p.x += p.vx;
                 p.y += p.vy;
-                p.vy += 0.16; // gravity
+                p.vy += 0.16;
                 p.rotation += p.rotationSpeed;
                 if (p.y < confettiCanvas.height + 20) alive = true;
 
@@ -334,14 +319,11 @@
             flippedCards = [];
             isLockBoard = false;
 
-            // Reset progress
             document.getElementById('progress-percent').innerText = "0%";
             document.getElementById('progress-bar-fill').style.width = "0%";
 
-            // Play with all 10 words (20 cards total)
             cards = [];
             VOCABULARY.forEach(v => {
-                // Card 1: Chinese Card
                 cards.push({
                     id: `card-zh-${v.id}`,
                     pairId: v.id,
@@ -350,7 +332,6 @@
                     pinyin: v.pinyin,
                     matched: false
                 });
-                // Card 2: English Card
                 cards.push({
                     id: `card-en-${v.id}`,
                     pairId: v.id,
@@ -360,32 +341,23 @@
                 });
             });
 
-            // Scramble Card deck
             cards.sort(() => Math.random() - 0.5);
 
-            // Populate Card Grid DOM
             const grid = document.getElementById('card-grid');
             grid.innerHTML = '';
 
             cards.forEach(c => {
                 const cardEl = document.createElement('div');
-                // Ensure proper touch target layout & full responsive scale
                 cardEl.className = "w-full aspect-[4/5] relative select-none cursor-pointer active:scale-95 transition-transform duration-150";
                 cardEl.id = c.id;
 
-                // 3D Flipping structure with inner container and front/back faces
                 cardEl.innerHTML = `
                     <div class="card-inner w-full h-full relative rounded-2xl shadow-md border border-amber-800/10">
-                        
-                        <!-- Card Back face -->
                         <div class="card-back card-back-pattern w-full h-full flex items-center justify-center">
-                            <!-- Premium ornamental spiral decoration mimicking screenshot -->
                             <div class="w-10 h-10 rounded-full border-4 border-amber-300/40 flex items-center justify-center">
                                 <span class="text-amber-200/50 text-base">★</span>
                             </div>
                         </div>
-
-                        <!-- Card Front face (Revealed content) -->
                         <div class="card-front w-full h-full flex flex-col items-center justify-center p-2 text-center bg-sky-100 border-2 border-sky-400">
                             ${c.type === 'zh' ? `
                                 <span class="text-[10px] md:text-xs font-black text-sky-600 font-mono tracking-wider">${c.pinyin}</span>
@@ -396,11 +368,9 @@
                                 <span class="text-sm md:text-base font-black text-indigo-950 leading-tight">${c.content}</span>
                             `}
                         </div>
-
                     </div>
                 `;
 
-                // Single Unified event trigger
                 cardEl.addEventListener('click', () => handleCardClick(cardEl, c));
                 grid.appendChild(cardEl);
             });
@@ -410,26 +380,20 @@
         function handleCardClick(el, cardObj) {
             if (isLockBoard) return;
             if (cardObj.matched) return;
-            // Prevent double-clicking the exact same flipped card
             if (flippedCards.some(f => f.data.id === cardObj.id)) return;
 
             initAudio();
-
-            // 1. Instantly apply CSS 3D flipped state to the active element
             el.classList.add('card-flipped');
             playSound('flip');
 
-            // Standard pronunciation readouts
             if (cardObj.type === 'zh') {
                 speakWord(cardObj.content);
             }
 
-            // Queue up cards
             flippedCards.push({ el, data: cardObj });
 
-            // 2. Perform comparison matching if two cards are flipped face up
             if (flippedCards.length === 2) {
-                isLockBoard = true; // Freeze further clicks
+                isLockBoard = true;
                 checkMatch();
             }
         }
@@ -439,13 +403,10 @@
             const [c1, c2] = flippedCards;
 
             if (c1.data.pairId === c2.data.pairId) {
-                // MATCH SCENARIO!
-                // Wait briefly for the 3D flip animation to finish rendering completely
                 setTimeout(() => {
                     c1.data.matched = true;
                     c2.data.matched = true;
 
-                    // Apply successful highlight styling
                     const c1Front = c1.el.querySelector('.card-front');
                     const c2Front = c2.el.querySelector('.card-front');
 
@@ -454,7 +415,6 @@
 
                     matchedCount++;
                     
-                    // Update progress tracker
                     const totalPairs = VOCABULARY.length;
                     const percent = Math.floor((matchedCount / totalPairs) * 100);
                     document.getElementById('progress-percent').innerText = `${percent}%`;
@@ -463,38 +423,33 @@
                     playSound('match');
 
                     flippedCards = [];
-                    isLockBoard = false; // Immediately unlock board for other matches
+                    isLockBoard = false;
 
                     if (matchedCount === totalPairs) {
                         handleVictory();
                     }
                 }, 500);
             } else {
-                // MISMATCH SCENARIO!
-                // Give user a brief moment to see both card values at the same time
                 setTimeout(() => {
                     playSound('error');
                     
-                    // Flash red warning borders to front cards
                     const c1Front = c1.el.querySelector('.card-front');
                     const c2Front = c2.el.querySelector('.card-front');
                     c1Front.classList.add('border-red-500', 'bg-red-50');
                     c2Front.classList.add('border-red-500', 'bg-red-50');
 
-                    // Both stay flipped face-up for 1.2s, then turn face-down simultaneously
                     setTimeout(() => {
                         c1.el.classList.remove('card-flipped');
                         c2.el.classList.remove('card-flipped');
 
-                        // Reset color styles after they rotate back down
                         setTimeout(() => {
                             c1Front.classList.remove('border-red-500', 'bg-red-50');
                             c2Front.classList.remove('border-red-500', 'bg-red-50');
                         }, 300);
 
                         flippedCards = [];
-                        isLockBoard = false; // Unlock gameboard interaction
-                    }, 1200); // Perfect duration to observe and memorize the mismatch
+                        isLockBoard = false;
+                    }, 1200);
 
                 }, 500);
             }
@@ -508,7 +463,6 @@
             const finalTime = document.getElementById('timer-text').innerText;
             document.getElementById('modal-time-taken').innerText = finalTime;
 
-            // Pop modal panel
             setTimeout(() => {
                 const modal = document.getElementById('victory-modal');
                 modal.classList.remove('opacity-0', 'pointer-events-none');
@@ -520,10 +474,9 @@
             const modal = document.getElementById('victory-modal');
             modal.classList.add('opacity-0', 'pointer-events-none');
             modal.querySelector('div').classList.add('scale-95');
-            initGame(); // Rebuild and shuffle
+            initGame();
         }
 
-        // Boot-Up
         window.onload = function() {
             initGame();
             window.addEventListener('resize', () => {
