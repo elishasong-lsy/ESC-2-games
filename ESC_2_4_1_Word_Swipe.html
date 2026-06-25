@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ESC-2-4-1 Word Swipe｜Weather 天气</title>
+  <style>
+    :root{
+      --ink:#17304f;
+      --muted:#5d718c;
+      --panel:rgba(255,255,255,.78);
+      --line:#ffe44d;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","Microsoft YaHei",sans-serif;
+      color:var(--ink);
+      min-height:100vh;
+      overflow-x:hidden;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255,255,255,.95) 0 .8rem, transparent .85rem),
+        radial-gradient(circle at 22% 13%, rgba(255,255,255,.9) 0 1.2rem, transparent 1.25rem),
+        radial-gradient(circle at 76% 16%, rgba(255,255,255,.9) 0 1.5rem, transparent 1.55rem),
+        linear-gradient(135deg,#b9e7ff 0%,#d9f7ff 35%,#fff0c7 72%,#ffd6e8 100%);
+    }
+
+    .scene{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:-1}
+    .cloud{
+      position:absolute;border-radius:999px;background:rgba(255,255,255,.45);
+      filter:blur(.2px);animation:float 9s ease-in-out infinite;
+    }
+    .cloud:before,.cloud:after{
+      content:"";position:absolute;border-radius:999px;background:rgba(255,255,255,.55)
+    }
+    .cloud:before{width:70%;height:80%;left:15%;top:-38%}
+    .cloud:after{width:48%;height:60%;right:10%;top:-18%}
+    .c1{width:210px;height:62px;left:5%;top:12%}
+    .c2{width:260px;height:76px;right:8%;top:20%;animation-delay:-2s}
+    .c3{width:180px;height:54px;left:42%;bottom:9%;animation-delay:-4s}
+    @keyframes float{50%{transform:translateY(-12px) translateX(8px)}}
+
+    header{
+      max-width:1280px;margin:14px auto 0;padding:12px 18px;
+      display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:52px;height:52px;border-radius:18px;
+      background:linear-gradient(145deg,#0ea5e9,#22c55e);
+      display:grid;place-items:center;color:#fff;font-size:28px;
+      box-shadow:0 12px 30px rgba(14,165,233,.25);
+    }
+    h1{font-size:26px;line-height:1.1;margin:0;font-weight:950}
+    .sub{font-size:13px;color:var(--muted);font-weight:750;margin-top:3px}
+    .top-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .pill{
+      background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.8);
+      padding:9px 12px;border-radius:999px;font-size:13px;font-weight:900;
+      box-shadow:0 8px 20px rgba(42,79,120,.08)
+    }
+    button{
+      border:0;border-radius:14px;padding:10px 14px;font-weight:950;cursor:pointer;
+      transition:.15s transform,.15s filter,.15s box-shadow;font-family:inherit;
+    }
+    button:active{transform:scale(.98)}
+    .btn-blue{background:#0ea5e9;color:white;box-shadow:0 8px 18px rgba(14,165,233,.22)}
+    .btn-dark{background:#172033;color:white}
+    .btn-gold{background:#facc15;color:#3c2b00}
+    .btn-soft{background:rgba(255,255,255,.7);color:#17304f;border:1px solid rgba(255,255,255,.85)}
+
+    .layout{
+      max-width:1280px;margin:8px auto 22px;padding:0 14px;
+      display:grid;grid-template-columns:250px 1fr 270px;gap:14px;align-items:stretch;
+    }
+    .panel{
+      background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+      border:1px solid rgba(255,255,255,.85);border-radius:28px;
+      box-shadow:0 18px 50px rgba(30,64,110,.12);
+    }
+    aside{padding:16px;min-height:650px}
+    .side-title{
+      font-size:12px;text-transform:uppercase;letter-spacing:.12em;font-weight:950;
+      color:#6d84a1;margin-bottom:10px;
+    }
+    .big-card{
+      background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.8);
+      border-radius:24px;padding:18px;text-align:center;min-height:210px;
+      display:flex;flex-direction:column;justify-content:center;
+    }
+    .emoji{font-size:58px;line-height:1;margin-bottom:8px}
+    .zh-big{font-size:44px;font-weight:950;line-height:1.15}
+    .py-big{font-size:22px;font-weight:950;color:#1d4ed8;margin-top:6px}
+    .en-big{font-size:20px;font-weight:900;color:#334155;margin-top:6px}
+    .small-note{font-size:12px;color:#64748b;font-weight:750;line-height:1.45}
+    .selected-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+    .selected-item{
+      min-height:42px;border-radius:14px;padding:9px 10px;background:rgba(255,255,255,.62);
+      border:1px dashed rgba(56,91,130,.25);font-weight:900;color:#334155;
+      display:flex;align-items:center;justify-content:space-between;gap:8px;
+    }
+
+    .game{min-height:650px;position:relative;padding:16px;overflow:hidden}
+    .slidebar{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap;
+    }
+    .slide-tabs{display:flex;gap:7px;flex-wrap:wrap}
+    .tab{
+      padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.45);
+      font-weight:950;font-size:12px;border:1px solid rgba(255,255,255,.65)
+    }
+    .tab.active{background:#172033;color:white}
+    .instruction{font-size:13px;color:#53677f;font-weight:800;margin-top:6px}
+
+    .arena-wrap{
+      position:relative;border-radius:26px;overflow:hidden;
+      background:
+        radial-gradient(circle at 18% 78%, rgba(147,197,253,.32), transparent 32%),
+        radial-gradient(circle at 78% 18%, rgba(253,186,116,.25), transparent 28%),
+        linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,.12));
+      border:1px solid rgba(255,255,255,.75);min-height:560px;
+    }
+    #lineCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+    #bubbleArena{
+      position:relative;z-index:2;padding:38px 34px;
+      display:grid;grid-template-columns:repeat(3, minmax(130px, 1fr));
+      grid-template-rows:repeat(3, 1fr);
+      gap:28px;align-items:center;justify-items:center;min-height:560px;
+    }
+    .bubble{
+      width:148px;height:148px;border-radius:999px;margin:auto;
+      display:flex;align-items:center;justify-content:center;text-align:center;
+      padding:14px;color:#172033;font-weight:950;line-height:1.06;
+      box-shadow:
+        inset 16px 18px 24px rgba(255,255,255,.58),
+        inset -12px -14px 20px rgba(0,0,0,.14),
+        0 14px 26px rgba(22,43,78,.2);
+      border:3px solid rgba(255,255,255,.7);
+      cursor:pointer;user-select:none;touch-action:none;
+      transition:transform .16s, box-shadow .16s, opacity .2s;
+      position:relative;
+    }
+    .bubble:hover{transform:translateY(-3px) scale(1.02)}
+    .bubble.selected{outline:8px solid rgba(250,204,21,.72);transform:scale(1.07)}
+    .bubble.hint{animation:pulse 1s ease-in-out infinite;outline:8px solid rgba(34,197,94,.55)}
+    .bubble.matched{opacity:.12;transform:scale(.65);pointer-events:none}
+    .bubble.wrong{animation:shake .28s linear 2;outline:8px solid rgba(239,68,68,.62)}
+    @keyframes pulse{50%{transform:scale(1.1)}}
+    @keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+    .zh{font-size:40px}
+    .pinyin{font-size:30px;color:#243cbb}
+    .en{font-size:25px;color:#17304f}
+    .tiny{font-size:20px}
+
+    .c0{background:radial-gradient(circle at 32% 24%,#fff 0,#ffd6e7 22%,#fb7185 80%)}
+    .c1{background:radial-gradient(circle at 32% 24%,#fff 0,#bfdbfe 22%,#38bdf8 80%)}
+    .c2{background:radial-gradient(circle at 32% 24%,#fff 0,#bbf7d0 22%,#22c55e 82%)}
+    .c3{background:radial-gradient(circle at 32% 24%,#fff 0,#fde68a 22%,#f59e0b 82%)}
+    .c4{background:radial-gradient(circle at 32% 24%,#fff 0,#ddd6fe 22%,#8b5cf6 82%)}
+    .c5{background:radial-gradient(circle at 32% 24%,#fff 0,#fed7aa 22%,#f97316 82%)}
+    .c6{background:radial-gradient(circle at 32% 24%,#fff 0,#ccfbf1 22%,#14b8a6 82%)}
+    .c7{background:radial-gradient(circle at 32% 24%,#fff 0,#fbcfe8 22%,#ec4899 82%)}
+    .c8{background:radial-gradient(circle at 32% 24%,#fff 0,#d9f99d 22%,#84cc16 82%)}
+
+    .feedback{
+      margin-top:12px;padding:12px;border-radius:18px;background:rgba(255,255,255,.55);
+      font-weight:950;min-height:48px;color:#334155;
+    }
+    .progressbar{height:10px;background:rgba(255,255,255,.55);border-radius:999px;overflow:hidden;margin:10px 0 14px}
+    #bar{height:100%;width:0;background:linear-gradient(90deg,#22c55e,#0ea5e9,#a855f7);border-radius:999px;transition:.25s}
+    .word-bank{display:grid;grid-template-columns:1fr;gap:7px;margin-top:10px}
+    .mini{border-radius:12px;background:rgba(255,255,255,.48);padding:7px 8px;font-size:12px;font-weight:850;color:#475569}
+    .mini.done{text-decoration:line-through;opacity:.45}
+
+    .modal{
+      position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;
+      align-items:center;justify-content:center;z-index:10;padding:20px;
+    }
+    .modal.show{display:flex}
+    .modal-card{
+      background:white;border-radius:30px;padding:28px;max-width:420px;text-align:center;
+      box-shadow:0 30px 80px rgba(0,0,0,.25);
+    }
+
+    @media (max-width:1050px){
+      .layout{grid-template-columns:1fr}
+      aside{min-height:auto}
+      .game{min-height:auto}
+      .arena-wrap,#bubbleArena{min-height:520px}
+    }
+    @media (max-width:720px){
+      h1{font-size:21px}
+      #bubbleArena{
+        grid-template-columns:repeat(3, minmax(86px, 1fr));
+        gap:12px;
+        padding:18px 10px;
+      }
+      .bubble{width:102px;height:102px}
+      .zh{font-size:28px}
+      .pinyin{font-size:20px}
+      .en{font-size:16px}
+      .tiny{font-size:13px}
+      .layout{padding:0 8px}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="scene">
+    <div class="cloud c1"></div>
+    <div class="cloud c2"></div>
+    <div class="cloud c3"></div>
+  </div>
+
+  <header>
+    <div class="brand">
+      <div class="logo">🌀</div>
+      <div>
+        <h1>ESC-2-4-1 Word Swipe</h1>
+        <div class="sub">Unit 2 Weather 天气｜Word List 1｜每页 3 个词 / 9 个泡泡</div>
+      </div>
+    </div>
+
+    <div class="top-controls">
+      <div class="pill">⏱ <span id="timer">00:00</span></div>
+      <div class="pill">⭐ 得分 <span id="score">0</span>/<span id="total">27</span></div>
+      <button class="btn-soft" onclick="restartGame()">重新开始</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="panel">
+      <div class="side-title">Current Goal / 当前目标</div>
+
+      <div class="big-card">
+        <div class="emoji" id="goalEmoji">🌤️</div>
+        <div class="zh-big" id="goalZh">天气</div>
+        <div class="py-big" id="goalPy">tiān qì</div>
+        <div class="en-big" id="goalEn">weather</div>
+      </div>
+
+      <div class="progressbar">
+        <div id="bar"></div>
+      </div>
+
+      <div class="small-note">
+        玩法：点或划过同一个词的三个泡泡：<b>中文、拼音、英文</b>。三个都属于同一个词才得分。
+      </div>
+
+      <div class="selected-list">
+        <div class="selected-item"><span>中文</span><b id="selZh">—</b></div>
+        <div class="selected-item"><span>拼音</span><b id="selPy">—</b></div>
+        <div class="selected-item"><span>English</span><b id="selEn">—</b></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+        <button class="btn-blue" onclick="readGoal()">🔊 Read</button>
+        <button class="btn-gold" onclick="showHint()">💡 Hint</button>
+      </div>
+    </aside>
+
+    <section class="panel game">
+      <div class="slidebar">
+        <div>
+          <div class="slide-tabs" id="tabs"></div>
+          <div class="instruction">
+            像 Arch Chinese Word Swipe 一样：连续点/划 3 个泡泡；不要求顺序，但必须是同一个词的中文、拼音、英文。
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px">
+          <button class="btn-soft" onclick="prevSlide()">← 上一页</button>
+          <button class="btn-dark" onclick="nextSlide()">下一页 →</button>
+        </div>
+      </div>
+
+      <div class="arena-wrap" id="arenaWrap">
+        <canvas id="lineCanvas"></canvas>
+        <div id="bubbleArena"></div>
+      </div>
+
+      <div class="feedback" id="feedback">
+        先点一个泡泡，右边会显示它的 match 提示。
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="side-title">Match Hint / 配对提示</div>
+
+      <div class="big-card">
+        <div class="emoji" id="hintEmoji">👀</div>
+        <div class="zh-big" id="hintZh">点一个泡泡</div>
+        <div class="py-big" id="hintPy">pinyin</div>
+        <div class="en-big" id="hintEn">English</div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="small-note">
+        学生点到哪个泡泡，这里会显示对应词的图标、中文、拼音和英文，帮助他们找另外两个泡泡。
+      </div>
+
+      <div class="side-title" style="margin-top:14px">This Slide / 本页词</div>
+      <div class="word-bank" id="wordBank"></div>
+    </aside>
+  </main>
+
+  <div class="modal" id="modal">
+    <div class="modal-card">
+      <div style="font-size:64px">🌈</div>
+      <h2 style="margin:8px 0 6px">太棒啦！全部完成！</h2>
+      <p style="font-weight:800;color:#64748b">你把 Word List 1 的中文、拼音和英文都配好了。</p>
+      <button class="btn-blue" onclick="restartGame()">再玩一次</button>
+    </div>
+  </div>
+
+  <script>
+    const VOCAB = [
+      {id:"suzhou", zh:"苏州", py:"sū zhōu", en:"Suzhou, a city in China", emoji:"🏙️"},
+      {id:"zheli", zh:"这里", py:"zhè lǐ", en:"here", emoji:"📍"},
+      {id:"qing", zh:"晴", py:"qíng", en:"sunny", emoji:"☀️"},
+      {id:"qingtian", zh:"晴天", py:"qíng tiān", en:"sunny day", emoji:"🌞"},
+      {id:"yin", zh:"阴", py:"yīn", en:"overcast", emoji:"☁️"},
+      {id:"yintian", zh:"阴天", py:"yīn tiān", en:"overcast day", emoji:"🌥️"},
+      {id:"lei", zh:"雷", py:"léi", en:"thunder", emoji:"⚡"},
+      {id:"yu", zh:"雨", py:"yǔ", en:"rain", emoji:"🌧️"},
+      {id:"leiyu", zh:"雷雨", py:"léi yǔ", en:"thunderstorm", emoji:"⛈️"},
+      {id:"dayu", zh:"大雨", py:"dà yǔ", en:"heavy rain", emoji:"🌧️"},
+      {id:"nali_where", zh:"哪里", py:"nǎ lǐ", en:"where", emoji:"❓"},
+      {id:"guangzhou", zh:"广州", py:"guǎng zhōu", en:"Guangzhou, a city in China", emoji:"🌆"},
+      {id:"nali_there", zh:"那里", py:"nà lǐ", en:"there", emoji:"📌"},
+      {id:"qi", zh:"气", py:"qì", en:"weather; air", emoji:"💨"},
+      {id:"tianqi", zh:"天气", py:"tiān qì", en:"weather", emoji:"🌤️"},
+      {id:"zenmeyang", zh:"怎么样", py:"zěn me yàng", en:"how", emoji:"🤔"},
+      {id:"gua", zh:"刮", py:"guā", en:"blow (of wind)", emoji:"🍃"},
+      {id:"feng", zh:"风", py:"fēng", en:"wind", emoji:"🌬️"},
+      {id:"dafeng", zh:"大风", py:"dà fēng", en:"strong wind", emoji:"💨"},
+      {id:"guafeng", zh:"刮风", py:"guā fēng", en:"windy", emoji:"🌪️"},
+      {id:"taifeng", zh:"台风", py:"tái fēng", en:"typhoon", emoji:"🌀"},
+      {id:"xia", zh:"下", py:"xià", en:"fall", emoji:"⬇️"},
+      {id:"xiadayu", zh:"下大雨", py:"xià dà yǔ", en:"rain heavily", emoji:"🌧️"},
+      {id:"wen", zh:"温", py:"wēn", en:"temperature", emoji:"🌡️"},
+      {id:"qiwen", zh:"气温", py:"qì wēn", en:"air temperature", emoji:"🌡️"},
+      {id:"du", zh:"度", py:"dù", en:"degree", emoji:"°"},
+      {id:"dao", zh:"到", py:"dào", en:"up to", emoji:"↗️"}
+    ];
+
+    const SLIDES = [];
+    for(let i = 0; i < VOCAB.length; i += 3){
+      SLIDES.push(VOCAB.slice(i, i + 3));
+    }
+
+    let slideIndex = 0;
+    let matched = new Set();
+    let selected = [];
+    let currentHintWord = VOCAB[0];
+    let timerId = null;
+    let seconds = 0;
+    let dragging = false;
+    let pointer = null;
+
+    const arena = document.getElementById("bubbleArena");
+    const canvas = document.getElementById("lineCanvas");
+    const ctx = canvas.getContext("2d");
+    const colorCount = 9;
+
+    function shuffle(arr){
+      return [...arr].sort(() => Math.random() - 0.5);
+    }
+
+    function startTimer(){
+      clearInterval(timerId);
+      seconds = 0;
+      document.getElementById("timer").textContent = "00:00";
+      timerId = setInterval(() => {
+        seconds++;
+        const m = String(Math.floor(seconds / 60)).padStart(2,"0");
+        const s = String(seconds % 60).padStart(2,"0");
+        document.getElementById("timer").textContent = `${m}:${s}`;
+      }, 1000);
+    }
+
+    function speak(text, lang){
+      if(!("speechSynthesis" in window)) return;
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang;
+      u.rate = lang.startsWith("zh") ? 0.82 : 0.9;
+      speechSynthesis.speak(u);
+    }
+
+    function readGoal(){
+      speak(currentHintWord.zh, "zh-CN");
+    }
+
+    function resizeCanvas(){
+      const wrap = document.getElementById("arenaWrap");
+      const r = wrap.getBoundingClientRect();
+      canvas.width = Math.max(1, r.width);
+      canvas.height = Math.max(1, r.height);
+      drawLines();
+    }
+
+    function renderTabs(){
+      const tabs = document.getElementById("tabs");
+      tabs.innerHTML = SLIDES.map((s,i) => {
+        const done = s.every(w => matched.has(w.id)) ? " ✓" : "";
+        return `<button class="tab ${i === slideIndex ? "active" : ""}" onclick="goSlide(${i})">${i + 1}${done}</button>`;
+      }).join("");
+    }
+
+    function makeBubblesForSlide(){
+      clearSelection();
+      renderTabs();
+
+      const words = SLIDES[slideIndex];
+      const bubbleData = [];
+
+      words.forEach((w) => {
+        if(matched.has(w.id)) return;
+        bubbleData.push({word:w, type:"zh", text:w.zh, cls:"zh"});
+        bubbleData.push({word:w, type:"py", text:w.py, cls:"pinyin"});
+        bubbleData.push({word:w, type:"en", text:w.en, cls:"en"});
+      });
+
+      arena.innerHTML = "";
+
+      shuffle(bubbleData).forEach((b, idx) => {
+        const el = document.createElement("div");
+        const tiny = b.text.length > 12 ? " tiny" : "";
+
+        el.className = `bubble c${idx % colorCount} ${b.cls}${tiny}`;
+        el.textContent = b.text;
+
+        el.dataset.id = b.word.id;
+        el.dataset.type = b.type;
+        el.dataset.text = b.text;
+        el.dataset.zh = b.word.zh;
+        el.dataset.py = b.word.py;
+        el.dataset.en = b.word.en;
+        el.dataset.emoji = b.word.emoji;
+
+        el.addEventListener("pointerdown", (e) => {
+          dragging = true;
+          pointer = pointInWrap(e);
+          selectBubble(el);
+          if(el.setPointerCapture) el.setPointerCapture(e.pointerId);
+        });
+
+        el.addEventListener("pointerenter", () => {
+          if(dragging) selectBubble(el);
+        });
+
+        el.addEventListener("pointermove", (e) => {
+          if(!dragging) return;
+          pointer = pointInWrap(e);
+          drawLines();
+
+          const under = document.elementFromPoint(e.clientX, e.clientY);
+          const bEl = under && under.closest ? under.closest(".bubble") : null;
+          if(bEl) selectBubble(bEl);
+        });
+
+        arena.appendChild(el);
+      });
+
+      updateWordBank();
+      updateGoalToFirstUnmatched();
+      setTimeout(resizeCanvas, 60);
+    }
+
+    function updateWordBank(){
+      const box = document.getElementById("wordBank");
+      box.innerHTML = SLIDES[slideIndex].map(w =>
+        `<div class="mini ${matched.has(w.id) ? "done" : ""}">${w.emoji} ${w.zh}<br><span style="color:#64748b">${w.py}</span><br>${w.en}</div>`
+      ).join("");
+    }
+
+    function updateGoalToFirstUnmatched(){
+      const w = SLIDES[slideIndex].find(x => !matched.has(x.id)) || SLIDES[slideIndex][0];
+      showSideHint(w);
+      showGoal(w);
+    }
+
+    function showGoal(w){
+      currentHintWord = w;
+      document.getElementById("goalEmoji").textContent = w.emoji;
+      document.getElementById("goalZh").textContent = w.zh;
+      document.getElementById("goalPy").textContent = w.py;
+      document.getElementById("goalEn").textContent = w.en;
+    }
+
+    function showSideHint(w){
+      document.getElementById("hintEmoji").textContent = w.emoji;
+      document.getElementById("hintZh").textContent = w.zh;
+      document.getElementById("hintPy").textContent = w.py;
+      document.getElementById("hintEn").textContent = w.en;
+    }
+
+    function pointInWrap(e){
+      const r = document.getElementById("arenaWrap").getBoundingClientRect();
+      return {x:e.clientX - r.left, y:e.clientY - r.top};
+    }
+
+    function centerOf(el){
+      const r = el.getBoundingClientRect();
+      const wr = document.getElementById("arenaWrap").getBoundingClientRect();
+      return {x:r.left + r.width / 2 - wr.left, y:r.top + r.height / 2 - wr.top};
+    }
+
+    function selectBubble(el){
+      if(!el || el.classList.contains("matched")) return;
+
+      const id = el.dataset.id;
+      const type = el.dataset.type;
+      const w = VOCAB.find(x => x.id === id);
+
+      showSideHint(w);
+      showGoal(w);
+
+      if(type === "en"){
+        speak(el.dataset.text, "en-US");
+      }else{
+        speak(w.zh, "zh-CN");
+      }
+
+      if(selected.some(item => item.el === el)) return;
+
+      if(selected.some(item => item.type === type)){
+        feedback("同一种形式已经选过了。请选中文、拼音、英文各一个。", "bad");
+        markWrong([el]);
+        return;
+      }
+
+      selected.push({el,id,type,text:el.dataset.text});
+
+      el.classList.add("selected");
+      updateSelectedPanel();
+      drawLines();
+
+      if(selected.length === 3){
+        checkTriple();
+      }else{
+        feedback(`已选 ${selected.length}/3：继续找同一个词的另外 ${3 - selected.length} 个泡泡。`, "normal");
+      }
+    }
+
+    function updateSelectedPanel(){
+      document.getElementById("selZh").textContent = selected.find(x => x.type === "zh")?.text || "—";
+      document.getElementById("selPy").textContent = selected.find(x => x.type === "py")?.text || "—";
+      document.getElementById("selEn").textContent = selected.find(x => x.type === "en")?.text || "—";
+    }
+
+    function checkTriple(){
+      const ids = new Set(selected.map(x => x.id));
+      const types = new Set(selected.map(x => x.type));
+
+      if(ids.size === 1 && types.size === 3){
+        const id = selected[0].id;
+        matched.add(id);
+
+        selected.forEach(x => {
+          x.el.classList.remove("selected");
+          x.el.classList.add("matched");
+        });
+
+        const w = VOCAB.find(x => x.id === id);
+        feedback(`✅ 正确！${w.zh} / ${w.py} / ${w.en}`, "good");
+        chime(true);
+
+        clearSelection(false);
+        updateScore();
+        updateWordBank();
+
+        if(SLIDES[slideIndex].every(w => matched.has(w.id))){
+          setTimeout(() => {
+            if(matched.size === VOCAB.length){
+              finishGame();
+            }else{
+              feedback("🎉 本页完成！自动进入下一页。", "good");
+              setTimeout(nextSlide, 700);
+            }
+          }, 350);
+        }else{
+          updateGoalToFirstUnmatched();
+        }
+      }else{
+        feedback("❌ 这三个不是同一个词。请重新选。", "bad");
+        markWrong(selected.map(x => x.el));
+        chime(false);
+        setTimeout(() => clearSelection(), 650);
+      }
+    }
+
+    function markWrong(els){
+      els.forEach(el => {
+        el.classList.add("wrong");
+        setTimeout(() => el.classList.remove("wrong"), 650);
+      });
+    }
+
+    function clearSelection(removeClasses = true){
+      if(removeClasses){
+        selected.forEach(x => x.el.classList.remove("selected"));
+      }
+      selected = [];
+      pointer = null;
+      updateSelectedPanel();
+      drawLines();
+    }
+
+    function drawLines(){
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if(selected.length === 0) return;
+
+      const points = selected.map(x => centerOf(x.el));
+
+      ctx.lineWidth = 22;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.shadowBlur = 14;
+      ctx.shadowColor = "rgba(250,204,21,.7)";
+      ctx.strokeStyle = "rgba(250,224,70,.92)";
+
+      ctx.beginPath();
+      points.forEach((p, i) => {
+        if(i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      });
+
+      if(dragging && pointer) ctx.lineTo(pointer.x, pointer.y);
+
+      ctx.stroke();
+
+      ctx.shadowBlur = 0;
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = "rgba(255,255,255,.92)";
+      ctx.stroke();
+    }
+
+    function feedback(msg, mode){
+      const el = document.getElementById("feedback");
+      el.textContent = msg;
+
+      if(mode === "good"){
+        el.style.color = "#166534";
+        el.style.background = "rgba(220,252,231,.75)";
+      }else if(mode === "bad"){
+        el.style.color = "#991b1b";
+        el.style.background = "rgba(254,226,226,.75)";
+      }else{
+        el.style.color = "#334155";
+        el.style.background = "rgba(255,255,255,.55)";
+      }
+    }
+
+    function updateScore(){
+      document.getElementById("score").textContent = matched.size;
+      document.getElementById("bar").style.width = `${matched.size / VOCAB.length * 100}%`;
+      renderTabs();
+    }
+
+    function showHint(){
+      const choices = SLIDES[slideIndex].filter(w => !matched.has(w.id));
+      if(!choices.length) return;
+
+      const w = choices[Math.floor(Math.random() * choices.length)];
+      showGoal(w);
+      showSideHint(w);
+
+      document.querySelectorAll(".bubble").forEach(el => {
+        if(el.dataset.id === w.id){
+          el.classList.add("hint");
+          setTimeout(() => el.classList.remove("hint"), 2200);
+        }
+      });
+
+      feedback(`💡 找这三个：${w.zh} / ${w.py} / ${w.en}`, "normal");
+    }
+
+    function goSlide(i){
+      slideIndex = i;
+      makeBubblesForSlide();
+    }
+
+    function nextSlide(){
+      slideIndex = (slideIndex + 1) % SLIDES.length;
+      makeBubblesForSlide();
+    }
+
+    function prevSlide(){
+      slideIndex = (slideIndex - 1 + SLIDES.length) % SLIDES.length;
+      makeBubblesForSlide();
+    }
+
+    window.addEventListener("pointerup", () => {
+      dragging = false;
+      pointer = null;
+      drawLines();
+    });
+
+    function chime(ok){
+      try{
+        const ac = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+
+        o.connect(g);
+        g.connect(ac.destination);
+
+        o.type = ok ? "sine" : "sawtooth";
+        o.frequency.value = ok ? 740 : 130;
+
+        g.gain.setValueAtTime(0.08, ac.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + (ok ? 0.18 : 0.25));
+
+        o.start();
+        o.stop(ac.currentTime + (ok ? 0.18 : 0.25));
+      }catch(e){}
+    }
+
+    function finishGame(){
+      clearInterval(timerId);
+      document.getElementById("modal").classList.add("show");
+    }
+
+    function restartGame(){
+      matched = new Set();
+      slideIndex = 0;
+
+      document.getElementById("modal").classList.remove("show");
+      document.getElementById("total").textContent = VOCAB.length;
+
+      updateScore();
+      startTimer();
+      makeBubblesForSlide();
+
+      feedback("先点一个泡泡，右边会显示它的 match 提示。", "normal");
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("load", restartGame);
+  </script>
+</body>
+</html>
