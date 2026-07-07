@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ESC-2-5-1 Season Dress Up｜Seasons 季节</title>
+<style>
+:root{
+  --ink:#273044;--muted:#667085;--panel:rgba(255,255,255,.78);
+  --pink:#ff7ab6;--purple:#8b5cf6;--shadow:0 22px 60px rgba(86,64,120,.18);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;color:var(--ink);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","Microsoft YaHei",sans-serif;
+  background:linear-gradient(135deg,#ffe4f1 0%,#fff7d6 35%,#dff8ff 70%,#e9ddff 100%);
+  padding:16px;overflow-x:hidden;
+}
+.app{max-width:1320px;margin:0 auto}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:56px;height:56px;border-radius:20px;display:grid;place-items:center;font-size:32px;
+  background:linear-gradient(145deg,#ff9acb,#8b5cf6);box-shadow:var(--shadow);
+}
+h1{margin:0;font-size:28px;line-height:1.05;font-weight:950}
+.sub{margin-top:5px;color:var(--muted);font-size:13px;font-weight:800}
+button{
+  border:0;border-radius:14px;padding:10px 14px;font-family:inherit;font-weight:950;
+  cursor:pointer;transition:transform .12s,filter .12s;
+}
+button:hover{filter:brightness(1.04)}
+button:active{transform:translateY(1px) scale(.99)}
+button:disabled{opacity:.55;cursor:not-allowed}
+.btn-dark{background:#202638;color:white;box-shadow:0 14px 26px rgba(32,38,56,.18)}
+.btn-soft{background:rgba(255,255,255,.74);color:#334155;border:1px solid rgba(255,255,255,.9)}
+.layout{display:grid;grid-template-columns:300px 1fr 330px;gap:14px;align-items:stretch}
+.panel{
+  background:var(--panel);border:1px solid rgba(255,255,255,.82);border-radius:30px;
+  box-shadow:var(--shadow);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.side{min-height:690px;padding:16px}
+.side-title{color:#8b5cf6;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:950;margin-bottom:10px}
+.word-card{
+  min-height:230px;border-radius:26px;padding:18px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  background:linear-gradient(180deg,rgba(255,255,255,.88),rgba(255,240,249,.7));
+  border:1px solid rgba(255,255,255,.92);
+}
+.word-emoji{font-size:58px;line-height:1;margin-bottom:8px}
+.word-zh{font-size:46px;line-height:1.08;font-weight:950}
+.word-py{color:#2563eb;font-size:24px;font-weight:950;margin-top:8px}
+.word-en{color:#334155;font-size:18px;font-weight:900;margin-top:6px}
+.progress{margin:14px 0;height:12px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.65)}
+.bar{
+  height:100%;width:0%;border-radius:999px;
+  background:linear-gradient(90deg,#ff7ab6,#facc15,#22c55e,#38bdf8,#8b5cf6);
+  transition:width .35s ease;
+}
+.note{color:#667085;font-size:13px;font-weight:750;line-height:1.45}
+.stage{min-height:690px;padding:16px;display:flex;flex-direction:column;gap:12px;overflow:hidden;position:relative}
+.scene{
+  position:relative;flex:1;min-height:500px;border-radius:28px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.9);background:linear-gradient(180deg,#fff2fa,#dff7ff);
+  transition:background .45s ease;
+}
+.scene.spring{background:linear-gradient(180deg,#ffe6f3 0%,#f2fff1 58%,#b9f6c6 100%)}
+.scene.summer{background:linear-gradient(180deg,#aeeeff 0%,#fff7a5 58%,#7ee081 100%)}
+.scene.autumn{background:linear-gradient(180deg,#ffe7bf 0%,#ffd08a 54%,#e99b45 100%)}
+.scene.winter{background:linear-gradient(180deg,#dff7ff 0%,#f8fbff 55%,#d5ecff 100%)}
+.sun{
+  position:absolute;right:42px;top:36px;width:92px;height:92px;border-radius:999px;
+  background:radial-gradient(circle,#fff9b8 0%,#facc15 70%);
+  box-shadow:0 0 42px rgba(250,204,21,.55);opacity:.85;
+}
+.cloud{
+  position:absolute;width:160px;height:52px;border-radius:999px;background:rgba(255,255,255,.72);
+  left:56px;top:68px;filter:drop-shadow(0 8px 10px rgba(100,116,139,.12));
+}
+.cloud:before,.cloud:after{content:"";position:absolute;border-radius:999px;background:rgba(255,255,255,.82)}
+.cloud:before{width:70px;height:70px;left:28px;top:-34px}
+.cloud:after{width:58px;height:58px;right:28px;top:-24px}
+.ground{
+  position:absolute;left:-4%;right:-4%;bottom:-3%;height:22%;border-radius:50% 50% 0 0;
+  background:rgba(34,197,94,.25);
+}
+.scene.autumn .ground{background:rgba(217,119,6,.24)}
+.scene.winter .ground{background:rgba(255,255,255,.72)}
+.decor{position:absolute;inset:0;pointer-events:none;font-size:30px}
+.decor span{position:absolute;animation:floaty 3s ease-in-out infinite}
+.decor span:nth-child(1){left:18%;top:27%;animation-delay:-.4s}
+.decor span:nth-child(2){right:18%;top:35%;animation-delay:-1.2s}
+.decor span:nth-child(3){left:28%;bottom:25%;animation-delay:-2s}
+.decor span:nth-child(4){right:30%;bottom:22%;animation-delay:-.9s}
+@keyframes floaty{50%{transform:translateY(-10px) rotate(6deg)}}
+.character{
+  position:absolute;left:50%;bottom:50px;width:230px;height:430px;transform:translateX(-50%);
+  transition:filter .25s,transform .25s;
+}
+.character.sparkle{filter:drop-shadow(0 0 26px rgba(255,255,255,.95));transform:translateX(-50%) scale(1.03)}
+.hair-back{
+  position:absolute;left:44px;top:26px;width:142px;height:178px;border-radius:70px;
+  background:linear-gradient(145deg,#2b1b2f,#69405d);
+}
+.neck{position:absolute;left:94px;top:152px;width:42px;height:48px;border-radius:0 0 18px 18px;background:#ffd2bd;z-index:3}
+.face{
+  position:absolute;left:58px;top:42px;width:114px;height:126px;border-radius:50%;
+  background:linear-gradient(145deg,#ffe2d4,#ffc6b0);z-index:4;box-shadow:0 8px 18px rgba(131,82,61,.16);
+}
+.bang{
+  position:absolute;left:54px;top:34px;width:122px;height:58px;border-radius:70px 70px 30px 38px;
+  background:linear-gradient(145deg,#3a243a,#77506a);z-index:5;transform:rotate(-3deg);
+}
+.eye{position:absolute;top:82px;width:12px;height:18px;border-radius:999px;background:#263238;z-index:6}
+.eye.left{left:88px}.eye.right{right:88px}
+.blush{position:absolute;top:112px;width:22px;height:10px;border-radius:999px;background:rgba(255,122,182,.35);z-index:6}
+.blush.left{left:72px}.blush.right{right:72px}
+.mouth{
+  position:absolute;left:102px;top:124px;width:26px;height:14px;border-bottom:4px solid #b5476b;
+  border-radius:0 0 999px 999px;z-index:6;
+}
+.body{
+  position:absolute;left:55px;top:182px;width:120px;height:162px;border-radius:44px 44px 18px 18px;
+  background:linear-gradient(145deg,#ff8fc7,#8b5cf6);z-index:2;
+  clip-path:polygon(18% 0,82% 0,100% 100%,0 100%);
+  transition:background .35s;box-shadow:0 14px 24px rgba(111,66,193,.16);
+}
+.body:after{content:"";position:absolute;left:16px;right:16px;top:45px;height:8px;border-radius:999px;background:rgba(255,255,255,.45)}
+.arm{position:absolute;top:198px;width:34px;height:130px;border-radius:999px;background:#ffd2bd;z-index:1}
+.arm.left{left:38px;transform:rotate(13deg)}.arm.right{right:38px;transform:rotate(-13deg)}
+.leg{position:absolute;top:330px;width:34px;height:72px;border-radius:999px;background:#ffc6b0;z-index:1}
+.leg.left{left:80px}.leg.right{right:80px}
+.shoe{position:absolute;top:392px;width:52px;height:22px;border-radius:999px;background:#2f3651;z-index:3}
+.shoe.left{left:65px}.shoe.right{right:65px}
+.hat,.scarf,.coat,.flower-pin,.sunglasses{position:absolute;opacity:0;transition:opacity .25s,transform .25s;z-index:8}
+.hat{
+  left:55px;top:10px;width:122px;height:54px;border-radius:70px 70px 18px 18px;
+  background:linear-gradient(145deg,#fff,#ff95c3);transform:translateY(-8px);
+}
+.hat:after{content:"";position:absolute;left:-20px;right:-20px;bottom:0;height:18px;border-radius:999px;background:#ff7ab6}
+.scarf{left:60px;top:166px;width:116px;height:32px;border-radius:999px;background:#f97316;transform:rotate(2deg)}
+.scarf:after{content:"";position:absolute;right:10px;top:24px;width:24px;height:78px;border-radius:999px;background:#fb923c;transform:rotate(-10deg)}
+.coat{
+  left:48px;top:180px;width:136px;height:174px;border-radius:48px 48px 20px 20px;
+  clip-path:polygon(14% 0,86% 0,100% 100%,0 100%);
+  background:linear-gradient(145deg,#8ddfff,#2563eb);z-index:3;
+}
+.flower-pin{left:136px;top:208px;font-size:28px}
+.sunglasses{
+  left:72px;top:82px;width:86px;height:24px;border-radius:999px;
+  background:linear-gradient(90deg,#111827 0 40%,transparent 40% 60%,#111827 60% 100%);z-index:9;
+}
+.look-1 .flower-pin,.look-2 .hat,.look-3 .sunglasses,.look-4 .scarf,.look-5 .coat,
+.look-6 .flower-pin,.look-6 .hat,.look-6 .sunglasses,.look-6 .scarf{opacity:1;transform:none}
+.scene.spring .body{background:linear-gradient(145deg,#ff9acb,#f472b6)}
+.scene.summer .body{background:linear-gradient(145deg,#fff176,#22c55e)}
+.scene.autumn .body{background:linear-gradient(145deg,#fdba74,#c2410c)}
+.scene.winter .body{background:linear-gradient(145deg,#93c5fd,#8b5cf6)}
+.reward-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.reward{
+  min-height:66px;border-radius:18px;display:grid;place-items:center;text-align:center;font-size:24px;
+  background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.78);opacity:.42;filter:grayscale(.4);
+}
+.reward span{display:block;font-size:11px;font-weight:950;color:#64748b}
+.reward.on{opacity:1;filter:none;background:linear-gradient(145deg,#fff,#fff0f8);box-shadow:0 10px 18px rgba(255,122,182,.16)}
+.question-card{
+  border-radius:26px;padding:16px;background:linear-gradient(180deg,rgba(255,255,255,.88),rgba(255,247,252,.7));
+  border:1px solid rgba(255,255,255,.9);
+}
+.question{min-height:68px;font-size:22px;line-height:1.28;font-weight:950}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.choice{min-height:56px;background:#fff7d6;color:#382306;border:1px solid rgba(255,255,255,.9);font-size:16px}
+.choice.correct{background:#bbf7d0;color:#14532d}
+.choice.wrong{background:#fecaca;color:#7f1d1d}
+.feedback{
+  margin-top:12px;min-height:44px;padding:11px 12px;border-radius:16px;background:rgba(255,255,255,.58);
+  color:#475569;font-weight:900;line-height:1.35;
+}
+.mini-list{max-height:360px;overflow:auto;display:grid;gap:7px;padding-right:4px}
+.mini-word{border-radius:14px;padding:8px 10px;background:rgba(255,255,255,.58);color:#475569;font-size:12px;line-height:1.3;font-weight:800}
+.win{
+  position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.5);
+  z-index:20;padding:20px;
+}
+.win.show{display:flex}
+.win-card{width:min(470px,100%);padding:28px;border-radius:32px;background:white;box-shadow:0 30px 80px rgba(0,0,0,.25);text-align:center}
+.win-card h2{margin:8px 0;font-size:30px}
+.win-card p{color:#64748b;font-weight:800;line-height:1.45}
+@media (max-width:1120px){
+  .layout{grid-template-columns:1fr}.side,.stage{min-height:auto}.scene{min-height:520px}
+}
+@media (max-width:680px){
+  body{padding:10px}h1{font-size:22px}.choices{grid-template-columns:1fr}.reward-row{grid-template-columns:repeat(3,1fr)}
+  .character{transform:translateX(-50%) scale(.82);bottom:16px}.character.sparkle{transform:translateX(-50%) scale(.86)}
+  .scene{min-height:470px}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="logo">👗</div>
+      <div>
+        <h1>ESC-2-5-1 Season Dress-Up</h1>
+        <div class="sub">Seasons 季节｜Word List 1｜答对题目，解锁四季造型</div>
+      </div>
+    </div>
+    <div>
+      <button class="btn-soft" onclick="toggleSound()">声音：<span id="soundLabel">开</span></button>
+      <button class="btn-soft" onclick="restartGame()">重新开始</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="panel side">
+      <div class="side-title">Current Word / 当前词</div>
+      <div class="word-card">
+        <div class="word-emoji" id="wordEmoji">🌸</div>
+        <div class="word-zh" id="wordZh">春天</div>
+        <div class="word-py" id="wordPy">chūn tiān</div>
+        <div class="word-en" id="wordEn">spring</div>
+      </div>
+      <div class="progress"><div class="bar" id="bar"></div></div>
+      <p class="note">玩法：选择正确答案。每答对一题，人物会解锁一个装扮，背景也会变成对应的季节。全部完成后获得“杭州四季达人”造型。</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+        <button class="btn-dark" onclick="speakCurrent()">朗读</button>
+        <button class="btn-soft" onclick="hint()">提示</button>
+      </div>
+    </aside>
+
+    <section class="panel stage">
+      <div class="scene spring" id="scene">
+        <div class="sun"></div>
+        <div class="cloud"></div>
+        <div class="ground"></div>
+        <div class="decor" id="decor">
+          <span>🌸</span><span>🦋</span><span>🌷</span><span>✨</span>
+        </div>
+
+        <div class="character look-0" id="character">
+          <div class="hair-back"></div><div class="neck"></div><div class="face"></div><div class="bang"></div>
+          <div class="eye left"></div><div class="eye right"></div>
+          <div class="blush left"></div><div class="blush right"></div><div class="mouth"></div>
+          <div class="arm left"></div><div class="arm right"></div><div class="body"></div>
+          <div class="leg left"></div><div class="leg right"></div><div class="shoe left"></div><div class="shoe right"></div>
+          <div class="hat"></div><div class="scarf"></div><div class="coat"></div><div class="flower-pin">🌺</div><div class="sunglasses"></div>
+        </div>
+      </div>
+      <div class="reward-row" id="rewards"></div>
+    </section>
+
+    <aside class="panel side">
+      <div class="side-title">Question / 小题</div>
+      <div class="question-card">
+        <div class="question" id="question">准备开始！</div>
+        <div class="choices" id="choices"></div>
+        <div class="feedback" id="feedback">点击下面的答案，答对就能解锁新造型。</div>
+      </div>
+      <div class="side-title" style="margin-top:14px">Word List 1 / 词汇表</div>
+      <div class="mini-list" id="wordList"></div>
+    </aside>
+  </main>
+</div>
+
+<div class="win" id="win">
+  <div class="win-card">
+    <div style="font-size:66px">🌈</div>
+    <h2>杭州四季达人！</h2>
+    <p>你完成了 ESC-2-5 Word List 1。春夏秋冬都会说，还完成了最终造型。</p>
+    <button class="btn-dark" onclick="restartGame()">再玩一次</button>
+  </div>
+</div>
+
+<script>
+const WORDS=[
+  {zh:"杭州",py:"háng zhōu",en:"Hangzhou, a city in China",emoji:"🏙️",season:"spring"},
+  {zh:"季",py:"jì",en:"season",emoji:"🗓️",season:"spring"},
+  {zh:"节",py:"jié",en:"division",emoji:"📌",season:"spring"},
+  {zh:"季节",py:"jì jié",en:"season",emoji:"🌈",season:"spring"},
+  {zh:"春",py:"chūn",en:"spring",emoji:"🌱",season:"spring"},
+  {zh:"春天",py:"chūn tiān",en:"spring",emoji:"🌸",season:"spring"},
+  {zh:"夏",py:"xià",en:"summer",emoji:"☀️",season:"summer"},
+  {zh:"夏天",py:"xià tiān",en:"summer",emoji:"🏖️",season:"summer"},
+  {zh:"秋",py:"qiū",en:"autumn",emoji:"🍂",season:"autumn"},
+  {zh:"秋天",py:"qiū tiān",en:"autumn",emoji:"🍁",season:"autumn"},
+  {zh:"冬",py:"dōng",en:"winter",emoji:"❄️",season:"winter"},
+  {zh:"冬天",py:"dōng tiān",en:"winter",emoji:"⛄",season:"winter"},
+  {zh:"有时候",py:"yǒu shí hou",en:"sometimes",emoji:"⏳",season:"autumn"},
+  {zh:"冷",py:"lěng",en:"cold",emoji:"🧊",season:"winter"},
+  {zh:"暖",py:"nuǎn",en:"warm",emoji:"🌤️",season:"spring"},
+  {zh:"和",py:"hé",en:"mild",emoji:"🍃",season:"spring"},
+  {zh:"暖和",py:"nuǎn huo",en:"nice and warm",emoji:"🌷",season:"spring"},
+  {zh:"热",py:"rè",en:"hot",emoji:"🔥",season:"summer"},
+  {zh:"以上",py:"yǐ shàng",en:"above",emoji:"⬆️",season:"summer"},
+  {zh:"以下",py:"yǐ xià",en:"below",emoji:"⬇️",season:"winter"},
+  {zh:"凉",py:"liáng",en:"cool",emoji:"🌬️",season:"autumn"},
+  {zh:"凉快",py:"liáng kuai",en:"nice and cool",emoji:"🍃",season:"autumn"},
+  {zh:"很少",py:"hěn shǎo",en:"seldom",emoji:"🤏",season:"winter"},
+  {zh:"西湖",py:"xī hú",en:"West Lake (in Hangzhou)",emoji:"🌊",season:"spring"},
+  {zh:"美",py:"měi",en:"beautiful",emoji:"✨",season:"spring"}
+];
+
+const REWARDS=[
+  {icon:"🌺",label:"flower"},{icon:"👒",label:"hat"},{icon:"🕶️",label:"glasses"},
+  {icon:"🧣",label:"scarf"},{icon:"🧥",label:"coat"},{icon:"✨",label:"final"}
+];
+
+let order=[],index=0,score=0,currentWord=WORDS[0],currentQuestion=null,soundOn=true;
+
+function restartGame(){
+  order=shuffle(WORDS).slice(0,14);
+  index=0;score=0;
+  document.getElementById("win").classList.remove("show");
+  renderRewards();renderWordList();setLook();nextQuestion();
+}
+
+function nextQuestion(){
+  if(index>=order.length){
+    document.getElementById("win").classList.add("show");
+    return;
+  }
+  currentWord=order[index];
+  updateWordCard(currentWord);
+  setSeason(currentWord.season);
+  currentQuestion=buildQuestion(currentWord);
+  document.getElementById("question").innerHTML=currentQuestion.prompt;
+  document.getElementById("choices").innerHTML=currentQuestion.choices.map(choice=>
+    `<button class="choice" onclick="answer(this,'${escapeJs(choice)}')">${escapeHtml(choice)}</button>`
+  ).join("");
+  document.getElementById("feedback").textContent=`第 ${index+1} 题 / ${order.length}：答对可以解锁造型。`;
+}
+
+function buildQuestion(word){
+  const type=Math.floor(Math.random()*3);
+  let prompt="",answer="",pool=[];
+  if(type===0){
+    prompt=`“${word.zh}” 的英文意思是什么？`;
+    answer=word.en;pool=WORDS.map(w=>w.en);
+  }else if(type===1){
+    prompt=`哪个中文是 <b>${word.en}</b>？`;
+    answer=word.zh;pool=WORDS.map(w=>w.zh);
+  }else{
+    prompt=`“${word.zh}” 的拼音是什么？`;
+    answer=word.py;pool=WORDS.map(w=>w.py);
+  }
+  const choices=shuffle([answer,...shuffle(pool.filter(x=>x!==answer)).slice(0,3)]);
+  return {prompt,answer,choices};
+}
+
+function answer(btn,value){
+  const ok=value===currentQuestion.answer;
+  document.querySelectorAll(".choice").forEach(el=>{
+    el.disabled=true;
+    if(el.textContent===currentQuestion.answer) el.classList.add("correct");
+  });
+  if(ok){
+    btn.classList.add("correct");score++;sparkle();playSuccess();
+    document.getElementById("feedback").textContent=`正确！解锁造型：${currentWord.zh} / ${currentWord.py} / ${currentWord.en}`;
+  }else{
+    btn.classList.add("wrong");playError();
+    document.getElementById("feedback").textContent=`差一点。正确答案是：${currentQuestion.answer}`;
+  }
+  index++;setLook();
+  setTimeout(nextQuestion,ok?850:1200);
+}
+
+function setLook(){
+  const stage=Math.min(6,Math.floor(score/2));
+  document.getElementById("character").className=`character look-${stage}`;
+  document.getElementById("bar").style.width=`${Math.min(100,score/order.length*100)}%`;
+  renderRewards();
+}
+
+function setSeason(season){
+  const scene=document.getElementById("scene");
+  scene.className=`scene ${season}`;
+  const decor={
+    spring:["🌸","🦋","🌷","✨"],
+    summer:["☀️","🍉","🌻","💦"],
+    autumn:["🍁","🍂","🌰","🧡"],
+    winter:["❄️","⛄","🧤","✨"]
+  }[season]||["🌸","🦋","🌷","✨"];
+  document.getElementById("decor").innerHTML=decor.map(x=>`<span>${x}</span>`).join("");
+}
+
+function updateWordCard(w){
+  document.getElementById("wordEmoji").textContent=w.emoji;
+  document.getElementById("wordZh").textContent=w.zh;
+  document.getElementById("wordPy").textContent=w.py;
+  document.getElementById("wordEn").textContent=w.en;
+}
+
+function renderRewards(){
+  const unlocked=Math.min(6,Math.floor(score/2));
+  document.getElementById("rewards").innerHTML=REWARDS.map((r,i)=>
+    `<div class="reward ${i<unlocked?"on":""}">${r.icon}<span>${r.label}</span></div>`
+  ).join("");
+}
+
+function renderWordList(){
+  document.getElementById("wordList").innerHTML=WORDS.map(w=>
+    `<div class="mini-word">${w.emoji} <b>${w.zh}</b> ${w.py}<br>${w.en}</div>`
+  ).join("");
+}
+
+function sparkle(){
+  const c=document.getElementById("character");
+  c.classList.add("sparkle");
+  setTimeout(()=>c.classList.remove("sparkle"),450);
+}
+
+function hint(){
+  updateWordCard(currentWord);
+  document.getElementById("feedback").textContent=`提示：${currentWord.zh} / ${currentWord.py} / ${currentWord.en}`;
+  speakCurrent();
+}
+
+function speakCurrent(){
+  if(!soundOn||!("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(currentWord.zh);
+  u.lang="zh-CN";u.rate=.82;
+  speechSynthesis.speak(u);
+}
+
+function toggleSound(){
+  soundOn=!soundOn;
+  document.getElementById("soundLabel").textContent=soundOn?"开":"关";
+  if(!soundOn&&"speechSynthesis" in window) speechSynthesis.cancel();
+}
+
+function playSuccess(){
+  if(!soundOn) return;
+  [523,659,784].forEach((f,i)=>setTimeout(()=>tone(f,.08),i*75));
+}
+
+function playError(){if(soundOn) tone(140,.16,"sawtooth")}
+
+function tone(freq,duration,type="sine"){
+  try{
+    const ac=new (window.AudioContext||window.webkitAudioContext)();
+    const o=ac.createOscillator(),g=ac.createGain();
+    o.connect(g);g.connect(ac.destination);o.type=type;o.frequency.value=freq;
+    g.gain.setValueAtTime(.05,ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+duration);
+    o.start();o.stop(ac.currentTime+duration);
+  }catch(e){}
+}
+
+function shuffle(arr){return [...arr].sort(()=>Math.random()-.5)}
+function escapeHtml(text){
+  return String(text).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+function escapeJs(text){
+  return String(text).replaceAll("\\","\\\\").replaceAll("'","\\'").replaceAll("\n"," ");
+}
+window.addEventListener("load",restartGame);
+</script>
+</body>
+</html>
