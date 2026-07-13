@@ -1,1476 +1,1822 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ESC-2-5-2 City Outfit Runner</title>
-
-<style>
-:root{
-  --ink:#1f2937;
-  --muted:#64748b;
-  --purple:#7c3aed;
-  --blue:#38bdf8;
-  --green:#22c55e;
-  --gold:#facc15;
-  --pink:#fb7185;
-  --panel:rgba(255,255,255,.86);
-  --shadow:0 18px 48px rgba(15,23,42,.14);
-}
-
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  min-height:100vh;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","Microsoft YaHei",sans-serif;
-  color:var(--ink);
-  background:linear-gradient(135deg,#dff7ff 0%,#fff4d6 48%,#ffe5f2 100%);
-  padding:16px;
-}
-
-.wrap{
-  max-width:1380px;
-  margin:0 auto;
-}
-
-.top{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-bottom:14px;
-}
-
-.brand{
-  display:flex;
-  gap:12px;
-  align-items:center;
-}
-
-.logo{
-  width:60px;
-  height:60px;
-  border-radius:18px;
-  display:grid;
-  place-items:center;
-  color:white;
-  font-size:32px;
-  background:linear-gradient(145deg,#38bdf8,#7c3aed);
-  box-shadow:var(--shadow);
-}
-
-h1{
-  margin:0;
-  font-size:30px;
-  line-height:1.05;
-  font-weight:950;
-}
-
-.sub{
-  margin-top:5px;
-  color:var(--muted);
-  font-size:14px;
-  font-weight:850;
-}
-
-.top-buttons{
-  display:flex;
-  gap:10px;
-}
-
-button{
-  font-family:inherit;
-  border:0;
-  cursor:pointer;
-  font-weight:950;
-}
-
-.top-btn{
-  border-radius:16px;
-  padding:11px 16px;
-  background:rgba(255,255,255,.82);
-  color:#334155;
-  box-shadow:var(--shadow);
-}
-
-.layout{
-  display:grid;
-  grid-template-columns:minmax(620px,1.35fr) minmax(360px,.65fr);
-  gap:16px;
-  align-items:stretch;
-}
-
-.panel{
-  background:var(--panel);
-  border:1px solid rgba(255,255,255,.95);
-  border-radius:30px;
-  box-shadow:var(--shadow);
-  backdrop-filter:blur(10px);
-}
-
-.left{
-  padding:16px;
-}
-
-.how{
-  padding:15px 18px;
-  border-radius:24px;
-  background:rgba(255,255,255,.74);
-  margin-bottom:12px;
-}
-
-.cap{
-  color:var(--purple);
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  font-size:12px;
-  font-weight:950;
-  margin-bottom:8px;
-}
-
-.how h2{
-  margin:0 0 8px;
-  font-size:22px;
-}
-
-.how p{
-  margin:0;
-  color:var(--muted);
-  line-height:1.45;
-  font-weight:820;
-  font-size:14px;
-}
-
-.stats{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:12px;
-}
-
-.stat{
-  background:white;
-  border-radius:999px;
-  padding:7px 12px;
-  font-size:13px;
-  font-weight:950;
-  color:#475569;
-}
-
-.scene{
-  position:relative;
-  height:660px;
-  border-radius:28px;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.95);
-  background:linear-gradient(180deg,#9fe8ff 0%,#fff4aa 45%,#b7e879 100%);
-}
-
-.scene.hangzhou-spring{
-  background:linear-gradient(180deg,#bdefff 0%,#fff0fa 42%,#bff0a7 100%);
-}
-
-.scene.hangzhou-summer{
-  background:linear-gradient(180deg,#86e5ff 0%,#fff08c 44%,#bde875 100%);
-}
-
-.scene.hangzhou-autumn{
-  background:linear-gradient(180deg,#cceeff 0%,#ffd39a 44%,#eeb85c 100%);
-}
-
-.scene.hangzhou-winter{
-  background:linear-gradient(180deg,#dff7ff 0%,#f7fcff 45%,#d6eaf7 100%);
-}
-
-.scene.harbin-winter{
-  background:linear-gradient(180deg,#d4f3ff 0%,#fbfdff 44%,#deefff 100%);
-}
-
-.scene-head{
-  position:absolute;
-  top:16px;
-  left:16px;
-  right:16px;
-  z-index:20;
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:flex-start;
-}
-
-.stop{
-  background:rgba(255,255,255,.82);
-  border-radius:20px;
-  padding:11px 15px;
-  font-weight:950;
-  font-size:18px;
-  box-shadow:0 8px 18px rgba(15,23,42,.08);
-}
-
-.progress{
-  width:240px;
-  background:rgba(255,255,255,.82);
-  border-radius:20px;
-  padding:11px 14px;
-  box-shadow:0 8px 18px rgba(15,23,42,.08);
-}
-
-.progress-row{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  font-size:12px;
-  font-weight:950;
-  color:#475569;
-  margin-bottom:8px;
-}
-
-.track{
-  height:12px;
-  background:white;
-  border-radius:999px;
-  overflow:hidden;
-}
-
-.fill{
-  width:0%;
-  height:100%;
-  background:linear-gradient(90deg,#38bdf8,#22c55e,#facc15,#fb7185,#7c3aed);
-  border-radius:999px;
-  transition:width .35s;
-}
-
-.sun{
-  position:absolute;
-  right:80px;
-  top:95px;
-  width:96px;
-  height:96px;
-  border-radius:50%;
-  background:radial-gradient(circle,#fff8b8,#facc15 72%);
-  box-shadow:0 0 38px rgba(250,204,21,.5);
-}
-
-.cloud{
-  position:absolute;
-  left:90px;
-  top:120px;
-  width:160px;
-  height:56px;
-  border-radius:999px;
-  background:rgba(255,255,255,.72);
-}
-
-.cloud:before,
-.cloud:after{
-  content:"";
-  position:absolute;
-  background:rgba(255,255,255,.86);
-  border-radius:50%;
-}
-
-.cloud:before{
-  width:70px;
-  height:70px;
-  left:24px;
-  top:-30px;
-}
-
-.cloud:after{
-  width:58px;
-  height:58px;
-  right:22px;
-  top:-22px;
-}
-
-.snow{
-  position:absolute;
-  inset:0;
-  opacity:0;
-  pointer-events:none;
-}
-
-.harbin-winter .snow,
-.hangzhou-winter .snow{
-  opacity:1;
-}
-
-.snow span{
-  position:absolute;
-  top:-30px;
-  font-size:22px;
-  animation:snow 5.5s linear infinite;
-}
-
-.snow span:nth-child(1){left:8%;animation-delay:-1s}
-.snow span:nth-child(2){left:22%;animation-delay:-2.2s}
-.snow span:nth-child(3){left:38%;animation-delay:-.6s}
-.snow span:nth-child(4){left:54%;animation-delay:-3s}
-.snow span:nth-child(5){left:70%;animation-delay:-1.8s}
-.snow span:nth-child(6){left:86%;animation-delay:-3.8s}
-
-@keyframes snow{
-  to{transform:translateY(720px) rotate(180deg)}
-}
-
-.deco{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:155px;
-  display:flex;
-  justify-content:space-around;
-  font-size:36px;
-  opacity:.55;
-}
-
-.road{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  height:150px;
-  background:linear-gradient(180deg,#64748b,#3f4b60);
-  overflow:hidden;
-}
-
-.road:after{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  top:58px;
-  height:24px;
-  background:repeating-linear-gradient(90deg,#fff 0 70px,transparent 70px 150px);
-  animation:roadmove .55s linear infinite;
-}
-
-@keyframes roadmove{
-  to{transform:translateX(-150px)}
-}
-
-.runner-wrap{
-  position:absolute;
-  left:90px;
-  bottom:88px;
-  width:330px;
-  height:430px;
-  z-index:10;
-}
-
-.speed-line{
-  position:absolute;
-  left:0;
-  top:230px;
-  width:54px;
-  height:5px;
-  border-radius:999px;
-  background:rgba(255,255,255,.9);
-  box-shadow:-16px -24px 0 rgba(255,255,255,.65),-26px 24px 0 rgba(255,255,255,.55);
-  animation:speed .35s linear infinite;
-}
-
-@keyframes speed{
-  50%{opacity:.35;transform:translateX(-8px)}
-}
-
-.runner-svg{
-  position:absolute;
-  left:50px;
-  bottom:0;
-  width:250px;
-  height:430px;
-  overflow:visible;
-  animation:bodybounce .28s ease-in-out infinite alternate;
-  transform-origin:50% 88%;
-}
-
-@keyframes bodybounce{
-  from{transform:translateY(0) rotate(-1deg)}
-  to{transform:translateY(-9px) rotate(1.2deg)}
-}
-
-.arm-left{
-  transform-origin:115px 155px;
-  animation:armL .32s ease-in-out infinite alternate;
-}
-
-.arm-right{
-  transform-origin:135px 155px;
-  animation:armR .32s ease-in-out infinite alternate;
-}
-
-@keyframes armL{
-  from{transform:rotate(38deg)}
-  to{transform:rotate(-34deg)}
-}
-
-@keyframes armR{
-  from{transform:rotate(-38deg)}
-  to{transform:rotate(34deg)}
-}
-
-.leg-left{
-  transform-origin:118px 270px;
-  animation:legL .32s ease-in-out infinite alternate;
-}
-
-.leg-right{
-  transform-origin:138px 270px;
-  animation:legR .32s ease-in-out infinite alternate;
-}
-
-@keyframes legL{
-  from{transform:rotate(-34deg)}
-  to{transform:rotate(30deg)}
-}
-
-@keyframes legR{
-  from{transform:rotate(32deg)}
-  to{transform:rotate(-32deg)}
-}
-
-.pony{
-  transform-origin:154px 78px;
-  animation:pony .32s ease-in-out infinite alternate;
-}
-
-@keyframes pony{
-  from{transform:rotate(14deg)}
-  to{transform:rotate(-8deg)}
-}
-
-.item{
-  opacity:0;
-  transition:opacity .2s;
-}
-
-.item.show{
-  opacity:1;
-}
-
-.base-shirt{
-  fill:#ffffff;
-}
-
-.base-shorts{
-  fill:#ffffff;
-}
-
-.top-tshirt{fill:#fb923c}
-.top-shirt{fill:#60a5fa}
-.top-sweater{fill:#db2777}
-.top-jacket{fill:#ea580c}
-.top-downjacket{fill:#2563eb}
-.top-uniform{fill:#475569}
-
-.bottom-skirt{fill:#a855f7}
-.bottom-shorts{fill:#0ea5e9}
-.bottom-pants{fill:#475569}
-.bottom-jeans{fill:#1d4ed8}
-.bottom-longpants{fill:#111827}
-
-.shoe-skin{
-  fill:#111827;
-}
-
-.feet-sandals .shoe-skin{fill:#f59e0b}
-.feet-boots .shoe-skin{fill:#111827}
-.feet-leathershoes .shoe-skin{fill:#7c2d12}
-
-.toast{
-  position:absolute;
-  left:50%;
-  top:88px;
-  transform:translateX(-50%) translateY(-8px);
-  z-index:30;
-  min-width:250px;
-  max-width:80%;
-  padding:12px 16px;
-  border-radius:999px;
-  background:linear-gradient(90deg,#fff,#ecfeff,#fef3c7);
-  font-weight:950;
-  text-align:center;
-  box-shadow:0 12px 24px rgba(15,23,42,.12);
-  opacity:0;
-  pointer-events:none;
-  transition:.25s;
-}
-
-.toast.show{
-  opacity:1;
-  transform:translateX(-50%) translateY(0);
-}
-
-.note{
-  position:absolute;
-  left:16px;
-  right:16px;
-  bottom:16px;
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  z-index:20;
-}
-
-.note div{
-  background:rgba(255,255,255,.84);
-  border-radius:18px;
-  padding:11px 13px;
-  color:#475569;
-  font-size:13px;
-  line-height:1.35;
-  font-weight:900;
-  box-shadow:0 8px 16px rgba(15,23,42,.08);
-}
-
-.right{
-  padding:18px;
-}
-
-.question-card{
-  padding:18px;
-  border-radius:28px;
-  background:rgba(255,255,255,.76);
-}
-
-.qhead{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  align-items:center;
-  flex-wrap:wrap;
-  margin-bottom:14px;
-}
-
-.qnum{
-  font-size:15px;
-  font-weight:950;
-  color:#475569;
-}
-
-.city-pill{
-  border-radius:999px;
-  padding:8px 12px;
-  color:white;
-  background:linear-gradient(90deg,#38bdf8,#7c3aed);
-  font-size:13px;
-  font-weight:950;
-}
-
-.helpbox{
-  display:none;
-  border-radius:16px;
-  padding:10px 12px;
-  background:#eef6ff;
-  color:#475569;
-  font-size:17px;
-  line-height:1.45;
-  font-weight:850;
-  margin-bottom:10px;
-}
-
-.helpbox.show{
-  display:block;
-}
-
-.question{
-  font-size:38px;
-  line-height:1.24;
-  font-weight:950;
-  margin:10px 0;
-}
-
-.toggle-row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin:14px 0;
-}
-
-.toggle{
-  border-radius:16px;
-  padding:12px;
-  background:white;
-  color:#334155;
-  font-size:15px;
-}
-
-.choices{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.choice{
-  min-height:76px;
-  border-radius:20px;
-  background:#fff1c9;
-  color:#382306;
-  font-size:26px;
-  padding:12px;
-}
-
-.choice.correct{
-  background:#bbf7d0;
-  color:#14532d;
-}
-
-.choice.wrong{
-  background:#fecaca;
-  color:#7f1d1d;
-}
-
-.feedback{
-  margin-top:14px;
-  min-height:58px;
-  padding:13px;
-  border-radius:18px;
-  background:rgba(255,255,255,.72);
-  color:#475569;
-  font-size:15px;
-  line-height:1.45;
-  font-weight:900;
-}
-
-.wordbank-btn{
-  margin-top:14px;
-  width:100%;
-  border-radius:18px;
-  padding:13px;
-  background:linear-gradient(90deg,#38bdf8,#7c3aed);
-  color:white;
-  font-size:16px;
-}
-
-.modal{
-  position:fixed;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:rgba(15,23,42,.55);
-  z-index:100;
-  padding:16px;
-}
-
-.modal.show{
-  display:flex;
-}
-
-.modal-card{
-  width:min(850px,100%);
-  max-height:85vh;
-  background:white;
-  border-radius:28px;
-  overflow:hidden;
-  box-shadow:0 30px 90px rgba(0,0,0,.28);
-  display:flex;
-  flex-direction:column;
-}
-
-.modal-head{
-  padding:18px 20px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid #e5e7eb;
-}
-
-.modal-head h2{
-  margin:0;
-  font-size:24px;
-}
-
-.close{
-  width:42px;
-  height:42px;
-  border-radius:14px;
-  background:#eef2ff;
-  font-size:24px;
-}
-
-.word-grid{
-  padding:18px;
-  overflow:auto;
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-  background:#f8fbff;
-}
-
-.word{
-  border-radius:16px;
-  padding:10px 12px;
-  background:white;
-  border:1px solid #e5edf7;
-  color:#475569;
-  font-size:15px;
-  line-height:1.38;
-  font-weight:850;
-}
-
-.word b{
-  color:#111827;
-  font-size:18px;
-}
-
-.win{
-  position:fixed;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:rgba(15,23,42,.55);
-  z-index:120;
-  padding:20px;
-}
-
-.win.show{
-  display:flex;
-}
-
-.win-card{
-  width:min(520px,100%);
-  background:white;
-  border-radius:30px;
-  padding:28px;
-  text-align:center;
-  box-shadow:0 30px 80px rgba(0,0,0,.28);
-}
-
-.win-card h2{
-  font-size:32px;
-  margin:8px 0;
-}
-
-.play{
-  margin-top:14px;
-  border-radius:18px;
-  padding:13px 18px;
-  background:linear-gradient(90deg,#38bdf8,#7c3aed);
-  color:white;
-  font-size:16px;
-}
-
-@media(max-width:1050px){
-  .layout{
-    grid-template-columns:1fr;
-  }
-}
-
-@media(max-width:720px){
-  body{padding:10px}
-  h1{font-size:24px}
-  .scene{height:620px}
-  .runner-wrap{left:8px;transform:scale(.82);transform-origin:left bottom}
-  .question{font-size:30px}
-  .choices{grid-template-columns:1fr}
-  .toggle-row{grid-template-columns:1fr}
-  .word-grid{grid-template-columns:1fr}
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ESC-2-5-2 City Outfit Runner</title>
+
+  <style>
+    :root{
+      --ink:#172033;
+      --muted:#64748b;
+      --purple:#7c3aed;
+      --blue:#38bdf8;
+      --green:#22c55e;
+      --gold:#facc15;
+      --pink:#fb7185;
+      --panel:rgba(255,255,255,.86);
+      --white:rgba(255,255,255,.92);
+      --shadow:0 18px 50px rgba(15,23,42,.16);
+      --softline:rgba(255,255,255,.9);
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans SC",
+        "Microsoft YaHei",
+        sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 8% 8%, rgba(255,255,255,.8) 0 3px, transparent 3px),
+        radial-gradient(circle at 88% 16%, rgba(255,255,255,.55) 0 3px, transparent 3px),
+        linear-gradient(135deg,#d9f5ff 0%,#fff3cf 46%,#ffe2f1 100%);
+      padding:16px;
+    }
+
+    .wrap{
+      max-width:1380px;
+      margin:0 auto;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .brand{
+      display:flex;
+      gap:13px;
+      align-items:center;
+    }
+
+    .logo{
+      width:64px;
+      height:64px;
+      border-radius:20px;
+      display:grid;
+      place-items:center;
+      font-size:34px;
+      color:#fff;
+      background:linear-gradient(145deg,#38bdf8,#7c3aed);
+      box-shadow:var(--shadow);
+    }
+
+    h1{
+      margin:0;
+      font-size:31px;
+      line-height:1.05;
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+
+    .sub{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:14px;
+      font-weight:850;
+    }
+
+    .top-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    button{
+      font-family:inherit;
+      border:0;
+      cursor:pointer;
+      font-weight:950;
+    }
+
+    .top-btn{
+      border-radius:17px;
+      padding:12px 17px;
+      background:rgba(255,255,255,.82);
+      color:#334155;
+      box-shadow:var(--shadow);
+      font-size:14px;
+    }
+
+    .top-btn:hover{
+      filter:brightness(1.04);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:minmax(620px,1.35fr) minmax(360px,.72fr);
+      gap:16px;
+      align-items:start;
+    }
+
+    .panel{
+      background:var(--panel);
+      border:1px solid var(--softline);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+    }
+
+    .left{
+      padding:16px;
+    }
+
+    .right{
+      padding:18px;
+      position:sticky;
+      top:12px;
+    }
+
+    .how{
+      border-radius:24px;
+      background:rgba(255,255,255,.78);
+      border:1px solid rgba(255,255,255,.92);
+      padding:15px 18px;
+      margin-bottom:12px;
+    }
+
+    .cap{
+      color:var(--purple);
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      font-size:12px;
+      font-weight:950;
+      margin-bottom:8px;
+    }
+
+    .how h2{
+      margin:0 0 8px;
+      font-size:23px;
+      line-height:1.15;
+    }
+
+    .how p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.5;
+      font-weight:830;
+      font-size:14px;
+    }
+
+    .stats{
+      display:flex;
+      gap:9px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .stat{
+      border-radius:999px;
+      background:white;
+      padding:8px 12px;
+      color:#475569;
+      font-size:13px;
+      font-weight:950;
+      border:1px solid rgba(255,255,255,.95);
+    }
+
+    .scene{
+      position:relative;
+      height:690px;
+      border-radius:28px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.95);
+      background:linear-gradient(180deg,#9ee7ff 0%,#fff3a3 48%,#9adf75 100%);
+      transition:background .35s;
+    }
+
+    .scene.spring{
+      background:linear-gradient(180deg,#bcefff 0%,#fff0fa 44%,#abe893 100%);
+    }
+
+    .scene.summer{
+      background:linear-gradient(180deg,#8de8ff 0%,#fff094 46%,#90dc6f 100%);
+    }
+
+    .scene.autumn{
+      background:linear-gradient(180deg,#cceeff 0%,#ffd6a0 44%,#e8b95e 100%);
+    }
+
+    .scene.winter{
+      background:linear-gradient(180deg,#d8f4ff 0%,#fbfdff 44%,#dcecff 100%);
+    }
+
+    .scene-head{
+      position:absolute;
+      top:16px;
+      left:16px;
+      right:16px;
+      z-index:20;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+
+    .stop-card,
+    .progress-card{
+      border-radius:22px;
+      background:rgba(255,255,255,.84);
+      border:1px solid rgba(255,255,255,.95);
+      box-shadow:0 10px 22px rgba(15,23,42,.10);
+      padding:12px 16px;
+    }
+
+    .stop-card{
+      font-size:19px;
+      font-weight:950;
+      line-height:1.2;
+    }
+
+    .progress-card{
+      min-width:250px;
+    }
+
+    .progress-top{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      color:#475569;
+      font-size:12.5px;
+      font-weight:950;
+      margin-bottom:8px;
+    }
+
+    .track{
+      height:12px;
+      border-radius:999px;
+      background:white;
+      overflow:hidden;
+    }
+
+    .fill{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg,#38bdf8,#22c55e,#facc15,#fb7185,#7c3aed);
+      transition:width .35s ease;
+    }
+
+    .sun{
+      position:absolute;
+      right:74px;
+      top:92px;
+      width:100px;
+      height:100px;
+      border-radius:50%;
+      background:radial-gradient(circle,#fff8bc 0%,#facc15 72%);
+      box-shadow:0 0 40px rgba(250,204,21,.52);
+      z-index:2;
+    }
+
+    .cloud{
+      position:absolute;
+      left:96px;
+      top:135px;
+      width:170px;
+      height:58px;
+      border-radius:999px;
+      background:rgba(255,255,255,.72);
+      z-index:2;
+    }
+
+    .cloud::before,
+    .cloud::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      background:rgba(255,255,255,.88);
+    }
+
+    .cloud::before{
+      width:74px;
+      height:74px;
+      left:24px;
+      top:-30px;
+    }
+
+    .cloud::after{
+      width:58px;
+      height:58px;
+      right:22px;
+      top:-22px;
+    }
+
+    .snow{
+      position:absolute;
+      inset:0;
+      z-index:4;
+      pointer-events:none;
+      opacity:0;
+      transition:opacity .25s;
+    }
+
+    .scene.winter .snow{
+      opacity:1;
+    }
+
+    .snow span{
+      position:absolute;
+      top:-36px;
+      font-size:24px;
+      animation:snowfall 5.8s linear infinite;
+    }
+
+    .snow span:nth-child(1){left:7%;animation-delay:-1s}
+    .snow span:nth-child(2){left:20%;animation-delay:-2.4s}
+    .snow span:nth-child(3){left:36%;animation-delay:-.7s}
+    .snow span:nth-child(4){left:52%;animation-delay:-3.2s}
+    .snow span:nth-child(5){left:69%;animation-delay:-1.8s}
+    .snow span:nth-child(6){left:84%;animation-delay:-4s}
+
+    @keyframes snowfall{
+      to{
+        transform:translateY(760px) rotate(180deg);
+      }
+    }
+
+    .deco{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:170px;
+      display:flex;
+      justify-content:space-around;
+      font-size:38px;
+      opacity:.55;
+      pointer-events:none;
+      z-index:5;
+    }
+
+    .road{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      height:158px;
+      background:linear-gradient(180deg,#64748b,#3d4658);
+      overflow:hidden;
+      z-index:6;
+    }
+
+    .road::after{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      top:64px;
+      height:25px;
+      background:repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,.98) 0 74px,
+        transparent 74px 154px
+      );
+      animation:roadMove .52s linear infinite;
+    }
+
+    @keyframes roadMove{
+      to{
+        transform:translateX(-154px);
+      }
+    }
+
+    .runner-zone{
+      position:absolute;
+      left:78px;
+      bottom:116px;
+      width:360px;
+      height:440px;
+      z-index:12;
+    }
+
+    .runner{
+      position:absolute;
+      left:60px;
+      bottom:0;
+      width:245px;
+      height:390px;
+      object-fit:contain;
+      object-position:center bottom;
+      animation:runnerBounce .32s ease-in-out infinite alternate;
+      filter:drop-shadow(0 16px 18px rgba(15,23,42,.18));
+      transform-origin:50% 90%;
+    }
+
+    @keyframes runnerBounce{
+      from{
+        transform:translateY(0) rotate(-1.5deg);
+      }
+      to{
+        transform:translateY(-12px) rotate(1.5deg);
+      }
+    }
+
+    .runner.happy{
+      animation:runnerHappy .22s ease-in-out 4 alternate;
+    }
+
+    @keyframes runnerHappy{
+      from{
+        transform:translateY(-6px) scale(1);
+      }
+      to{
+        transform:translateY(-20px) scale(1.04);
+      }
+    }
+
+    .speed-lines{
+      position:absolute;
+      left:18px;
+      top:205px;
+      width:62px;
+      height:5px;
+      border-radius:999px;
+      background:rgba(255,255,255,.92);
+      box-shadow:
+        -18px -25px 0 rgba(255,255,255,.66),
+        -28px 25px 0 rgba(255,255,255,.54);
+      animation:speedPulse .38s linear infinite;
+    }
+
+    @keyframes speedPulse{
+      50%{
+        opacity:.35;
+        transform:translateX(-10px);
+      }
+    }
+
+    .shadow{
+      position:absolute;
+      left:105px;
+      bottom:8px;
+      width:128px;
+      height:22px;
+      border-radius:999px;
+      background:rgba(15,23,42,.22);
+      filter:blur(8px);
+      z-index:-1;
+    }
+
+    .reward-pop{
+      position:absolute;
+      left:50%;
+      top:42%;
+      transform:translate(-50%,-50%) scale(.5);
+      width:190px;
+      min-height:190px;
+      border-radius:28px;
+      background:rgba(255,255,255,.93);
+      border:1px solid rgba(255,255,255,.96);
+      box-shadow:0 20px 50px rgba(15,23,42,.18);
+      display:none;
+      place-items:center;
+      text-align:center;
+      z-index:40;
+      padding:14px;
+    }
+
+    .reward-pop.show{
+      display:grid;
+      animation:popReward .75s ease both;
+    }
+
+    @keyframes popReward{
+      0%{
+        opacity:0;
+        transform:translate(-50%,-50%) scale(.35) rotate(-8deg);
+      }
+      35%{
+        opacity:1;
+        transform:translate(-50%,-50%) scale(1.12) rotate(3deg);
+      }
+      100%{
+        opacity:0;
+        transform:translate(-50%,-95%) scale(.86) rotate(0);
+      }
+    }
+
+    .reward-pop img{
+      max-width:120px;
+      max-height:120px;
+      object-fit:contain;
+      display:block;
+      margin:auto;
+    }
+
+    .reward-label{
+      font-size:18px;
+      font-weight:950;
+      margin-top:8px;
+      color:#1e293b;
+    }
+
+    .scene-note{
+      position:absolute;
+      left:16px;
+      right:16px;
+      bottom:16px;
+      z-index:22;
+      display:grid;
+      grid-template-columns:1fr minmax(220px,.65fr);
+      gap:12px;
+      align-items:end;
+    }
+
+    .unlocked-box,
+    .city-note{
+      border-radius:20px;
+      background:rgba(255,255,255,.84);
+      border:1px solid rgba(255,255,255,.96);
+      box-shadow:0 10px 22px rgba(15,23,42,.10);
+      padding:12px;
+    }
+
+    .unlocked-title{
+      font-size:12px;
+      font-weight:950;
+      color:#7c3aed;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+
+    .unlocked-grid{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      min-height:52px;
+      align-items:center;
+    }
+
+    .unlock-card{
+      width:62px;
+      height:62px;
+      border-radius:16px;
+      background:#fff;
+      border:1px solid #eef2ff;
+      display:grid;
+      place-items:center;
+      box-shadow:0 8px 18px rgba(15,23,42,.06);
+      position:relative;
+    }
+
+    .unlock-card img{
+      max-width:48px;
+      max-height:48px;
+      object-fit:contain;
+    }
+
+    .unlock-card .fallback{
+      font-size:24px;
+    }
+
+    .city-note{
+      color:#475569;
+      font-size:13px;
+      line-height:1.38;
+      font-weight:900;
+      text-align:right;
+    }
+
+    .question-card{
+      border-radius:28px;
+      background:rgba(255,255,255,.76);
+      border:1px solid rgba(255,255,255,.92);
+      padding:18px;
+    }
+
+    .qhead{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .qnum{
+      color:#475569;
+      font-size:15px;
+      font-weight:950;
+    }
+
+    .city-pill{
+      border-radius:999px;
+      padding:8px 12px;
+      background:linear-gradient(90deg,#38bdf8,#7c3aed);
+      color:#fff;
+      font-size:13px;
+      font-weight:950;
+    }
+
+    .helpbox{
+      display:none;
+      border-radius:16px;
+      padding:11px 12px;
+      background:#eef6ff;
+      border:1px solid rgba(59,130,246,.18);
+      color:#475569;
+      font-size:17px;
+      line-height:1.45;
+      font-weight:850;
+      margin-bottom:10px;
+    }
+
+    .helpbox.show{
+      display:block;
+    }
+
+    .question{
+      font-size:36px;
+      line-height:1.25;
+      font-weight:950;
+      color:#172033;
+      margin:10px 0;
+    }
+
+    .toggle-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin:14px 0;
+    }
+
+    .toggle{
+      border-radius:17px;
+      padding:12px;
+      background:white;
+      color:#334155;
+      font-size:15px;
+      box-shadow:0 8px 16px rgba(15,23,42,.05);
+    }
+
+    .choices{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .choice{
+      min-height:76px;
+      border-radius:20px;
+      background:#fff1c9;
+      color:#382306;
+      font-size:25px;
+      line-height:1.15;
+      padding:12px;
+      box-shadow:0 10px 18px rgba(15,23,42,.06);
+    }
+
+    .choice:hover{
+      filter:brightness(1.04);
+      transform:translateY(-1px);
+    }
+
+    .choice.correct{
+      background:#bbf7d0;
+      color:#14532d;
+    }
+
+    .choice.wrong{
+      background:#fecaca;
+      color:#7f1d1d;
+    }
+
+    .feedback{
+      margin-top:14px;
+      min-height:64px;
+      border-radius:18px;
+      background:rgba(255,255,255,.76);
+      color:#475569;
+      padding:13px 14px;
+      font-size:15px;
+      line-height:1.45;
+      font-weight:900;
+    }
+
+    .right-actions{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+
+    .wordbank-btn{
+      border-radius:18px;
+      padding:13px;
+      color:white;
+      background:linear-gradient(90deg,#38bdf8,#7c3aed);
+      font-size:16px;
+      box-shadow:0 10px 20px rgba(124,58,237,.18);
+    }
+
+    .summary-small{
+      border-radius:18px;
+      padding:12px;
+      background:rgba(255,255,255,.72);
+      color:#64748b;
+      font-size:13px;
+      font-weight:850;
+      line-height:1.42;
+    }
+
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(15,23,42,.56);
+      z-index:100;
+      padding:16px;
+    }
+
+    .modal.show{
+      display:flex;
+    }
+
+    .modal-card{
+      width:min(880px,100%);
+      max-height:85vh;
+      border-radius:30px;
+      background:white;
+      box-shadow:0 30px 90px rgba(0,0,0,.28);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .modal-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:18px 20px;
+      border-bottom:1px solid #e5e7eb;
+      background:linear-gradient(180deg,#fff,#f8fbff);
+    }
+
+    .modal-head h2{
+      margin:0;
+      font-size:24px;
+    }
+
+    .close{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      background:#eef2ff;
+      font-size:24px;
+      color:#334155;
+    }
+
+    .word-grid{
+      overflow:auto;
+      padding:18px;
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      background:#f8fbff;
+    }
+
+    .word{
+      border-radius:16px;
+      padding:10px 12px;
+      background:white;
+      border:1px solid #e5edf7;
+      color:#475569;
+      font-size:15px;
+      line-height:1.38;
+      font-weight:850;
+    }
+
+    .word b{
+      color:#111827;
+      font-size:18px;
+    }
+
+    .win{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(15,23,42,.56);
+      z-index:120;
+      padding:18px;
+    }
+
+    .win.show{
+      display:flex;
+    }
+
+    .win-card{
+      width:min(620px,100%);
+      background:#fff;
+      border-radius:32px;
+      padding:26px;
+      text-align:center;
+      box-shadow:0 30px 90px rgba(0,0,0,.28);
+    }
+
+    .win-card h2{
+      margin:8px 0;
+      font-size:32px;
+    }
+
+    .win-card p{
+      color:#64748b;
+      line-height:1.55;
+      font-weight:850;
+      margin:0 0 14px;
+    }
+
+    .final-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin:14px 0;
+    }
+
+    .final-card{
+      border-radius:20px;
+      background:#f8fbff;
+      border:1px solid #e5edf7;
+      padding:12px;
+      text-align:left;
+    }
+
+    .final-title{
+      font-weight:950;
+      margin-bottom:8px;
+      color:#172033;
+    }
+
+    .final-items{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .play{
+      border-radius:18px;
+      padding:13px 18px;
+      background:linear-gradient(90deg,#38bdf8,#7c3aed);
+      color:white;
+      font-size:16px;
+      margin-top:10px;
+    }
+
+    @media(max-width:1080px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+
+      .right{
+        position:static;
+      }
+    }
+
+    @media(max-width:760px){
+      body{
+        padding:10px;
+      }
+
+      h1{
+        font-size:24px;
+      }
+
+      .scene{
+        height:650px;
+      }
+
+      .runner-zone{
+        left:18px;
+        transform:scale(.84);
+        transform-origin:left bottom;
+      }
+
+      .question{
+        font-size:29px;
+      }
+
+      .choices{
+        grid-template-columns:1fr;
+      }
+
+      .toggle-row{
+        grid-template-columns:1fr;
+      }
+
+      .scene-note{
+        grid-template-columns:1fr;
+      }
+
+      .city-note{
+        text-align:left;
+      }
+
+      .word-grid{
+        grid-template-columns:1fr;
+      }
+
+      .final-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
-<div class="wrap">
-  <div class="top">
-    <div class="brand">
-      <div class="logo">🏃‍♀️</div>
-      <div>
-        <h1>ESC-2-5-2 City Outfit Runner</h1>
-        <div class="sub">Seasons 季节｜杭州 vs 哈尔滨｜Word List 2 + Clothes Review</div>
-      </div>
-    </div>
-    <div class="top-buttons">
-      <button class="top-btn" onclick="openWordBank()">Word Bank</button>
-      <button class="top-btn" onclick="restartGame()">Restart</button>
-    </div>
-  </div>
-
-  <div class="layout">
-    <section class="panel left">
-      <div class="how">
-        <div class="cap">How to Play</div>
-        <h2>杭州 or 哈尔滨？穿对衣服快跑！</h2>
-        <p>Read the city / season clue and choose the best answer. Correct answers unlock clothes. Use Pinyin or English only when needed.</p>
-        <div class="stats">
-          <div class="stat">Correct: <span id="score">0</span></div>
-          <div class="stat">Cold Mistakes: <span id="cold">0</span></div>
-          <div class="stat">Unlocked: <span id="unlockCount">0</span></div>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">🏃‍♀️</div>
+        <div>
+          <h1>ESC-2-5-2 City Outfit Runner</h1>
+          <div class="sub">Seasons 季节｜杭州 vs 哈尔滨｜Word List 2 + Clothes Review</div>
         </div>
       </div>
 
-      <div class="scene hangzhou-spring" id="scene">
-        <div class="scene-head">
-          <div class="stop" id="stopCard">Next Stop: 杭州 Hangzhou</div>
-          <div class="progress">
-            <div class="progress-row">
-              <span id="progressText">Question 1 / 28</span>
-              <span id="seasonText">春天 Spring</span>
-            </div>
-            <div class="track"><div class="fill" id="fill"></div></div>
+      <div class="top-actions">
+        <button class="top-btn" onclick="openWordBank()">Word Bank</button>
+        <button class="top-btn" onclick="restartGame()">Restart</button>
+      </div>
+    </div>
+
+    <div class="layout">
+      <section class="panel left">
+        <div class="how">
+          <div class="cap">How to Play</div>
+          <h2>杭州 or 哈尔滨？穿对衣服快跑！</h2>
+          <p>
+            Read the clue and choose the best answer. Correct answers unlock outfit cards for the runner.
+            Use <b>Show Pinyin</b> or <b>Show English</b> only when needed.
+          </p>
+
+          <div class="stats">
+            <div class="stat">Correct: <span id="score">0</span></div>
+            <div class="stat">Mistakes: <span id="mistakes">0</span></div>
+            <div class="stat">Unlocked: <span id="unlockCount">0</span></div>
           </div>
         </div>
 
-        <div class="toast" id="toast">Correct!</div>
-        <div class="sun"></div>
-        <div class="cloud"></div>
-        <div class="snow"><span>❄️</span><span>❄️</span><span>❄️</span><span>❄️</span><span>❄️</span><span>❄️</span></div>
-        <div class="deco" id="deco"><span>🌸</span><span>🏞️</span><span>🌿</span><span>✨</span></div>
+        <div class="scene spring" id="scene">
+          <div class="scene-head">
+            <div class="stop-card" id="stopCard">Next Stop: 杭州 Hangzhou</div>
 
-        <div class="runner-wrap">
-          <div class="speed-line"></div>
+            <div class="progress-card">
+              <div class="progress-top">
+                <span id="progressText">Question 1 / 30</span>
+                <span id="seasonText">Spring</span>
+              </div>
+              <div class="track">
+                <div class="fill" id="fill"></div>
+              </div>
+            </div>
+          </div>
 
-          <svg class="runner-svg" id="runnerSvg" viewBox="0 0 250 430" aria-label="running character">
-            <ellipse cx="125" cy="413" rx="62" ry="14" fill="rgba(0,0,0,.16)"/>
+          <div class="reward-pop" id="rewardPop">
+            <div>
+              <img id="rewardImg" alt="" />
+              <div class="reward-label" id="rewardLabel">Unlocked!</div>
+            </div>
+          </div>
 
-            <g class="runner-core">
-              <path class="pony" d="M150 75 C205 95 190 175 150 182 C166 138 166 100 150 75Z" fill="#714868"/>
-              <path d="M72 38 C55 78 58 158 99 184 C80 126 88 76 114 48Z" fill="#4b2d51"/>
-              <path d="M93 26 C137 0 177 29 177 83 C177 135 158 172 124 174 C88 174 68 133 70 83 C72 58 80 38 93 26Z" fill="#5f3862"/>
+          <div class="sun"></div>
+          <div class="cloud"></div>
 
-              <circle cx="125" cy="82" r="48" fill="#ffd3c0"/>
-              <path d="M81 64 C88 20 164 18 174 67 C143 50 112 50 81 64Z" fill="#4b2d51"/>
-              <rect x="113" y="125" width="25" height="22" rx="8" fill="#f3bea6"/>
+          <div class="snow">
+            <span>❄️</span>
+            <span>❄️</span>
+            <span>❄️</span>
+            <span>❄️</span>
+            <span>❄️</span>
+            <span>❄️</span>
+          </div>
 
-              <ellipse cx="106" cy="82" rx="5" ry="9" fill="#1f2937"/>
-              <ellipse cx="142" cy="82" rx="5" ry="9" fill="#1f2937"/>
-              <path d="M114 103 Q125 115 137 103" stroke="#b94a67" stroke-width="4" fill="none" stroke-linecap="round"/>
-              <ellipse cx="94" cy="100" rx="13" ry="7" fill="rgba(255,128,160,.25)"/>
-              <ellipse cx="154" cy="100" rx="13" ry="7" fill="rgba(255,128,160,.25)"/>
+          <div class="deco" id="deco">
+            <span>🌸</span><span>🏞️</span><span>🌿</span><span>✨</span>
+          </div>
 
-              <g class="arm-left">
-                <rect x="83" y="148" width="23" height="116" rx="12" fill="#f3bea6"/>
-                <circle cx="94" cy="265" r="12" fill="#f3bea6"/>
-              </g>
-              <g class="arm-right">
-                <rect x="145" y="148" width="23" height="116" rx="12" fill="#f3bea6"/>
-                <circle cx="156" cy="265" r="12" fill="#f3bea6"/>
-              </g>
+          <div class="runner-zone">
+            <div class="speed-lines"></div>
+            <div class="shadow"></div>
+            <img class="runner" id="runner" src="assets/outfit/runner_base.png" alt="runner">
+          </div>
 
-              <rect class="base-shirt" x="84" y="140" width="82" height="122" rx="22"/>
-              <rect class="base-shorts" x="91" y="250" width="68" height="44" rx="12"/>
+          <div class="road"></div>
 
-              <rect class="item top-tshirt" data-item="tshirt" x="80" y="138" width="90" height="126" rx="24"/>
-              <rect class="item top-shirt" data-item="shirt" x="80" y="138" width="90" height="126" rx="24"/>
-              <rect class="item top-sweater" data-item="sweater" x="78" y="136" width="94" height="130" rx="25"/>
-              <rect class="item top-jacket" data-item="jacket" x="76" y="134" width="98" height="134" rx="26"/>
-              <rect class="item top-downjacket" data-item="downjacket" x="74" y="130" width="102" height="140" rx="28"/>
-              <rect class="item top-uniform" data-item="uniform" x="77" y="136" width="96" height="130" rx="25"/>
+          <div class="scene-note">
+            <div class="unlocked-box">
+              <div class="unlocked-title">Unlocked Outfit</div>
+              <div class="unlocked-grid" id="unlockedGrid">
+                <span style="color:#64748b;font-weight:850;font-size:13px;">Correct answers will unlock outfit cards here.</span>
+              </div>
+            </div>
 
-              <path class="item bottom-skirt" data-item="skirt" d="M88 250 L162 250 L180 326 L70 326 Z"/>
-              <rect class="item bottom-shorts" data-item="shorts" x="92" y="252" width="66" height="46" rx="12"/>
-              <path class="item bottom-pants" data-item="pants" d="M91 252 L121 252 L117 392 L88 392 Z M130 252 L160 252 L166 392 L137 392 Z"/>
-              <path class="item bottom-jeans" data-item="jeans" d="M91 252 L121 252 L117 392 L88 392 Z M130 252 L160 252 L166 392 L137 392 Z"/>
-              <path class="item bottom-longpants" data-item="longpants" d="M91 252 L121 252 L117 394 L88 394 Z M130 252 L160 252 L166 394 L137 394 Z"/>
+            <div class="city-note" id="cityNote">
+              Good for: 杭州 · 春天
+            </div>
+          </div>
+        </div>
+      </section>
 
-              <g class="leg-left">
-                <rect x="95" y="276" width="25" height="108" rx="13" fill="#f3bea6"/>
-                <rect class="shoe-skin" x="82" y="374" width="48" height="22" rx="11"/>
-              </g>
-              <g class="leg-right">
-                <rect x="132" y="276" width="25" height="108" rx="13" fill="#f3bea6"/>
-                <rect class="shoe-skin" x="123" y="374" width="48" height="22" rx="11"/>
-              </g>
+      <aside class="panel right">
+        <div class="cap">Question</div>
 
-              <path class="item" data-item="hat" d="M75 35 Q125 -2 175 35 L178 50 L72 50 Z" fill="#ef4444"/>
-              <rect class="item" data-item="hat" x="62" y="45" width="126" height="13" rx="7" fill="#b91c1c"/>
+        <div class="question-card">
+          <div class="qhead">
+            <div class="qnum" id="qnum">Question 1 / 30</div>
+            <div class="city-pill" id="cityPill">杭州 Hangzhou</div>
+          </div>
 
-              <rect class="item" data-item="scarf" x="78" y="134" width="98" height="25" rx="13" fill="#f97316"/>
-              <path class="item" data-item="scarf" d="M147 150 L174 154 L160 245 L133 241 Z" fill="#fb923c"/>
+          <div class="helpbox" id="pinyinBox"></div>
 
-              <circle class="item" data-item="gloves" cx="92" cy="266" r="15" fill="#2563eb"/>
-              <circle class="item" data-item="gloves" cx="158" cy="266" r="15" fill="#2563eb"/>
-            </g>
-          </svg>
+          <div class="question" id="questionMain">
+            Ready?
+          </div>
+
+          <div class="helpbox" id="englishBox"></div>
+
+          <div class="toggle-row">
+            <button class="toggle" onclick="toggleBox('pinyinBox')">Show Pinyin</button>
+            <button class="toggle" onclick="toggleBox('englishBox')">Show English</button>
+          </div>
+
+          <div class="choices" id="choices"></div>
+
+          <div class="feedback" id="feedback">
+            Choose the best answer.
+          </div>
+
+          <div class="right-actions">
+            <button class="wordbank-btn" onclick="openWordBank()">Open Word Bank</button>
+            <div class="summary-small">
+              Tip: Pinyin and English are hidden first so students can try the Chinese question independently.
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="modal" id="wordBankModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2>📚 Word Bank / 词汇表</h2>
+        <button class="close" onclick="closeWordBank()">×</button>
+      </div>
+      <div class="word-grid" id="wordBank"></div>
+    </div>
+  </div>
+
+  <div class="win" id="win">
+    <div class="win-card">
+      <div style="font-size:72px;">🏁</div>
+      <h2>Runner Complete!</h2>
+      <p>
+        Great job! You practiced seasons, city weather, clothing words, and useful sentence patterns.
+      </p>
+
+      <div class="final-grid">
+        <div class="final-card">
+          <div class="final-title">杭州夏天 Hangzhou Summer</div>
+          <div class="final-items" id="finalSummer"></div>
         </div>
 
-        <div class="road"></div>
-
-        <div class="note">
-          <div id="unlockNote">Unlocked items will appear here.</div>
-          <div id="counterNote">Good for: 杭州 · 春天</div>
+        <div class="final-card">
+          <div class="final-title">哈尔滨冬天 Harbin Winter</div>
+          <div class="final-items" id="finalWinter"></div>
         </div>
       </div>
-    </section>
 
-    <aside class="panel right">
-      <div class="cap">Question</div>
-
-      <div class="question-card">
-        <div class="qhead">
-          <div class="qnum" id="qnum">Question 1 / 28</div>
-          <div class="city-pill" id="cityPill">杭州 Hangzhou</div>
-        </div>
-
-        <div class="helpbox" id="pinyinBox"></div>
-        <div class="question" id="questionMain">Ready?</div>
-        <div class="helpbox" id="englishBox"></div>
-
-        <div class="toggle-row">
-          <button class="toggle" onclick="toggleBox('pinyinBox')">Show Pinyin</button>
-          <button class="toggle" onclick="toggleBox('englishBox')">Show English</button>
-        </div>
-
-        <div class="choices" id="choices"></div>
-        <div class="feedback" id="feedback">Choose the best answer.</div>
-
-        <button class="wordbank-btn" onclick="openWordBank()">Open Word Bank</button>
-      </div>
-    </aside>
-  </div>
-</div>
-
-<div class="modal" id="wordBankModal">
-  <div class="modal-card">
-    <div class="modal-head">
-      <h2>📚 Word Bank / 词汇表</h2>
-      <button class="close" onclick="closeWordBank()">×</button>
+      <button class="play" onclick="restartGame()">Play Again</button>
     </div>
-    <div class="word-grid" id="wordBank"></div>
   </div>
-</div>
 
-<div class="win" id="win">
-  <div class="win-card">
-    <div style="font-size:70px">🏁</div>
-    <h2>Runner Complete!</h2>
-    <p>Great job! You practiced seasons, cities, weather, clothing words, and sentence patterns.</p>
-    <button class="play" onclick="restartGame()">Play Again</button>
-  </div>
-</div>
+  <script>
+    const ASSETS = {
+      runner: "assets/outfit/runner_base.png",
 
-<script>
-const WORD_BANK = [
-  ["杭州","háng zhōu","Hangzhou"],
-  ["春天","chūn tiān","spring"],
-  ["夏天","xià tiān","summer"],
-  ["秋天","qiū tiān","autumn"],
-  ["冬天","dōng tiān","winter"],
-  ["冷","lěng","cold"],
-  ["暖和","nuǎn huo","nice and warm"],
-  ["热","rè","hot"],
-  ["凉快","liáng kuai","nice and cool"],
-  ["美","měi","beautiful"],
-  ["哈尔滨","hā ěr bīn","Harbin"],
-  ["最","zuì","most"],
-  ["低","dī","low"],
-  ["人们","rén men","people"],
-  ["凉鞋","liáng xié","sandals"],
-  ["绒","róng","down"],
-  ["羽绒服","yǔ róng fú","down jacket"],
-  ["靴子","xuē zi","boots"],
-  ["戴","dài","wear accessories"],
-  ["帽子","mào zi","hat"],
-  ["围巾","wéi jīn","scarf"],
-  ["手套","shǒu tào","gloves"],
-  ["……的时候","de shí hou","when"],
-  ["穿","chuān","wear"],
-  ["衬衫","chèn shān","shirt"],
-  ["裤子","kù zi","pants / trousers"],
-  ["裙子","qún zi","skirt"],
-  ["T恤","T xù","T-shirt"],
-  ["短裤","duǎn kù","shorts"],
-  ["衣服","yī fu","clothes"],
-  ["牛仔裤","niú zǎi kù","jeans"],
-  ["校服","xiào fú","school uniform"],
-  ["毛衣","máo yī","sweater"],
-  ["外套","wài tào","jacket / coat"],
-  ["长裤","cháng kù","long pants"],
-  ["皮鞋","pí xié","leather shoes"]
-];
+      tshirt: "assets/outfit/tshirt.png",
+      shorts: "assets/outfit/shorts.png",
+      sandals: "assets/outfit/sandals.png",
+      skirt: "assets/outfit/skirt.png",
 
-const QUESTIONS = [
-  {
-    city:"杭州 Hangzhou", season:"春天 Spring", scene:"hangzhou-spring",
-    deco:["🌸","🏞️","🌿","🌷"],
-    zh:"杭州春天有时候很冷，有时候很暖和。穿什么比较合适？",
-    py:"Háng zhōu chūn tiān yǒu shí hou hěn lěng, yǒu shí hou hěn nuǎn huo. Chuān shén me bǐ jiào hé shì?",
-    en:"Hangzhou spring is sometimes cold and sometimes warm. What is good to wear?",
-    choices:["外套","凉鞋","手套","靴子"], answer:"外套", item:"jacket"
-  },
-  {
-    city:"杭州 Hangzhou", season:"夏天 Summer", scene:"hangzhou-summer",
-    deco:["☀️","🍉","🌻","🌿"],
-    zh:"杭州夏天很热。穿什么上衣最好？",
-    py:"Háng zhōu xià tiān hěn rè. Chuān shén me shàng yī zuì hǎo?",
-    en:"Hangzhou summer is hot. What top is best?",
-    choices:["T恤","羽绒服","毛衣","围巾"], answer:"T恤", item:"tshirt"
-  },
-  {
-    city:"杭州 Hangzhou", season:"夏天 Summer", scene:"hangzhou-summer",
-    deco:["☀️","🍉","🌻","🌿"],
-    zh:"天气很热。穿什么裤子更合适？",
-    py:"Tiān qì hěn rè. Chuān shén me kù zi gèng hé shì?",
-    en:"The weather is hot. What bottoms are better?",
-    choices:["短裤","长裤","牛仔裤","裤子"], answer:"短裤", item:"shorts"
-  },
-  {
-    city:"杭州 Hangzhou", season:"夏天 Summer", scene:"hangzhou-summer",
-    deco:["☀️","🍉","🌻","🌿"],
-    zh:"杭州夏天很热。脚上穿什么更好？",
-    py:"Háng zhōu xià tiān hěn rè. Jiǎo shang chuān shén me gèng hǎo?",
-    en:"Hangzhou summer is hot. What is better for your feet?",
-    choices:["凉鞋","靴子","皮鞋","手套"], answer:"凉鞋", item:"sandals"
-  },
-  {
-    city:"杭州 Hangzhou", season:"夏天 Summer", scene:"hangzhou-summer",
-    deco:["☀️","🍉","🌻","🌿"],
-    zh:"哪一个词是 “裙子”？",
-    py:"Nǎ yí ge cí shì qún zi?",
-    en:"Which word means skirt?",
-    choices:["裙子","帽子","围巾","长裤"], answer:"裙子", item:"skirt"
-  },
-  {
-    city:"杭州 Hangzhou", season:"秋天 Autumn", scene:"hangzhou-autumn",
-    deco:["🍁","🏞️","🧡","🍂"],
-    zh:"杭州秋天很凉快。穿什么比较合适？",
-    py:"Háng zhōu qiū tiān hěn liáng kuai. Chuān shén me bǐ jiào hé shì?",
-    en:"Hangzhou autumn is nice and cool. What is suitable?",
-    choices:["牛仔裤","凉鞋","短裤","手套"], answer:"牛仔裤", item:"jeans"
-  },
-  {
-    city:"杭州 Hangzhou", season:"冬天 Winter", scene:"hangzhou-winter",
-    deco:["❄️","🏞️","🩵","☁️"],
-    zh:"杭州冬天冷。穿什么比较暖和？",
-    py:"Háng zhōu dōng tiān lěng. Chuān shén me bǐ jiào nuǎn huo?",
-    en:"Hangzhou winter is cold. What is warmer?",
-    choices:["毛衣","凉鞋","短裤","T恤"], answer:"毛衣", item:"sweater"
-  },
-  {
-    city:"杭州 Hangzhou", season:"秋天 Autumn", scene:"hangzhou-autumn",
-    deco:["🍁","🏞️","🧡","🍂"],
-    zh:"哪一个词是 “长裤”？",
-    py:"Nǎ yí ge cí shì cháng kù?",
-    en:"Which word means long pants?",
-    choices:["长裤","短裤","凉鞋","帽子"], answer:"长裤", item:"longpants"
-  },
-  {
-    city:"杭州 Hangzhou", season:"四季 All Seasons", scene:"hangzhou-spring",
-    deco:["🌸","☀️","🍁","❄️"],
-    zh:"哪一个词是 “衣服”？",
-    py:"Nǎ yí ge cí shì yī fu?",
-    en:"Which word means clothes?",
-    choices:["衣服","低","最","人们"], answer:"衣服", item:"shirt"
-  },
-  {
-    city:"杭州 Hangzhou", season:"Text 1", scene:"hangzhou-spring",
-    deco:["🌸","🏞️","🌿","✨"],
-    zh:"下雨天，杭州的西湖非常 ____。",
-    py:"Xià yǔ tiān, Háng zhōu de Xī hú fēi cháng ____.",
-    en:"On rainy days, West Lake in Hangzhou is very ____.",
-    choices:["美","冷","低","最"], answer:"美", item:"jacket"
-  },
-  {
-    city:"Clothes Review", season:"Review", scene:"hangzhou-spring",
-    deco:["👕","👖","👗","🧥"],
-    zh:"哪一个动词表示 “穿衣服”？",
-    py:"Nǎ yí ge dòng cí biǎo shì chuān yī fu?",
-    en:"Which verb means to wear clothes?",
-    choices:["穿","戴","最","低"], answer:"穿", item:"shirt"
-  },
-  {
-    city:"Clothes Review", season:"Review", scene:"hangzhou-spring",
-    deco:["👕","👖","👗","🧥"],
-    zh:"哪一个词是 “衬衫”？",
-    py:"Nǎ yí ge cí shì chèn shān?",
-    en:"Which word means shirt?",
-    choices:["衬衫","裙子","手套","帽子"], answer:"衬衫", item:"shirt"
-  },
-  {
-    city:"哈尔滨 Harbin", season:"冬天 Winter", scene:"harbin-winter",
-    deco:["❄️","☃️","🧤","🥶"],
-    zh:"哈尔滨冬天最冷的时候，穿什么最合适？",
-    py:"Hā ěr bīn dōng tiān zuì lěng de shí hou, chuān shén me zuì hé shì?",
-    en:"When Harbin is coldest in winter, what is best to wear?",
-    choices:["羽绒服","凉鞋","短裤","T恤"], answer:"羽绒服", item:"downjacket"
-  },
-  {
-    city:"哈尔滨 Harbin", season:"Word List 2", scene:"harbin-winter",
-    deco:["❄️","☃️","🧤","🥶"],
-    zh:"哪一个词是 “羽绒服”？",
-    py:"Nǎ yí ge cí shì yǔ róng fú?",
-    en:"Which word means down jacket?",
-    choices:["羽绒服","凉鞋","校服","皮鞋"], answer:"羽绒服", item:"downjacket"
-  },
-  {
-    city:"哈尔滨 Harbin", season:"Word List 2", scene:"harbin-winter",
-    deco:["❄️","☃️","🧤","🥶"],
-    zh:"“羽绒服” 里的 “绒” 是什么意思？",
-    py:"Yǔ róng fú lǐ de róng shì shén me yì si?",
-    en:"What does 绒 mean in 羽绒服?",
-    choices:["down","people","low","when"], answer:"down", item:"downjacket"
-  },
-  {
-    city:"哈尔滨 Harbin", season:"Word List 2", scene:"harbin-winter",
-    deco:["❄️","☃️","🧤","🥶"],
-    zh:"下雪的时候，脚上穿什么最好？",
-    py:"Xià xuě de shí hou, jiǎo shang chuān shén me zuì hǎo?",
-    en:"When it snows, what is best for your feet?",
-    choices:["靴子","凉鞋","皮鞋","短裤"], answer:"靴子", item:"boots"
-  },
-  {
-    city:"哈尔滨 Harbin", season:"Word List 2", scene:"harbin-winter",
-    deco:["❄️","☃️","🧤","🥶"],
-    zh:"哪一个词是 “帽子”？",
-    py:"Nǎ yí ge cí shì mào zi?",
-    en:"Which word means hat?",
-    choices:["帽子","围巾","手套","凉鞋"], answer:"帽子", item:"hat"
-  },
-  {
-    city:"哈尔滨 Harbin", season:"Word List 2", scene:"harbin-winter",
-    deco:["❄️","☃️","🧤","🥶"],
-    zh:"哪一个词是 “围巾”？",
-    py:"Nǎ yí ge cí shì wéi jīn?",
-    en:"Which word means scarf?",
-    choices:["围巾","帽子","靴子","凉鞋"], answer:"围巾", item:"scarf"
-  },
-  {
-    city:"哈尔滨 Harbin", season:"Word List 2", scene:"harbin-winter",
-    deco:["❄️","☃️","🧤","🥶"],
-    zh:"哪一个词是 “手套”？",
-    py:"Nǎ yí ge cí shì shǒu tào?",
-    en:"Which word means gloves?",
-    choices:["手套","围巾","帽子","长裤"], answer:"手套", item:"gloves"
-  },
-  {
-    city:"哈尔滨 Harbin", season:"Word List 2", scene:"harbin-winter",
-    deco:["❄️","☃️","🧤","🥶"],
-    zh:"帽子、围巾、手套前面一般用哪个动词？",
-    py:"Mào zi, wéi jīn, shǒu tào qián mian yì bān yòng nǎ ge dòng cí?",
-    en:"Which verb goes with hats, scarves, and gloves?",
-    choices:["戴","穿","最","低"], answer:"戴", item:"hat"
-  },
-  {
-    city:"Clothes Review", season:"Review", scene:"harbin-winter",
-    deco:["👞","👖","🧥","❄️"],
-    zh:"哪一个词是 “皮鞋”？",
-    py:"Nǎ yí ge cí shì pí xié?",
-    en:"Which word means leather shoes?",
-    choices:["皮鞋","靴子","凉鞋","手套"], answer:"皮鞋", item:"leathershoes"
-  },
-  {
-    city:"Clothes Review", season:"Review", scene:"hangzhou-spring",
-    deco:["🏫","👕","👖","🎒"],
-    zh:"哪一个词是 “校服”？",
-    py:"Nǎ yí ge cí shì xiào fú?",
-    en:"Which word means school uniform?",
-    choices:["校服","羽绒服","围巾","帽子"], answer:"校服", item:"uniform"
-  },
-  {
-    city:"Clothes Review", season:"Review", scene:"hangzhou-spring",
-    deco:["👖","👕","🩳","👗"],
-    zh:"哪一个词是 “裤子”？",
-    py:"Nǎ yí ge cí shì kù zi?",
-    en:"Which word means pants / trousers?",
-    choices:["裤子","裙子","围巾","帽子"], answer:"裤子", item:"pants"
-  },
-  {
-    city:"Clothes Review", season:"Review", scene:"hangzhou-autumn",
-    deco:["👖","👕","🩳","👗"],
-    zh:"哪一个词是 “牛仔裤”？",
-    py:"Nǎ yí ge cí shì niú zǎi kù?",
-    en:"Which word means jeans?",
-    choices:["牛仔裤","长裤","短裤","衣服"], answer:"牛仔裤", item:"jeans"
-  },
-  {
-    city:"Harbin Text 2", season:"Text 2", scene:"harbin-winter",
-    deco:["❄️","🧣","🧤","🏙️"],
-    zh:"“人们” 的英文是什么？",
-    py:"Rén men de Yīng wén shì shén me?",
-    en:"What is the English meaning of 人们?",
-    choices:["people","winter","lowest","beautiful"], answer:"people", item:"gloves"
-  },
-  {
-    city:"Harbin Text 2", season:"Text 2", scene:"harbin-winter",
-    deco:["❄️","🧣","🧤","🏙️"],
-    zh:"“最低气温” 里的 “最” 是什么意思？",
-    py:"Zuì dī qì wēn lǐ de zuì shì shén me yì si?",
-    en:"What does 最 mean in 最低气温?",
-    choices:["most","low","people","when"], answer:"most", item:"downjacket"
-  },
-  {
-    city:"Harbin Text 2", season:"Text 2", scene:"harbin-winter",
-    deco:["❄️","🧣","🧤","🏙️"],
-    zh:"“最低气温” 里的 “低” 是什么意思？",
-    py:"Zuì dī qì wēn lǐ de dī shì shén me yì si?",
-    en:"What does 低 mean in 最低气温?",
-    choices:["low","most","when","people"], answer:"low", item:"boots"
-  },
-  {
-    city:"Harbin Text 2", season:"Text 2", scene:"harbin-winter",
-    deco:["❄️","🧣","🧤","🏙️"],
-    zh:"“下雪____，哈尔滨很美。” 应该填什么？",
-    py:"Xià xuě ____，Hā ěr bīn hěn měi. Yīng gāi tián shén me?",
-    en:"What should go in the blank: When it snows, Harbin is beautiful.",
-    choices:["的时候","最","低","人们"], answer:"的时候", item:"scarf"
-  },
-  {
-    city:"Hangzhou vs Harbin", season:"Review", scene:"hangzhou-summer",
-    deco:["☀️","🍉","👕","🩳"],
-    zh:"如果去杭州夏天，下面哪一套更合适？",
-    py:"Rú guǒ qù Háng zhōu xià tiān, xià mian nǎ yí tào gèng hé shì?",
-    en:"If you go to Hangzhou in summer, which outfit is more suitable?",
-    choices:["T恤 + 短裤","羽绒服 + 手套","围巾 + 帽子","毛衣 + 靴子"],
-    answer:"T恤 + 短裤", item:["tshirt","shorts"]
-  },
-  {
-    city:"Hangzhou vs Harbin", season:"Review", scene:"harbin-winter",
-    deco:["❄️","🧥","🧤","🥾"],
-    zh:"如果去哈尔滨冬天，下面哪一套更合适？",
-    py:"Rú guǒ qù Hā ěr bīn dōng tiān, xià mian nǎ yí tào gèng hé shì?",
-    en:"If you go to Harbin in winter, which outfit is more suitable?",
-    choices:["羽绒服 + 靴子","凉鞋 + 短裤","T恤 + 凉鞋","裙子 + 凉鞋"],
-    answer:"羽绒服 + 靴子", item:["downjacket","boots"]
-  }
-];
+      gloves: "assets/outfit/gloves.png",
+      hat: "assets/outfit/hat.png",
+      scarf: "assets/outfit/scarf.png",
+      sweater: "assets/outfit/sweater.png",
+      boots: "assets/outfit/boots.png",
+      down_jacket: "assets/outfit/down_jacket.png",
 
-let index = 0;
-let score = 0;
-let cold = 0;
-let topSlot = null;
-let bottomSlot = null;
-let feetSlot = null;
-let accessories = new Set();
-let unlockedItems = [];
+      jacket: "assets/outfit/jacket.png",
+      jacket2: "assets/outfit/jacket2.png",
+      school_uniform: "assets/outfit/school_uniform.png",
+      long_pants: "assets/outfit/long_pants.png",
+      jeans: "assets/outfit/jeans.png",
+      leather_shoes: "assets/outfit/leather_shoes.png"
+    };
 
-function escapeHtml(text){
-  return String(text)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
+    const ITEM_INFO = {
+      tshirt: { zh:"T恤", py:"T xù", en:"T-shirt", img:ASSETS.tshirt, emoji:"👕" },
+      shorts: { zh:"短裤", py:"duǎn kù", en:"shorts", img:ASSETS.shorts, emoji:"🩳" },
+      sandals: { zh:"凉鞋", py:"liáng xié", en:"sandals", img:ASSETS.sandals, emoji:"👡" },
+      skirt: { zh:"裙子", py:"qún zi", en:"skirt", img:ASSETS.skirt, emoji:"👗" },
 
-function renderWordBank(){
-  document.getElementById("wordBank").innerHTML = WORD_BANK.map(w => `
-    <div class="word">
-      <b>${escapeHtml(w[0])}</b><br>
-      ${escapeHtml(w[1])}<br>
-      ${escapeHtml(w[2])}
-    </div>
-  `).join("");
-}
+      jacket: { zh:"外套", py:"wài tào", en:"jacket / coat", img:ASSETS.jacket, emoji:"🧥" },
+      jacket2: { zh:"外套", py:"wài tào", en:"jacket / coat", img:ASSETS.jacket2, emoji:"🧥" },
+      sweater: { zh:"毛衣", py:"máo yī", en:"sweater", img:ASSETS.sweater, emoji:"🧶" },
+      jeans: { zh:"牛仔裤", py:"niú zǎi kù", en:"jeans", img:ASSETS.jeans, emoji:"👖" },
+      long_pants: { zh:"长裤", py:"cháng kù", en:"long pants", img:ASSETS.long_pants, emoji:"👖" },
 
-function openWordBank(){
-  document.getElementById("wordBankModal").classList.add("show");
-}
+      down_jacket: { zh:"羽绒服", py:"yǔ róng fú", en:"down jacket", img:ASSETS.down_jacket, emoji:"🧥" },
+      boots: { zh:"靴子", py:"xuē zi", en:"boots", img:ASSETS.boots, emoji:"🥾" },
+      hat: { zh:"帽子", py:"mào zi", en:"hat", img:ASSETS.hat, emoji:"🧢" },
+      scarf: { zh:"围巾", py:"wéi jīn", en:"scarf", img:ASSETS.scarf, emoji:"🧣" },
+      gloves: { zh:"手套", py:"shǒu tào", en:"gloves", img:ASSETS.gloves, emoji:"🧤" },
 
-function closeWordBank(){
-  document.getElementById("wordBankModal").classList.remove("show");
-}
+      school_uniform: { zh:"校服", py:"xiào fú", en:"school uniform", img:ASSETS.school_uniform, emoji:"🏫" },
+      leather_shoes: { zh:"皮鞋", py:"pí xié", en:"leather shoes", img:ASSETS.leather_shoes, emoji:"👞" },
 
-function toggleBox(id){
-  document.getElementById(id).classList.toggle("show");
-}
+      shirt: { zh:"衬衫", py:"chèn shān", en:"shirt", img:null, emoji:"👔" },
+      pants: { zh:"裤子", py:"kù zi", en:"pants / trousers", img:null, emoji:"👖" },
+      clothes: { zh:"衣服", py:"yī fu", en:"clothes", img:null, emoji:"👚" }
+    };
 
-function restartGame(){
-  index = 0;
-  score = 0;
-  cold = 0;
-  topSlot = null;
-  bottomSlot = null;
-  feetSlot = null;
-  accessories = new Set();
-  unlockedItems = [];
+    const WORD_BANK = [
+      ["杭州","háng zhōu","Hangzhou"],
+      ["春天","chūn tiān","spring"],
+      ["夏天","xià tiān","summer"],
+      ["秋天","qiū tiān","autumn"],
+      ["冬天","dōng tiān","winter"],
+      ["冷","lěng","cold"],
+      ["暖和","nuǎn huo","nice and warm"],
+      ["热","rè","hot"],
+      ["凉快","liáng kuai","nice and cool"],
+      ["美","měi","beautiful"],
 
-  document.getElementById("win").classList.remove("show");
-  closeWordBank();
-  updateStats();
-  updateRunner();
-  loadQuestion();
-}
+      ["哈尔滨","hā ěr bīn","Harbin"],
+      ["最","zuì","most"],
+      ["低","dī","low"],
+      ["人们","rén men","people"],
+      ["凉鞋","liáng xié","sandals"],
+      ["绒","róng","down"],
+      ["羽绒服","yǔ róng fú","down jacket"],
+      ["靴子","xuē zi","boots"],
+      ["戴","dài","wear accessories"],
+      ["帽子","mào zi","hat"],
+      ["围巾","wéi jīn","scarf"],
+      ["手套","shǒu tào","gloves"],
+      ["……的时候","de shí hou","when"],
 
-function loadQuestion(){
-  if(index >= QUESTIONS.length){
-    finishGame();
-    return;
-  }
+      ["穿","chuān","wear"],
+      ["衬衫","chèn shān","shirt"],
+      ["裤子","kù zi","pants / trousers"],
+      ["裙子","qún zi","skirt"],
+      ["T恤","T xù","T-shirt"],
+      ["短裤","duǎn kù","shorts"],
+      ["衣服","yī fu","clothes"],
+      ["牛仔裤","niú zǎi kù","jeans"],
+      ["校服","xiào fú","school uniform"],
+      ["毛衣","máo yī","sweater"],
+      ["外套","wài tào","jacket / coat"],
+      ["长裤","cháng kù","long pants"],
+      ["皮鞋","pí xié","leather shoes"]
+    ];
 
-  const q = QUESTIONS[index];
+    const QUESTIONS = [
+      {
+        city:"杭州 Hangzhou",
+        season:"春天 Spring",
+        scene:"spring",
+        deco:["🌸","🏞️","🌿","🌷"],
+        zh:"杭州春天有时候很冷，有时候很暖和。穿什么比较合适？",
+        py:"Háng zhōu chūn tiān yǒu shí hou hěn lěng, yǒu shí hou hěn nuǎn huo. Chuān shén me bǐ jiào hé shì?",
+        en:"Hangzhou spring is sometimes cold and sometimes warm. What is good to wear?",
+        choices:["外套","凉鞋","手套","靴子"],
+        answer:"外套",
+        item:"jacket"
+      },
+      {
+        city:"杭州 Hangzhou",
+        season:"夏天 Summer",
+        scene:"summer",
+        deco:["☀️","🍉","🌻","🌿"],
+        zh:"杭州夏天很热。穿什么上衣最好？",
+        py:"Háng zhōu xià tiān hěn rè. Chuān shén me shàng yī zuì hǎo?",
+        en:"Hangzhou summer is hot. What top is best?",
+        choices:["T恤","羽绒服","毛衣","围巾"],
+        answer:"T恤",
+        item:"tshirt"
+      },
+      {
+        city:"杭州 Hangzhou",
+        season:"夏天 Summer",
+        scene:"summer",
+        deco:["☀️","🍉","🌻","🌿"],
+        zh:"天气很热。穿什么裤子更合适？",
+        py:"Tiān qì hěn rè. Chuān shén me kù zi gèng hé shì?",
+        en:"The weather is hot. What bottoms are better?",
+        choices:["短裤","长裤","牛仔裤","裤子"],
+        answer:"短裤",
+        item:"shorts"
+      },
+      {
+        city:"杭州 Hangzhou",
+        season:"夏天 Summer",
+        scene:"summer",
+        deco:["☀️","🍉","🌻","🌿"],
+        zh:"杭州夏天很热。脚上穿什么更好？",
+        py:"Háng zhōu xià tiān hěn rè. Jiǎo shang chuān shén me gèng hǎo?",
+        en:"Hangzhou summer is hot. What is better for your feet?",
+        choices:["凉鞋","靴子","皮鞋","手套"],
+        answer:"凉鞋",
+        item:"sandals"
+      },
+      {
+        city:"杭州 Hangzhou",
+        season:"夏天 Summer",
+        scene:"summer",
+        deco:["☀️","🍉","🌻","🌿"],
+        zh:"哪一个词是 “裙子”？",
+        py:"Nǎ yí ge cí shì qún zi?",
+        en:"Which word means skirt?",
+        choices:["裙子","帽子","围巾","长裤"],
+        answer:"裙子",
+        item:"skirt"
+      },
+      {
+        city:"杭州 Hangzhou",
+        season:"秋天 Autumn",
+        scene:"autumn",
+        deco:["🍁","🏞️","🧡","🍂"],
+        zh:"杭州秋天很凉快。穿什么比较合适？",
+        py:"Háng zhōu qiū tiān hěn liáng kuai. Chuān shén me bǐ jiào hé shì?",
+        en:"Hangzhou autumn is nice and cool. What is suitable?",
+        choices:["牛仔裤","凉鞋","短裤","手套"],
+        answer:"牛仔裤",
+        item:"jeans"
+      },
+      {
+        city:"杭州 Hangzhou",
+        season:"冬天 Winter",
+        scene:"winter",
+        deco:["❄️","🏞️","☁️","🩵"],
+        zh:"杭州冬天冷。穿什么比较暖和？",
+        py:"Háng zhōu dōng tiān lěng. Chuān shén me bǐ jiào nuǎn huo?",
+        en:"Hangzhou winter is cold. What is warmer?",
+        choices:["毛衣","凉鞋","短裤","T恤"],
+        answer:"毛衣",
+        item:"sweater"
+      },
+      {
+        city:"杭州 Hangzhou",
+        season:"秋天 Autumn",
+        scene:"autumn",
+        deco:["🍁","🏞️","🧡","🍂"],
+        zh:"哪一个词是 “长裤”？",
+        py:"Nǎ yí ge cí shì cháng kù?",
+        en:"Which word means long pants?",
+        choices:["长裤","短裤","凉鞋","帽子"],
+        answer:"长裤",
+        item:"long_pants"
+      },
+      {
+        city:"杭州 Hangzhou",
+        season:"四季 All Seasons",
+        scene:"spring",
+        deco:["🌸","☀️","🍁","❄️"],
+        zh:"哪一个词是 “衣服”？",
+        py:"Nǎ yí ge cí shì yī fu?",
+        en:"Which word means clothes?",
+        choices:["衣服","低","最","人们"],
+        answer:"衣服",
+        item:"clothes"
+      },
+      {
+        city:"杭州 Hangzhou",
+        season:"Text 1",
+        scene:"spring",
+        deco:["🌸","🏞️","🌿","✨"],
+        zh:"下雨天，杭州的西湖非常 ____。",
+        py:"Xià yǔ tiān, Háng zhōu de Xī hú fēi cháng ____.",
+        en:"On rainy days, West Lake in Hangzhou is very ____.",
+        choices:["美","冷","低","最"],
+        answer:"美",
+        item:"jacket2"
+      },
+      {
+        city:"Clothes Review",
+        season:"Review",
+        scene:"spring",
+        deco:["👕","👖","👗","🧥"],
+        zh:"哪一个动词表示 “穿衣服”？",
+        py:"Nǎ yí ge dòng cí biǎo shì chuān yī fu?",
+        en:"Which verb means to wear clothes?",
+        choices:["穿","戴","最","低"],
+        answer:"穿",
+        item:"clothes"
+      },
+      {
+        city:"Clothes Review",
+        season:"Review",
+        scene:"spring",
+        deco:["👕","👖","👗","🧥"],
+        zh:"哪一个词是 “衬衫”？",
+        py:"Nǎ yí ge cí shì chèn shān?",
+        en:"Which word means shirt?",
+        choices:["衬衫","裙子","手套","帽子"],
+        answer:"衬衫",
+        item:"shirt"
+      },
+      {
+        city:"Clothes Review",
+        season:"Review",
+        scene:"spring",
+        deco:["👕","👖","👗","🧥"],
+        zh:"哪一个词是 “裤子”？",
+        py:"Nǎ yí ge cí shì kù zi?",
+        en:"Which word means pants / trousers?",
+        choices:["裤子","裙子","围巾","帽子"],
+        answer:"裤子",
+        item:"pants"
+      },
+      {
+        city:"Clothes Review",
+        season:"Review",
+        scene:"spring",
+        deco:["🏫","👕","👖","🎒"],
+        zh:"哪一个词是 “校服”？",
+        py:"Nǎ yí ge cí shì xiào fú?",
+        en:"Which word means school uniform?",
+        choices:["校服","羽绒服","围巾","帽子"],
+        answer:"校服",
+        item:"school_uniform"
+      },
+      {
+        city:"Clothes Review",
+        season:"Review",
+        scene:"spring",
+        deco:["👞","👖","🧥","🏫"],
+        zh:"哪一个词是 “皮鞋”？",
+        py:"Nǎ yí ge cí shì pí xié?",
+        en:"Which word means leather shoes?",
+        choices:["皮鞋","靴子","凉鞋","手套"],
+        answer:"皮鞋",
+        item:"leather_shoes"
+      },
+      {
+        city:"哈尔滨 Harbin",
+        season:"冬天 Winter",
+        scene:"winter",
+        deco:["❄️","☃️","🧤","🥶"],
+        zh:"哈尔滨冬天最冷的时候，穿什么最合适？",
+        py:"Hā ěr bīn dōng tiān zuì lěng de shí hou, chuān shén me zuì hé shì?",
+        en:"When Harbin is coldest in winter, what is best to wear?",
+        choices:["羽绒服","凉鞋","短裤","T恤"],
+        answer:"羽绒服",
+        item:"down_jacket"
+      },
+      {
+        city:"哈尔滨 Harbin",
+        season:"Word List 2",
+        scene:"winter",
+        deco:["❄️","☃️","🧤","🥶"],
+        zh:"哪一个词是 “羽绒服”？",
+        py:"Nǎ yí ge cí shì yǔ róng fú?",
+        en:"Which word means down jacket?",
+        choices:["羽绒服","凉鞋","校服","皮鞋"],
+        answer:"羽绒服",
+        item:"down_jacket"
+      },
+      {
+        city:"哈尔滨 Harbin",
+        season:"Word List 2",
+        scene:"winter",
+        deco:["❄️","☃️","🧤","🥶"],
+        zh:"“羽绒服” 里的 “绒” 是什么意思？",
+        py:"Yǔ róng fú lǐ de róng shì shén me yì si?",
+        en:"What does 绒 mean in 羽绒服?",
+        choices:["down","people","low","when"],
+        answer:"down",
+        item:"down_jacket"
+      },
+      {
+        city:"哈尔滨 Harbin",
+        season:"Word List 2",
+        scene:"winter",
+        deco:["❄️","☃️","🧤","🥶"],
+        zh:"下雪的时候，脚上穿什么最好？",
+        py:"Xià xuě de shí hou, jiǎo shang chuān shén me zuì hǎo?",
+        en:"When it snows, what is best for your feet?",
+        choices:["靴子","凉鞋","皮鞋","短裤"],
+        answer:"靴子",
+        item:"boots"
+      },
+      {
+        city:"哈尔滨 Harbin",
+        season:"Word List 2",
+        scene:"winter",
+        deco:["❄️","☃️","🧤","🥶"],
+        zh:"哪一个词是 “帽子”？",
+        py:"Nǎ yí ge cí shì mào zi?",
+        en:"Which word means hat?",
+        choices:["帽子","围巾","手套","凉鞋"],
+        answer:"帽子",
+        item:"hat"
+      },
+      {
+        city:"哈尔滨 Harbin",
+        season:"Word List 2",
+        scene:"winter",
+        deco:["❄️","☃️","🧤","🥶"],
+        zh:"哪一个词是 “围巾”？",
+        py:"Nǎ yí ge cí shì wéi jīn?",
+        en:"Which word means scarf?",
+        choices:["围巾","帽子","靴子","凉鞋"],
+        answer:"围巾",
+        item:"scarf"
+      },
+      {
+        city:"哈尔滨 Harbin",
+        season:"Word List 2",
+        scene:"winter",
+        deco:["❄️","☃️","🧤","🥶"],
+        zh:"哪一个词是 “手套”？",
+        py:"Nǎ yí ge cí shì shǒu tào?",
+        en:"Which word means gloves?",
+        choices:["手套","围巾","帽子","长裤"],
+        answer:"手套",
+        item:"gloves"
+      },
+      {
+        city:"哈尔滨 Harbin",
+        season:"Word List 2",
+        scene:"winter",
+        deco:["❄️","☃️","🧤","🥶"],
+        zh:"帽子、围巾、手套前面一般用哪个动词？",
+        py:"Mào zi, wéi jīn, shǒu tào qián mian yì bān yòng nǎ ge dòng cí?",
+        en:"Which verb usually goes with hats, scarves, and gloves?",
+        choices:["戴","穿","最","低"],
+        answer:"戴",
+        item:"hat"
+      },
+      {
+        city:"哈尔滨 Harbin",
+        season:"Text 2",
+        scene:"winter",
+        deco:["❄️","🧣","🧤","🏙️"],
+        zh:"“人们” 的英文是什么？",
+        py:"Rén men de Yīng wén shì shén me?",
+        en:"What is the English meaning of 人们?",
+        choices:["people","winter","lowest","beautiful"],
+        answer:"people",
+        item:"gloves"
+      },
+      {
+        city:"哈尔滨 Harbin",
+        season:"Text 2",
+        scene:"winter",
+        deco:["❄️","🧣","🧤","🏙️"],
+        zh:"“最低气温” 里的 “最” 是什么意思？",
+        py:"Zuì dī qì wēn lǐ de zuì shì shén me yì si?",
+        en:"What does 最 mean in 最低气温?",
+        choices:["most","low","people","when"],
+        answer:"most",
+        item:"down_jacket"
+      },
+      {
+        city:"哈尔滨 Harbin",
+        season:"Text 2",
+        scene:"winter",
+        deco:["❄️","🧣","🧤","🏙️"],
+        zh:"“最低气温” 里的 “低” 是什么意思？",
+        py:"Zuì dī qì wēn lǐ de dī shì shén me yì si?",
+        en:"What does 低 mean in 最低气温?",
+        choices:["low","most","when","people"],
+        answer:"low",
+        item:"boots"
+      },
+      {
+        city:"哈尔滨 Harbin",
+        season:"Text 2",
+        scene:"winter",
+        deco:["❄️","🧣","🧤","🏙️"],
+        zh:"“下雪____，哈尔滨很美。” 应该填什么？",
+        py:"Xià xuě ____，Hā ěr bīn hěn měi. Yīng gāi tián shén me?",
+        en:"What should go in the blank: When it snows, Harbin is beautiful.",
+        choices:["的时候","最","低","人们"],
+        answer:"的时候",
+        item:"scarf"
+      },
+      {
+        city:"Hangzhou vs Harbin",
+        season:"Review",
+        scene:"summer",
+        deco:["☀️","🍉","👕","🩳"],
+        zh:"如果去杭州夏天，下面哪一套更合适？",
+        py:"Rú guǒ qù Háng zhōu xià tiān, xià mian nǎ yí tào gèng hé shì?",
+        en:"If you go to Hangzhou in summer, which outfit is more suitable?",
+        choices:["T恤 + 短裤","羽绒服 + 手套","围巾 + 帽子","毛衣 + 靴子"],
+        answer:"T恤 + 短裤",
+        item:["tshirt","shorts"]
+      },
+      {
+        city:"Hangzhou vs Harbin",
+        season:"Review",
+        scene:"winter",
+        deco:["❄️","🧥","🧤","🥾"],
+        zh:"如果去哈尔滨冬天，下面哪一套更合适？",
+        py:"Rú guǒ qù Hā ěr bīn dōng tiān, xià mian nǎ yí tào gèng hé shì?",
+        en:"If you go to Harbin in winter, which outfit is more suitable?",
+        choices:["羽绒服 + 靴子","凉鞋 + 短裤","T恤 + 凉鞋","裙子 + 凉鞋"],
+        answer:"羽绒服 + 靴子",
+        item:["down_jacket","boots"]
+      },
+      {
+        city:"Compare",
+        season:"Opposites",
+        scene:"summer",
+        deco:["☀️","🌡️","🔥","❄️"],
+        zh:"“冷” 的反义词是哪一个？",
+        py:"Lěng de fǎn yì cí shì nǎ yí ge?",
+        en:"Which word is the opposite of cold?",
+        choices:["热","低","美","人们"],
+        answer:"热",
+        item:"tshirt"
+      },
+      {
+        city:"Compare",
+        season:"Opposites",
+        scene:"autumn",
+        deco:["🍁","🌬️","🌿","☁️"],
+        zh:"“热” 的反义词是哪一个？",
+        py:"Rè de fǎn yì cí shì nǎ yí ge?",
+        en:"Which word is the opposite of hot?",
+        choices:["冷","美","最","穿"],
+        answer:"冷",
+        item:"sweater"
+      }
+    ];
 
-  document.getElementById("scene").className = "scene " + q.scene;
-  document.getElementById("stopCard").textContent = "Next Stop: " + q.city;
-  document.getElementById("progressText").textContent = `Question ${index + 1} / ${QUESTIONS.length}`;
-  document.getElementById("seasonText").textContent = q.season;
-  document.getElementById("fill").style.width = `${index / QUESTIONS.length * 100}%`;
+    let index = 0;
+    let score = 0;
+    let mistakes = 0;
+    let unlocked = [];
 
-  document.getElementById("qnum").textContent = `Question ${index + 1} / ${QUESTIONS.length}`;
-  document.getElementById("cityPill").textContent = q.city;
-  document.getElementById("pinyinBox").textContent = q.py;
-  document.getElementById("englishBox").textContent = q.en;
-  document.getElementById("questionMain").textContent = q.zh;
-
-  document.getElementById("pinyinBox").classList.remove("show");
-  document.getElementById("englishBox").classList.remove("show");
-
-  document.getElementById("feedback").textContent =
-    "Choose the best answer. Use Pinyin or English only if needed.";
-
-  document.getElementById("counterNote").textContent = `Good for: ${q.city} · ${q.season}`;
-  document.getElementById("deco").innerHTML = q.deco.map(x => `<span>${x}</span>`).join("");
-
-  document.getElementById("choices").innerHTML = q.choices.map((c,i) => `
-    <button class="choice" onclick="chooseAnswer(this, ${i})">${escapeHtml(c)}</button>
-  `).join("");
-}
-
-function chooseAnswer(btn, choiceIndex){
-  const q = QUESTIONS[index];
-  const chosen = q.choices[choiceIndex];
-  const correct = chosen === q.answer;
-
-  document.querySelectorAll(".choice").forEach(b => {
-    b.disabled = true;
-    if(b.textContent === q.answer){
-      b.classList.add("correct");
+    function escapeHtml(text){
+      return String(text)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
     }
-  });
 
-  if(correct){
-    btn.classList.add("correct");
-    score++;
-    unlockItem(q.item);
-    showToast("Correct! Unlocked: " + itemText(q.item));
-    document.getElementById("feedback").textContent =
-      `Correct! ${q.answer} is the best answer.`;
-  }else{
-    btn.classList.add("wrong");
-    cold++;
-    showToast("Too cold! Try the next one.");
-    document.getElementById("feedback").textContent =
-      `Not quite. Correct answer: ${q.answer}`;
-  }
-
-  updateStats();
-  updateRunner();
-
-  setTimeout(() => {
-    index++;
-    loadQuestion();
-  }, correct ? 900 : 1300);
-}
-
-function unlockItem(item){
-  const list = Array.isArray(item) ? item : [item];
-
-  list.forEach(x => {
-    if(["tshirt","shirt","sweater","jacket","downjacket","uniform"].includes(x)){
-      topSlot = x;
-    }else if(["skirt","shorts","pants","jeans","longpants"].includes(x)){
-      bottomSlot = x;
-    }else if(["sandals","boots","leathershoes"].includes(x)){
-      feetSlot = x;
-    }else if(["hat","scarf","gloves"].includes(x)){
-      accessories.add(x);
+    function renderWordBank(){
+      const box = document.getElementById("wordBank");
+      box.innerHTML = WORD_BANK.map(([zh,py,en]) => `
+        <div class="word">
+          <b>${escapeHtml(zh)}</b><br>
+          ${escapeHtml(py)}<br>
+          ${escapeHtml(en)}
+        </div>
+      `).join("");
     }
 
-    if(!unlockedItems.includes(x)){
-      unlockedItems.push(x);
+    function openWordBank(){
+      document.getElementById("wordBankModal").classList.add("show");
     }
-  });
-}
 
-function updateRunner(){
-  document.querySelectorAll(".item").forEach(el => el.classList.remove("show"));
+    function closeWordBank(){
+      document.getElementById("wordBankModal").classList.remove("show");
+    }
 
-  const svg = document.getElementById("runnerSvg");
-  svg.classList.remove("feet-sandals","feet-boots","feet-leathershoes");
+    function toggleBox(id){
+      document.getElementById(id).classList.toggle("show");
+    }
 
-  if(topSlot){
-    const el = document.querySelector(`[data-item="${topSlot}"]`);
-    if(el) el.classList.add("show");
-  }
+    function restartGame(){
+      index = 0;
+      score = 0;
+      mistakes = 0;
+      unlocked = [];
 
-  if(bottomSlot){
-    const el = document.querySelector(`[data-item="${bottomSlot}"]`);
-    if(el) el.classList.add("show");
-  }
+      document.getElementById("win").classList.remove("show");
+      closeWordBank();
 
-  if(feetSlot){
-    svg.classList.add("feet-" + feetSlot);
-  }
+      updateStats();
+      renderUnlocked();
+      loadQuestion();
+    }
 
-  accessories.forEach(x => {
-    document.querySelectorAll(`[data-item="${x}"]`).forEach(el => el.classList.add("show"));
-  });
+    function loadQuestion(){
+      if(index >= QUESTIONS.length){
+        finishGame();
+        return;
+      }
 
-  const note = document.getElementById("unlockNote");
-  if(unlockedItems.length === 0){
-    note.textContent = "Unlocked items will appear here.";
-  }else{
-    note.textContent = "Unlocked so far: " + unlockedItems.map(getLabel).join(" · ");
-  }
-}
+      const q = QUESTIONS[index];
 
-function updateStats(){
-  document.getElementById("score").textContent = score;
-  document.getElementById("cold").textContent = cold;
-  document.getElementById("unlockCount").textContent = unlockedItems.length;
-}
+      document.getElementById("scene").className = "scene " + q.scene;
+      document.getElementById("stopCard").textContent = "Next Stop: " + q.city;
+      document.getElementById("progressText").textContent = `Question ${index + 1} / ${QUESTIONS.length}`;
+      document.getElementById("seasonText").textContent = q.season;
+      document.getElementById("fill").style.width = `${(index / QUESTIONS.length) * 100}%`;
 
-function getLabel(x){
-  const map = {
-    tshirt:"T恤",
-    shirt:"衬衫",
-    sweater:"毛衣",
-    jacket:"外套",
-    downjacket:"羽绒服",
-    uniform:"校服",
-    skirt:"裙子",
-    shorts:"短裤",
-    pants:"裤子",
-    jeans:"牛仔裤",
-    longpants:"长裤",
-    sandals:"凉鞋",
-    boots:"靴子",
-    leathershoes:"皮鞋",
-    hat:"帽子",
-    scarf:"围巾",
-    gloves:"手套"
-  };
-  return map[x] || x;
-}
+      document.getElementById("qnum").textContent = `Question ${index + 1} / ${QUESTIONS.length}`;
+      document.getElementById("cityPill").textContent = q.city;
+      document.getElementById("questionMain").textContent = q.zh;
+      document.getElementById("pinyinBox").textContent = q.py;
+      document.getElementById("englishBox").textContent = q.en;
 
-function itemText(item){
-  if(Array.isArray(item)){
-    return item.map(getLabel).join(" + ");
-  }
-  return getLabel(item);
-}
+      document.getElementById("pinyinBox").classList.remove("show");
+      document.getElementById("englishBox").classList.remove("show");
 
-function showToast(text){
-  const t = document.getElementById("toast");
-  t.textContent = text;
-  t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 950);
-}
+      document.getElementById("cityNote").textContent = `Good for: ${q.city} · ${q.season}`;
+      document.getElementById("deco").innerHTML = q.deco.map(x => `<span>${x}</span>`).join("");
 
-function finishGame(){
-  document.getElementById("fill").style.width = "100%";
-  document.getElementById("win").classList.add("show");
-}
+      document.getElementById("feedback").textContent =
+        "Choose the best answer. Use Pinyin or English only if needed.";
 
-document.getElementById("wordBankModal").addEventListener("click", e => {
-  if(e.target.id === "wordBankModal"){
-    closeWordBank();
-  }
-});
+      const choices = document.getElementById("choices");
+      choices.innerHTML = q.choices.map((c,i) => `
+        <button class="choice" onclick="chooseAnswer(this, ${i})">${escapeHtml(c)}</button>
+      `).join("");
+    }
 
-window.addEventListener("keydown", e => {
-  if(e.key === "Escape"){
-    closeWordBank();
-  }
-});
+    function chooseAnswer(btn, choiceIndex){
+      const q = QUESTIONS[index];
+      const chosen = q.choices[choiceIndex];
+      const correct = chosen === q.answer;
 
-window.addEventListener("load", () => {
-  renderWordBank();
-  restartGame();
-});
-</script>
+      document.querySelectorAll(".choice").forEach(b => {
+        b.disabled = true;
+        if(b.textContent === q.answer){
+          b.classList.add("correct");
+        }
+      });
+
+      if(correct){
+        btn.classList.add("correct");
+        score++;
+        addUnlocked(q.item);
+        popReward(q.item);
+        makeRunnerHappy();
+
+        document.getElementById("feedback").textContent =
+          `Correct! ${q.answer} is the best answer.`;
+      }else{
+        btn.classList.add("wrong");
+        mistakes++;
+
+        document.getElementById("feedback").textContent =
+          `Not quite. Correct answer: ${q.answer}`;
+      }
+
+      updateStats();
+      renderUnlocked();
+
+      setTimeout(() => {
+        index++;
+        loadQuestion();
+      }, correct ? 950 : 1400);
+    }
+
+    function addUnlocked(item){
+      const list = Array.isArray(item) ? item : [item];
+
+      list.forEach(x => {
+        if(!unlocked.includes(x)){
+          unlocked.push(x);
+        }
+      });
+    }
+
+    function renderUnlocked(){
+      const grid = document.getElementById("unlockedGrid");
+
+      if(unlocked.length === 0){
+        grid.innerHTML = `<span style="color:#64748b;font-weight:850;font-size:13px;">Correct answers will unlock outfit cards here.</span>`;
+        return;
+      }
+
+      grid.innerHTML = unlocked.map(x => makeMiniCard(x)).join("");
+    }
+
+    function makeMiniCard(item){
+      const info = ITEM_INFO[item] || {zh:item, emoji:"✨", img:null};
+
+      if(info.img){
+        return `
+          <div class="unlock-card" title="${escapeHtml(info.zh)}">
+            <img src="${escapeHtml(info.img)}" alt="${escapeHtml(info.zh)}" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+            <span class="fallback" style="display:none;">${escapeHtml(info.emoji || "✨")}</span>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="unlock-card" title="${escapeHtml(info.zh)}">
+          <span class="fallback">${escapeHtml(info.emoji || "✨")}</span>
+        </div>
+      `;
+    }
+
+    function popReward(item){
+      const first = Array.isArray(item) ? item[0] : item;
+      const info = ITEM_INFO[first] || {zh:first, emoji:"✨", img:null};
+
+      const pop = document.getElementById("rewardPop");
+      const img = document.getElementById("rewardImg");
+      const label = document.getElementById("rewardLabel");
+
+      label.textContent = "Unlocked: " + (Array.isArray(item) ? item.map(x => ITEM_INFO[x]?.zh || x).join(" + ") : info.zh);
+
+      if(info.img){
+        img.style.display = "block";
+        img.src = info.img;
+        img.onerror = function(){
+          img.style.display = "none";
+          label.textContent = "Unlocked: " + (info.emoji || "✨") + " " + info.zh;
+        };
+      }else{
+        img.style.display = "none";
+        label.textContent = "Unlocked: " + (info.emoji || "✨") + " " + info.zh;
+      }
+
+      pop.classList.remove("show");
+      void pop.offsetWidth;
+      pop.classList.add("show");
+
+      setTimeout(() => {
+        pop.classList.remove("show");
+      }, 820);
+    }
+
+    function makeRunnerHappy(){
+      const runner = document.getElementById("runner");
+      runner.classList.remove("happy");
+      void runner.offsetWidth;
+      runner.classList.add("happy");
+
+      setTimeout(() => {
+        runner.classList.remove("happy");
+      }, 900);
+    }
+
+    function updateStats(){
+      document.getElementById("score").textContent = score;
+      document.getElementById("mistakes").textContent = mistakes;
+      document.getElementById("unlockCount").textContent = unlocked.length;
+    }
+
+    function finishGame(){
+      document.getElementById("fill").style.width = "100%";
+
+      const summerItems = ["tshirt","shorts","sandals","skirt"];
+      const winterItems = ["down_jacket","boots","hat","scarf","gloves"];
+
+      document.getElementById("finalSummer").innerHTML = summerItems.map(makeMiniCard).join("");
+      document.getElementById("finalWinter").innerHTML = winterItems.map(makeMiniCard).join("");
+
+      document.getElementById("win").classList.add("show");
+    }
+
+    document.getElementById("wordBankModal").addEventListener("click", e => {
+      if(e.target.id === "wordBankModal"){
+        closeWordBank();
+      }
+    });
+
+    window.addEventListener("keydown", e => {
+      if(e.key === "Escape"){
+        closeWordBank();
+      }
+    });
+
+    window.addEventListener("load", () => {
+      renderWordBank();
+      restartGame();
+    });
+  </script>
 </body>
 </html>
