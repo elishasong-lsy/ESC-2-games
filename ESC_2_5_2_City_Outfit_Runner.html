@@ -132,7 +132,6 @@
       overflow:hidden;
     }
 
-    /* LEFT SCENE */
     .scene-shell{
       padding:14px;
     }
@@ -467,13 +466,37 @@
     }
 
     .sun{
-      right:54px;
-      top:46px;
-      width:128px;
-      height:128px;
+      right:52px;
+      top:34px;
+      width:132px;
+      height:132px;
       border-radius:50%;
       background:radial-gradient(circle at center, #fff7bc 0%, #f6dc5e 62%, #efc939 100%);
       box-shadow:0 0 34px rgba(243,214,86,.62);
+      z-index:1;
+    }
+
+    .sun-shower{
+      position:absolute;
+      right:30px;
+      top:122px;
+      width:210px;
+      height:300px;
+      pointer-events:none;
+      overflow:visible;
+      z-index:15;
+    }
+
+    .sun-particle{
+      position:absolute;
+      top:0;
+      left:50%;
+      transform:translateX(-50%);
+      font-size:22px;
+      opacity:0;
+      animation:fallSpark 2.1s ease-out forwards;
+      filter:drop-shadow(0 4px 8px rgba(31,42,68,.10));
+      user-select:none;
     }
 
     .scene-deco{
@@ -486,19 +509,20 @@
 
     .stage .runner-zone{
       position:absolute;
-      right:70px;
-      bottom:76px;
-      width:300px;
-      height:420px;
+      right:22px;
+      bottom:58px;
+      width:390px;
+      height:535px;
       display:flex;
       align-items:flex-end;
       justify-content:center;
+      z-index:6;
     }
 
     .bounce-wrap{
       position:relative;
-      width:240px;
-      height:390px;
+      width:340px;
+      height:515px;
       display:flex;
       align-items:flex-end;
       justify-content:center;
@@ -506,18 +530,18 @@
 
     .runner{
       position:absolute;
-      bottom:76px;
-      width:210px;
-      max-width:90%;
+      bottom:18px;
+      width:300px;
+      max-width:98%;
       object-fit:contain;
-      z-index:3;
+      z-index:4;
       transform-origin:center bottom;
       animation:idleBounce 1.8s ease-in-out infinite;
       filter:drop-shadow(0 14px 18px rgba(31,42,68,.16));
     }
 
     .runner.bounce-high{
-      animation:highBounce 1.1s ease-in-out 1;
+      animation:highBounce 1.35s ease-in-out 1;
     }
 
     .runner.bounce-low{
@@ -526,16 +550,16 @@
 
     .trampoline{
       position:absolute;
-      bottom:18px;
-      width:178px;
-      height:48px;
+      bottom:4px;
+      width:215px;
+      height:54px;
       border-radius:999px;
       background:linear-gradient(180deg,#5d7fc2,#3f5fa0);
       box-shadow:
         0 14px 18px rgba(31,42,68,.18),
         inset 0 -7px 0 rgba(0,0,0,.10);
       border:6px solid #dbe6ff;
-      z-index:1;
+      z-index:2;
       transform-origin:center;
       animation:padIdle 1.8s ease-in-out infinite;
     }
@@ -545,8 +569,8 @@
       position:absolute;
       left:10px;
       right:10px;
-      top:7px;
-      height:16px;
+      top:8px;
+      height:18px;
       border-radius:999px;
       background:rgba(255,255,255,.34);
     }
@@ -561,13 +585,13 @@
 
     .shadow-ellipse{
       position:absolute;
-      bottom:3px;
-      width:116px;
-      height:18px;
+      bottom:0px;
+      width:130px;
+      height:20px;
       background:rgba(31,42,68,.18);
       border-radius:50%;
       filter:blur(8px);
-      z-index:0;
+      z-index:1;
       animation:shadowIdle 1.8s ease-in-out infinite;
     }
 
@@ -586,7 +610,7 @@
       align-items:center;
       justify-content:space-between;
       gap:14px;
-      z-index:9;
+      z-index:20;
     }
 
     .feedback-left{
@@ -671,7 +695,6 @@
       color:var(--bad);
     }
 
-    /* RIGHT QUESTION PANEL */
     .question-shell{
       padding:18px;
       position:sticky;
@@ -874,7 +897,6 @@
       display:none !important;
     }
 
-    /* MODAL */
     .modal{
       position:fixed;
       inset:0;
@@ -973,48 +995,115 @@
     }
 
     @keyframes idleBounce{
-      0%,100%{ transform:translateY(0); }
-      50%{ transform:translateY(-11px); }
+      0%,100%{
+        transform:translateY(0);
+      }
+      50%{
+        transform:translateY(-14px);
+      }
     }
 
     @keyframes highBounce{
-      0%{ transform:translateY(0) scaleY(1); }
-      20%{ transform:translateY(-28px) scaleY(1.02); }
-      45%{ transform:translateY(-92px) scaleY(1.03); }
-      70%{ transform:translateY(-18px) scaleY(0.98); }
-      100%{ transform:translateY(0) scaleY(1); }
+      0%{
+        transform:translateY(0) scaleY(1);
+      }
+      12%{
+        transform:translateY(-38px) scaleY(1.02);
+      }
+      38%{
+        transform:translateY(-310px) scaleY(1.03);
+      }
+      56%{
+        transform:translateY(-245px) scaleY(1.02);
+      }
+      78%{
+        transform:translateY(-56px) scaleY(0.98);
+      }
+      100%{
+        transform:translateY(0) scaleY(1);
+      }
     }
 
     @keyframes lowBounce{
-      0%{ transform:translateY(0); }
-      25%{ transform:translateY(-12px); }
-      55%{ transform:translateY(-25px); }
-      80%{ transform:translateY(-8px); }
-      100%{ transform:translateY(0); }
+      0%{
+        transform:translateY(0);
+      }
+      25%{
+        transform:translateY(-12px);
+      }
+      55%{
+        transform:translateY(-30px);
+      }
+      80%{
+        transform:translateY(-8px);
+      }
+      100%{
+        transform:translateY(0);
+      }
     }
 
     @keyframes padIdle{
-      0%,100%{ transform:scaleX(1) scaleY(1); }
-      50%{ transform:scaleX(1.02) scaleY(.96); }
+      0%,100%{
+        transform:scaleX(1) scaleY(1);
+      }
+      50%{
+        transform:scaleX(1.02) scaleY(.96);
+      }
     }
 
     @keyframes padHigh{
-      0%{ transform:scaleX(1) scaleY(1); }
-      25%{ transform:scaleX(1.06) scaleY(.80); }
-      55%{ transform:scaleX(.98) scaleY(1.03); }
-      100%{ transform:scaleX(1) scaleY(1); }
+      0%{
+        transform:scaleX(1) scaleY(1);
+      }
+      25%{
+        transform:scaleX(1.10) scaleY(.72);
+      }
+      55%{
+        transform:scaleX(.98) scaleY(1.05);
+      }
+      100%{
+        transform:scaleX(1) scaleY(1);
+      }
     }
 
     @keyframes padLow{
-      0%{ transform:scaleX(1) scaleY(1); }
-      30%{ transform:scaleX(1.03) scaleY(.90); }
-      70%{ transform:scaleX(1) scaleY(1.01); }
-      100%{ transform:scaleX(1) scaleY(1); }
+      0%{
+        transform:scaleX(1) scaleY(1);
+      }
+      30%{
+        transform:scaleX(1.03) scaleY(.90);
+      }
+      70%{
+        transform:scaleX(1) scaleY(1.01);
+      }
+      100%{
+        transform:scaleX(1) scaleY(1);
+      }
     }
 
     @keyframes shadowIdle{
-      0%,100%{ transform:scaleX(1); opacity:.22; }
-      50%{ transform:scaleX(.84); opacity:.12; }
+      0%,100%{
+        transform:scaleX(1);
+        opacity:.22;
+      }
+      50%{
+        transform:scaleX(.82);
+        opacity:.12;
+      }
+    }
+
+    @keyframes fallSpark{
+      0%{
+        opacity:0;
+        transform:translate(calc(-50% + var(--dx, 0px)), -8px) scale(.6) rotate(0deg);
+      }
+      8%{
+        opacity:1;
+      }
+      100%{
+        opacity:0;
+        transform:translate(calc(-50% + var(--dx, 0px) + var(--drift, 0px)), 225px) scale(1.12) rotate(220deg);
+      }
     }
 
     @media (max-width:1260px){
@@ -1037,11 +1126,11 @@
       }
 
       .stage{
-        min-height:720px;
+        min-height:780px;
       }
 
       .stage .runner-zone{
-        right:20px;
+        right:10px;
       }
     }
 
@@ -1075,7 +1164,21 @@
         position:absolute;
         right:50%;
         transform:translateX(50%);
-        width:240px;
+        width:310px;
+      }
+
+      .bounce-wrap{
+        width:300px;
+        height:480px;
+      }
+
+      .runner{
+        width:270px;
+        bottom:18px;
+      }
+
+      .trampoline{
+        width:205px;
       }
 
       .feedback-box{
@@ -1116,7 +1219,6 @@
     </div>
 
     <div class="app">
-      <!-- LEFT -->
       <section class="panel scene-shell">
         <div class="scene-top">
           <div class="scene-chip" id="sceneChip">Scene: 杭州 Hangzhou</div>
@@ -1133,11 +1235,10 @@
         </div>
 
         <div class="scene-grid">
-          <!-- wardrobe -->
           <div class="wardrobe">
             <div class="wardrobe-title">Unlocked Outfit</div>
             <div class="wardrobe-sub">
-              Correct answers unlock outfit cards here. The runner now stays clear on the right side.
+              Correct answers unlock outfit cards here. The bigger runner bounces on the trampoline.
             </div>
 
             <div class="mini-stats">
@@ -1172,19 +1273,19 @@
               </div>
 
               <div class="toggleline" style="margin-top:10px;">
-                <span>Next button also works any time after feedback appears.</span>
+                <span>After feedback appears, students can click “Next Question” anytime.</span>
               </div>
             </div>
           </div>
 
-          <!-- stage -->
           <div class="stage" id="stage">
             <div class="sky-deco cloud"></div>
-            <div class="sky-deco sun"></div>
+            <div class="sky-deco sun" id="sunNode"></div>
+            <div class="sun-shower" id="sunShower"></div>
 
             <div class="scene-deco" id="deco1" style="left:70px; bottom:105px;">🌸</div>
             <div class="scene-deco" id="deco2" style="left:160px; bottom:92px;">🌿</div>
-            <div class="scene-deco" id="deco3" style="right:110px; top:160px;">☀️</div>
+            <div class="scene-deco" id="deco3" style="right:110px; top:180px;">☀️</div>
             <div class="scene-deco" id="deco4" style="right:42px; bottom:88px;">😊</div>
 
             <div class="runner-zone">
@@ -1218,7 +1319,6 @@
         </div>
       </section>
 
-      <!-- RIGHT -->
       <aside class="panel question-shell">
         <div class="question-title">Question</div>
 
@@ -1241,7 +1341,7 @@
 
           <div class="q-note">
             Choose the best answer. Use Pinyin / English support only when needed.
-            The runner bounces on the trampoline: higher for correct answers, lower for wrong ones.
+            Correct answers make the runner bounce higher and make the sun drop sparkles.
           </div>
 
           <div id="finalBox" class="final-box hidden"></div>
@@ -1250,7 +1350,6 @@
     </div>
   </div>
 
-  <!-- HOW TO PLAY -->
   <div class="modal" id="howModal">
     <div class="modal-card">
       <div class="modal-top">
@@ -1267,13 +1366,13 @@
           <strong>higher</strong> for correct answers,
           <strong>lower</strong> for wrong answers.
         </li>
+        <li>When the runner jumps high, the sun drops sparkles and flowers.</li>
         <li>After feedback appears, you can click <strong>Next Question</strong> right away.</li>
         <li>If <strong>Auto Next</strong> is ON, the game can also move to the next question automatically.</li>
       </ol>
     </div>
   </div>
 
-  <!-- WORD BANK -->
   <div class="modal" id="bankModal">
     <div class="modal-card">
       <div class="modal-top">
@@ -1307,7 +1406,7 @@
           <div class="wb-item"><div class="zh">凉鞋</div><div class="sub">liáng xié · sandals</div></div>
           <div class="wb-item"><div class="zh">羽绒服</div><div class="sub">yǔ róng fú · down jacket</div></div>
           <div class="wb-item"><div class="zh">靴子</div><div class="sub">xuē zi · boots</div></div>
-          <div class="wb-item"><div class="zh">戴</div><div class="sub">dài · wear (accessories)</div></div>
+          <div class="wb-item"><div class="zh">戴</div><div class="sub">dài · wear accessories</div></div>
           <div class="wb-item"><div class="zh">帽子</div><div class="sub">mào zi · hat</div></div>
           <div class="wb-item"><div class="zh">围巾</div><div class="sub">wéi jīn · scarf</div></div>
           <div class="wb-item"><div class="zh">手套</div><div class="sub">shǒu tào · gloves</div></div>
@@ -1684,6 +1783,7 @@
     const feedbackTop = document.getElementById("feedbackTop");
     const feedbackMain = document.getElementById("feedbackMain");
     const feedbackSub = document.getElementById("feedbackSub");
+    const sunShower = document.getElementById("sunShower");
 
     const qNumText = document.getElementById("qNumText");
     const qMiniLabel = document.getElementById("qMiniLabel");
@@ -1893,7 +1993,34 @@
       setTimeout(()=>{
         runnerImg.classList.remove("bounce-high","bounce-low");
         trampoline.classList.remove("high","low");
-      }, 1200);
+      }, 1400);
+    }
+
+    function triggerSunShower(){
+      const particles = ["✨","🌸","⭐","💛","🌼","✨","🌸","⭐","💫","🪷","✨","🌼","🌟","💛"];
+      sunShower.innerHTML = "";
+
+      particles.forEach((symbol)=>{
+        const p = document.createElement("span");
+        p.className = "sun-particle";
+        p.textContent = symbol;
+
+        const dx = Math.floor(Math.random()*120 - 60);
+        const drift = Math.floor(Math.random()*120 - 60);
+        const delay = (Math.random()*0.35).toFixed(2);
+
+        p.style.setProperty("--dx", dx + "px");
+        p.style.setProperty("--drift", drift + "px");
+        p.style.animationDelay = delay + "s";
+        p.style.left = (35 + Math.random()*70) + "%";
+        p.style.fontSize = (18 + Math.random()*14) + "px";
+
+        sunShower.appendChild(p);
+      });
+
+      setTimeout(()=>{
+        sunShower.innerHTML = "";
+      }, 2600);
     }
 
     function handleAnswer(key, btnEl){
@@ -1921,6 +2048,7 @@
       animateRunner(correct);
 
       if(correct){
+        triggerSunShower();
         state.correct += 1;
         if(!state.unlocked.includes(q.answer)){
           state.unlocked.push(q.answer);
@@ -2008,6 +2136,7 @@
       state.correct = 0;
       state.unlocked = [];
       state.locked = false;
+      sunShower.innerHTML = "";
       renderQuestion();
     }
 
@@ -2023,7 +2152,6 @@
 
     document.getElementById("restartTopBtn").onclick = restartGame;
 
-    // init
     renderQuestion();
   </script>
 </body>
