@@ -1,36 +1,49 @@
+<!doctype html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>汉字拼拼乐 - 生病单元</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap');
+
         body {
             font-family: 'Noto Sans SC', sans-serif;
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             color: white;
-            /* 去掉了 overflow: hidden，允许滚动 */
         }
+
         .char-card {
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .char-card:active {
             transform: scale(0.9);
         }
+
         .workbench {
             background: rgba(255, 255, 255, 0.05);
             border: 2px dashed rgba(255, 255, 255, 0.2);
         }
+
         .success-glow {
             animation: success-pulse 0.5s ease-out;
         }
+
         @keyframes success-pulse {
-            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
-            100% { box-shadow: 0 0 20px 20px rgba(34, 197, 94, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+            }
+
+            100% {
+                box-shadow: 0 0 20px 20px rgba(34, 197, 94, 0);
+            }
         }
     </style>
 </head>
+
 <body class="min-h-screen flex flex-col items-center py-6 px-2">
 
     <!-- 顶栏 -->
@@ -39,6 +52,7 @@
             <h1 class="text-2xl font-bold text-blue-400">汉字拼拼乐</h1>
             <p class="text-xs text-slate-400">ESC-2-6 生病单元词汇</p>
         </div>
+
         <div class="text-right">
             <div class="text-3xl font-mono font-bold text-yellow-400" id="score">000</div>
             <div class="text-xs text-slate-400">SCORE</div>
@@ -47,37 +61,71 @@
 
     <!-- 游戏主区域 -->
     <div class="w-full max-w-5xl flex flex-col md:flex-row gap-6 px-4">
-        
+
         <!-- 左侧字库 -->
-        <div id="pool-left" class="flex-1 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-2 gap-2 content-start">
+        <div
+            id="pool-left"
+            class="flex-1 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-2 gap-2 content-start"
+        >
             <!-- 动态生成 -->
         </div>
 
-        <!-- 中间：组合区 (固定在中间) -->
+        <!-- 中间：组合区 -->
         <div class="flex-none flex flex-col items-center justify-start py-4">
-            <div class="text-xs text-slate-500 mb-4 uppercase tracking-widest">Workbench / 组合区</div>
-            <div id="workbench" class="workbench w-64 h-64 rounded-3xl flex items-center justify-center gap-2 p-4 relative shadow-2xl">
-                <div id="slot-1" class="w-20 h-20 rounded-2xl border-2 border-slate-700 bg-slate-800/80 flex items-center justify-center text-4xl font-bold text-slate-500 shadow-inner">?</div>
+            <div class="text-xs text-slate-500 mb-4 uppercase tracking-widest">
+                Workbench / 组合区
+            </div>
+
+            <div
+                id="workbench"
+                class="workbench w-64 h-64 rounded-3xl flex items-center justify-center gap-2 p-4 relative shadow-2xl"
+            >
+                <div
+                    id="slot-1"
+                    class="w-20 h-20 rounded-2xl border-2 border-slate-700 bg-slate-800/80 flex items-center justify-center text-4xl font-bold text-slate-500 shadow-inner"
+                >
+                    ?
+                </div>
+
                 <div class="text-2xl text-slate-600 font-bold">+</div>
-                <div id="slot-2" class="w-20 h-20 rounded-2xl border-2 border-slate-700 bg-slate-800/80 flex items-center justify-center text-4xl font-bold text-slate-500 shadow-inner">?</div>
-                
+
+                <div
+                    id="slot-2"
+                    class="w-20 h-20 rounded-2xl border-2 border-slate-700 bg-slate-800/80 flex items-center justify-center text-4xl font-bold text-slate-500 shadow-inner"
+                >
+                    ?
+                </div>
+
                 <!-- 结果提示 -->
-                <div id="result-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-green-500 rounded-3xl opacity-0 pointer-events-none transition-opacity duration-300 z-10">
+                <div
+                    id="result-overlay"
+                    class="absolute inset-0 flex flex-col items-center justify-center bg-green-500 rounded-3xl opacity-0 pointer-events-none transition-opacity duration-300 z-10"
+                >
                     <span id="res-cn" class="text-6xl font-black text-white"></span>
                     <span id="res-py" class="text-xl font-bold text-green-100 mt-2"></span>
                 </div>
             </div>
-            
-            <button onclick="clearWorkbench()" class="mt-6 px-4 py-2 bg-slate-800/50 rounded-full text-slate-400 hover:text-white transition-colors flex items-center gap-2 border border-slate-700">
+
+            <button
+                onclick="clearWorkbench()"
+                class="mt-6 px-4 py-2 bg-slate-800/50 rounded-full text-slate-400 hover:text-white transition-colors flex items-center gap-2 border border-slate-700"
+            >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                    <path
+                        fill-rule="evenodd"
+                        d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                        clip-rule="evenodd"
+                    />
                 </svg>
                 重置选择
             </button>
         </div>
 
         <!-- 右侧字库 -->
-        <div id="pool-right" class="flex-1 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-2 gap-2 content-start">
+        <div
+            id="pool-right"
+            class="flex-1 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-2 gap-2 content-start"
+        >
             <!-- 动态生成 -->
         </div>
 
@@ -90,57 +138,177 @@
 
     <script>
         const words = [
-            { full: "觉得", p1: "觉", p2: "得", py: "jué de" },
-            { full: "力气", p1: "力", p2: "气", py: "lì qi" },
-            { full: "生病", p1: "生", p2: "病", py: "shēng bìng" },
-            { full: "发烧", p1: "发", p2: "烧", py: "fā shāo" },
-            { full: "感冒", p1: "感", p2: "冒", py: "gǎn mào" },
-            { full: "舒服", p1: "舒", p2: "服", py: "shū fu" },
-            { full: "头痛", p1: "头", p2: "痛", py: "tóu tòng" },
-            { full: "咳嗽", p1: "咳", p2: "嗽", py: "ké sou" },
-            { full: "肚子", p1: "肚", p2: "子", py: "dù zi" },
-            { full: "厕所", p1: "厕", p2: "所", py: "cè suǒ" },
-            { full: "休息", p1: "休", p2: "息", py: "xiū xi" },
-            { full: "嗓子", p1: "嗓", p2: "子", py: "sǎng zi" }
+            {
+                full: "觉得",
+                p1: "觉",
+                p2: "得",
+                py: "jué de"
+            },
+            {
+                full: "力气",
+                p1: "力",
+                p2: "气",
+                py: "lì qi"
+            },
+            {
+                full: "生病",
+                p1: "生",
+                p2: "病",
+                py: "shēng bìng"
+            },
+            {
+                full: "发烧",
+                p1: "发",
+                p2: "烧",
+                py: "fā shāo"
+            },
+            {
+                full: "感冒",
+                p1: "感",
+                p2: "冒",
+                py: "gǎn mào"
+            },
+            {
+                full: "舒服",
+                p1: "舒",
+                p2: "服",
+                py: "shū fu"
+            },
+            {
+                full: "头痛",
+                p1: "头",
+                p2: "痛",
+                py: "tóu tòng"
+            },
+            {
+                full: "咳嗽",
+                p1: "咳",
+                p2: "嗽",
+                py: "ké sou"
+            },
+            {
+                full: "肚子",
+                p1: "肚",
+                p2: "子",
+                py: "dù zi"
+            },
+            {
+                full: "厕所",
+                p1: "厕",
+                p2: "所",
+                py: "cè suǒ"
+            },
+            {
+                full: "休息",
+                p1: "休",
+                p2: "息",
+                py: "xiū xi"
+            },
+            {
+                full: "嗓子",
+                p1: "嗓",
+                p2: "子",
+                py: "sǎng zi"
+            }
         ];
 
         let score = 0;
+
         let selectedP1 = null;
         let selectedP2 = null;
 
+        let selectedP1Button = null;
+        let selectedP2Button = null;
+
+        function shuffleArray(array) {
+            const a = [...array];
+
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+
+            return a;
+        }
+
         function initGame() {
-            const leftPool = document.getElementById('pool-left');
-            const rightPool = document.getElementById('pool-right');
-            
-            const leftChars = words.map(w => w.p1).sort(() => Math.random() - 0.5);
-            const rightChars = words.map(w => w.p2).sort(() => Math.random() - 0.5);
+            const leftPool = document.getElementById("pool-left");
+            const rightPool = document.getElementById("pool-right");
 
-            leftPool.innerHTML = leftChars.map(char => `
-                <button onclick="selectChar(1, '${char}', this)" class="char-card bg-slate-800/60 border-l-4 border-blue-500 p-4 rounded-xl text-2xl font-bold hover:bg-blue-900/40 text-slate-200 shadow-lg">
-                    ${char}
-                </button>
-            `).join('');
+            /*
+              关键修复：
+              以前只是把字拿出来，比如右边有两个“子”，它们都只是“子”。
+              现在每一个按钮都保留 word id，所以两个“子”是两个不同按钮。
+            */
+            const leftItems = words.map((w, index) => ({
+                id: "left-" + index,
+                wordIndex: index,
+                char: w.p1
+            }));
 
-            rightPool.innerHTML = rightChars.map(char => `
-                <button onclick="selectChar(2, '${char}', this)" class="char-card bg-slate-800/60 border-r-4 border-purple-500 p-4 rounded-xl text-2xl font-bold hover:bg-purple-900/40 text-slate-200 shadow-lg">
-                    ${char}
+            const rightItems = words.map((w, index) => ({
+                id: "right-" + index,
+                wordIndex: index,
+                char: w.p2
+            }));
+
+            const shuffledLeft = shuffleArray(leftItems);
+            const shuffledRight = shuffleArray(rightItems);
+
+            leftPool.innerHTML = shuffledLeft.map(item => `
+                <button
+                    id="${item.id}"
+                    data-char="${item.char}"
+                    data-word-index="${item.wordIndex}"
+                    onclick="selectChar(1, '${item.char}', this)"
+                    class="char-card bg-slate-800/60 border-l-4 border-blue-500 p-4 rounded-xl text-2xl font-bold hover:bg-blue-900/40 text-slate-200 shadow-lg"
+                >
+                    ${item.char}
                 </button>
-            `).join('');
+            `).join("");
+
+            rightPool.innerHTML = shuffledRight.map(item => `
+                <button
+                    id="${item.id}"
+                    data-char="${item.char}"
+                    data-word-index="${item.wordIndex}"
+                    onclick="selectChar(2, '${item.char}', this)"
+                    class="char-card bg-slate-800/60 border-r-4 border-purple-500 p-4 rounded-xl text-2xl font-bold hover:bg-purple-900/40 text-slate-200 shadow-lg"
+                >
+                    ${item.char}
+                </button>
+            `).join("");
         }
 
         function selectChar(side, char, element) {
             if (side === 1) {
-                document.querySelectorAll('#pool-left button').forEach(b => b.classList.remove('bg-blue-600', 'ring-2', 'ring-white', 'scale-105'));
+                document
+                    .querySelectorAll("#pool-left button")
+                    .forEach(b => b.classList.remove("bg-blue-600", "ring-2", "ring-white", "scale-105"));
+
                 selectedP1 = char;
-                element.classList.add('bg-blue-600', 'ring-2', 'ring-white', 'scale-105');
-                document.getElementById('slot-1').textContent = char;
-                document.getElementById('slot-1').classList.replace('text-slate-500', 'text-white');
+                selectedP1Button = element;
+
+                element.classList.add("bg-blue-600", "ring-2", "ring-white", "scale-105");
+
+                const slot1 = document.getElementById("slot-1");
+                slot1.textContent = char;
+                slot1.classList.remove("text-slate-500");
+                slot1.classList.add("text-white");
             } else {
-                document.querySelectorAll('#pool-right button').forEach(b => b.classList.remove('bg-purple-600', 'ring-2', 'ring-white', 'scale-105'));
+                document
+                    .querySelectorAll("#pool-right button")
+                    .forEach(b => b.classList.remove("bg-purple-600", "ring-2", "ring-white", "scale-105"));
+
                 selectedP2 = char;
-                element.classList.add('bg-purple-600', 'ring-2', 'ring-white', 'scale-105');
-                document.getElementById('slot-2').textContent = char;
-                document.getElementById('slot-2').classList.replace('text-slate-500', 'text-white');
+                selectedP2Button = element;
+
+                element.classList.add("bg-purple-600", "ring-2", "ring-white", "scale-105");
+
+                const slot2 = document.getElementById("slot-2");
+                slot2.textContent = char;
+                slot2.classList.remove("text-slate-500");
+                slot2.classList.add("text-white");
             }
 
             checkMatch();
@@ -161,31 +329,37 @@
 
         function handleSuccess(match) {
             score += 10;
-            document.getElementById('score').textContent = score.toString().padStart(3, '0');
-            
-            const overlay = document.getElementById('result-overlay');
-            const wb = document.getElementById('workbench');
-            
-            document.getElementById('res-cn').textContent = match.full;
-            document.getElementById('res-py').textContent = match.py;
-            
-            overlay.classList.remove('opacity-0');
-            wb.classList.add('success-glow');
-            
+            document.getElementById("score").textContent = score.toString().padStart(3, "0");
+
+            const overlay = document.getElementById("result-overlay");
+            const wb = document.getElementById("workbench");
+
+            document.getElementById("res-cn").textContent = match.full;
+            document.getElementById("res-py").textContent = match.py;
+
+            overlay.classList.remove("opacity-0");
+            wb.classList.add("success-glow");
+
             setTimeout(() => {
-                overlay.classList.add('opacity-0');
-                wb.classList.remove('success-glow');
-                removeMatchedChars(selectedP1, selectedP2);
+                overlay.classList.add("opacity-0");
+                wb.classList.remove("success-glow");
+
+                removeSelectedButtons();
                 clearWorkbench();
-                if (document.querySelectorAll('.char-card').length === 0) showWin();
+
+                if (document.querySelectorAll(".char-card").length === 0) {
+                    showWin();
+                }
             }, 800);
         }
 
         function handleFailure() {
-            const wb = document.getElementById('workbench');
-            wb.classList.add('bg-red-900/40');
+            const wb = document.getElementById("workbench");
+
+            wb.classList.add("bg-red-900/40");
+
             setTimeout(() => {
-                wb.classList.remove('bg-red-900/40');
+                wb.classList.remove("bg-red-900/40");
                 clearWorkbench();
             }, 400);
         }
@@ -193,27 +367,63 @@
         function clearWorkbench() {
             selectedP1 = null;
             selectedP2 = null;
-            document.getElementById('slot-1').textContent = "?";
-            document.getElementById('slot-2').textContent = "?";
-            document.getElementById('slot-1').classList.replace('text-white', 'text-slate-500');
-            document.getElementById('slot-2').classList.replace('text-white', 'text-slate-500');
-            document.querySelectorAll('.char-card').forEach(b => b.classList.remove('bg-blue-600', 'bg-purple-600', 'ring-2', 'ring-white', 'scale-105'));
+            selectedP1Button = null;
+            selectedP2Button = null;
+
+            const slot1 = document.getElementById("slot-1");
+            const slot2 = document.getElementById("slot-2");
+
+            slot1.textContent = "?";
+            slot2.textContent = "?";
+
+            slot1.classList.remove("text-white");
+            slot2.classList.remove("text-white");
+
+            slot1.classList.add("text-slate-500");
+            slot2.classList.add("text-slate-500");
+
+            document
+                .querySelectorAll(".char-card")
+                .forEach(b => b.classList.remove(
+                    "bg-blue-600",
+                    "bg-purple-600",
+                    "ring-2",
+                    "ring-white",
+                    "scale-105"
+                ));
         }
 
-        function removeMatchedChars(p1, p2) {
-            document.querySelectorAll('#pool-left button').forEach(b => { if (b.textContent.trim() === p1) b.remove(); });
-            document.querySelectorAll('#pool-right button').forEach(b => { if (b.textContent.trim() === p2) b.remove(); });
+        function removeSelectedButtons() {
+            /*
+              关键修复：
+              不再按字删除。
+              以前如果 p2 是“子”，会把两个“子”都删掉。
+              现在只删除学生刚刚点中的那个按钮。
+            */
+            if (selectedP1Button) {
+                selectedP1Button.remove();
+            }
+
+            if (selectedP2Button) {
+                selectedP2Button.remove();
+            }
         }
 
         function showWin() {
-            document.getElementById('workbench').innerHTML = `
+            document.getElementById("workbench").innerHTML = `
                 <div class="text-center p-4">
                     <div class="text-6xl mb-4">🎉</div>
                     <div class="text-2xl font-bold text-yellow-400">全部拼对！</div>
-                    <button onclick="location.reload()" class="mt-6 px-8 py-2 bg-blue-600 rounded-full font-bold hover:bg-blue-500 transition-all">再玩一次</button>
+                    <button
+                        onclick="location.reload()"
+                        class="mt-6 px-8 py-2 bg-blue-600 rounded-full font-bold hover:bg-blue-500 transition-all"
+                    >
+                        再玩一次
+                    </button>
                 </div>
             `;
-            document.getElementById('hint').textContent = "完美通关！";
+
+            document.getElementById("hint").textContent = "完美通关！";
         }
 
         window.onload = initGame;
