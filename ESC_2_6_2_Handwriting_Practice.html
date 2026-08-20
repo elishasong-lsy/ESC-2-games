@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>ESC-2-6-2 Handwriting Practice</title>
+
+  <style>
+    body{
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        "Noto Sans SC",
+        sans-serif;
+
+      background:
+        radial-gradient(circle at top left, #e0f2fe 0%, #f6f7fb 42%, #eef2ff 100%);
+
+      margin:0;
+      padding:24px;
+      color:#111827;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+      flex-wrap:wrap;
+    }
+
+    .title{
+      font-size:24px;
+      font-weight:950;
+      color:#111827;
+      line-height:1.2;
+    }
+
+    .subtitle{
+      margin-top:4px;
+      color:#64748b;
+      font-size:14px;
+      font-weight:800;
+    }
+
+    .btns{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    button{
+      border:0;
+      padding:10px 14px;
+      border-radius:12px;
+      font-weight:900;
+      cursor:pointer;
+      font-size:14px;
+    }
+
+    .primary{
+      background:#6d28d9;
+      color:#fff;
+    }
+
+    .ghost{
+      background:#fff;
+      color:#111827;
+      border:1px solid #e5e7eb;
+    }
+
+    .ghost:hover{
+      border-color:#6d28d9;
+    }
+
+    .score{
+      background:#fff;
+      border:1px solid #e5e7eb;
+      padding:10px 14px;
+      border-radius:12px;
+      font-weight:950;
+      box-shadow:0 8px 20px rgba(15,23,42,.06);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:360px 1fr;
+      gap:16px;
+      align-items:start;
+    }
+
+    .card{
+      background:rgba(255,255,255,.86);
+      border:1px solid #e5e7eb;
+      border-radius:20px;
+      padding:16px;
+      box-shadow:0 12px 28px rgba(15,23,42,.08);
+    }
+
+    .label{
+      font-size:13px;
+      font-weight:950;
+      color:#6b7280;
+      margin-bottom:6px;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+    }
+
+    .big{
+      font-size:34px;
+      font-weight:950;
+      color:#111827;
+      line-height:1.25;
+    }
+
+    .mid{
+      font-size:18px;
+      font-weight:850;
+      color:#111827;
+      line-height:1.4;
+    }
+
+    .sentence{
+      font-size:17px;
+      font-weight:800;
+      color:#334155;
+      line-height:1.55;
+      background:#f8fafc;
+      border:1px solid #e5e7eb;
+      border-radius:14px;
+      padding:12px;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+      max-height:310px;
+      overflow:auto;
+      padding-right:4px;
+    }
+
+    .chip{
+      border:1px solid #e5e7eb;
+      background:#fff;
+      border-radius:999px;
+      padding:8px 11px;
+      font-weight:900;
+      cursor:pointer;
+      color:#111827;
+    }
+
+    .chip:hover{
+      border-color:#6d28d9;
+      background:#f5f3ff;
+    }
+
+    .chip.active{
+      background:#6d28d9;
+      color:#fff;
+      border-color:#6d28d9;
+    }
+
+    .writerWrap{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .writerTop{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .charBadge{
+      background:#f5f3ff;
+      border:1px solid #ddd6fe;
+      color:#5b21b6;
+      border-radius:16px;
+      padding:10px 14px;
+      font-weight:950;
+    }
+
+    #writerTarget{
+      width:520px;
+      height:520px;
+      margin:0 auto;
+      background:#fff;
+      border:2px solid #e5e7eb;
+      border-radius:18px;
+      box-shadow:inset 0 0 0 1px rgba(15,23,42,.02);
+    }
+
+    .hint{
+      color:#6b7280;
+      font-weight:750;
+      line-height:1.55;
+    }
+
+    #statusText{
+      color:#b42318;
+      font-weight:900;
+      line-height:1.45;
+      margin-top:10px;
+    }
+
+    .miniProgress{
+      color:#64748b;
+      font-weight:900;
+      font-size:14px;
+      margin-top:4px;
+    }
+
+    .footerNote{
+      margin-top:12px;
+      background:#fff7ed;
+      color:#9a3412;
+      border:1px solid #fed7aa;
+      border-radius:14px;
+      padding:11px 12px;
+      font-weight:800;
+      line-height:1.5;
+    }
+
+    @media (max-width: 980px){
+      body{
+        padding:16px;
+      }
+
+      .layout{
+        grid-template-columns:1fr;
+      }
+
+      #writerTarget{
+        width:min(520px, 92vw);
+        height:min(520px, 92vw);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div>
+      <div class="title">ESC-2-6-2 · Handwriting Practice</div>
+      <div class="subtitle">生病单元 New Words 2｜写字练习</div>
+    </div>
+
+    <div class="btns">
+      <div class="score" id="scoreBox">Score: 0</div>
+      <button class="ghost" id="speakBtn">🔊 Speak</button>
+      <button class="ghost" id="animateBtn">✍️ Show Stroke Order</button>
+      <button class="ghost" id="nextBtn">Next ▶</button>
+      <button class="primary" id="restartBtn">Restart</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="card">
+      <div class="label">Current Item</div>
+
+      <div class="label" style="margin-top:8px;">Word / Phrase</div>
+      <div class="big" id="wordBox">舒服</div>
+
+      <div class="label" style="margin-top:12px;">Pinyin</div>
+      <div class="mid" id="pinyinBox">shū fu</div>
+
+      <div class="label" style="margin-top:12px;">English</div>
+      <div class="mid" id="englishBox">be well; comfortable</div>
+
+      <div class="label" style="margin-top:12px;">Example Sentence</div>
+      <div class="sentence" id="sentenceBox">我不舒服。</div>
+
+      <div class="label" style="margin-top:16px;">Choose a word / phrase</div>
+      <div class="chips" id="chips"></div>
+
+      <div class="footerNote">
+        写字规则：每个词会拆成一个一个汉字练习。写完当前字以后，自动进入下一个字。
+      </div>
+
+      <div id="statusText"></div>
+    </div>
+
+    <div class="card writerWrap">
+      <div class="writerTop">
+        <div>
+          <div class="big" id="charTitle">舒</div>
+          <div class="miniProgress" id="charIndex">Character 1 / 2</div>
+        </div>
+
+        <div class="charBadge" id="itemIndexBox">Item 1 / 19</div>
+      </div>
+
+      <div id="writerTarget" aria-label="handwriting target"></div>
+
+      <div class="hint">
+        Write inside the big box. You can use “Show Stroke Order” first, then write it yourself.
+      </div>
+    </div>
+  </div>
+
+  <!-- HanziWriter core -->
+  <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.7.0/dist/hanzi-writer.min.js"></script>
+
+  <script>
+    const VOCAB = [
+      {
+        hanzi:"舒",
+        pinyin:"shū",
+        english:"relax",
+        sentence:"舒 is used in 舒服."
+      },
+      {
+        hanzi:"舒服",
+        pinyin:"shū fu",
+        english:"be well; comfortable",
+        sentence:"我不舒服。"
+      },
+      {
+        hanzi:"痛",
+        pinyin:"tòng",
+        english:"ache; pain",
+        sentence:"痛 is used in 头痛."
+      },
+      {
+        hanzi:"头痛",
+        pinyin:"tóu tòng",
+        english:"headache",
+        sentence:"我头痛。"
+      },
+      {
+        hanzi:"咳",
+        pinyin:"ké",
+        english:"cough",
+        sentence:"咳 is used in 咳嗽."
+      },
+      {
+        hanzi:"嗽",
+        pinyin:"sou",
+        english:"cough",
+        sentence:"嗽 is used in 咳嗽."
+      },
+      {
+        hanzi:"咳嗽",
+        pinyin:"ké sou",
+        english:"cough",
+        sentence:"我咳嗽。"
+      },
+      {
+        hanzi:"拉",
+        pinyin:"lā",
+        english:"empty the bowels",
+        sentence:"拉 is used in 拉肚子."
+      },
+      {
+        hanzi:"肚",
+        pinyin:"dù",
+        english:"stomach; abdomen",
+        sentence:"肚 is used in 肚子."
+      },
+      {
+        hanzi:"肚子",
+        pinyin:"dù zi",
+        english:"stomach; abdomen",
+        sentence:"我肚子痛。"
+      },
+      {
+        hanzi:"拉肚子",
+        pinyin:"lā dù zi",
+        english:"have loose bowels",
+        sentence:"我拉肚子。"
+      },
+      {
+        hanzi:"要",
+        pinyin:"yào",
+        english:"should; need",
+        sentence:"你要多休息。"
+      },
+      {
+        hanzi:"不要",
+        pinyin:"bú yào",
+        english:"do not; should not",
+        sentence:"你今天和明天都不要去上学了。"
+      },
+      {
+        hanzi:"休",
+        pinyin:"xiū",
+        english:"rest",
+        sentence:"休 is used in 休息."
+      },
+      {
+        hanzi:"息",
+        pinyin:"xi",
+        english:"rest",
+        sentence:"息 is used in 休息."
+      },
+      {
+        hanzi:"休息",
+        pinyin:"xiū xi",
+        english:"rest",
+        sentence:"你要多休息。"
+      },
+      {
+        hanzi:"不用谢",
+        pinyin:"bú yòng xiè",
+        english:"never mind; you're welcome",
+        sentence:"不用谢。"
+      },
+      {
+        hanzi:"厕",
+        pinyin:"cè",
+        english:"toilet",
+        sentence:"厕 is used in 厕所."
+      },
+      {
+        hanzi:"所",
+        pinyin:"suǒ",
+        english:"place",
+        sentence:"所 is used in 厕所."
+      },
+      {
+        hanzi:"厕所",
+        pinyin:"cè suǒ",
+        english:"toilet",
+        sentence:"我要上厕所。"
+      }
+    ];
+
+    let itemIndex = 1;
+    let charIndex = 0;
+    let score = 0;
+    let writer = null;
+
+    function charsFrom(hanzi){
+      return Array.from(hanzi).filter(ch => ch.trim() !== "");
+    }
+
+    function updateUI(){
+      const item = VOCAB[itemIndex];
+      const chars = charsFrom(item.hanzi);
+
+      if(charIndex >= chars.length){
+        charIndex = 0;
+      }
+
+      document.getElementById("wordBox").textContent = item.hanzi;
+      document.getElementById("pinyinBox").textContent = item.pinyin;
+      document.getElementById("englishBox").textContent = item.english;
+      document.getElementById("sentenceBox").textContent = item.sentence;
+
+      document.getElementById("charTitle").textContent = chars[charIndex] || "";
+      document.getElementById("charIndex").textContent =
+        `Character ${charIndex + 1} / ${chars.length}`;
+
+      document.getElementById("itemIndexBox").textContent =
+        `Item ${itemIndex + 1} / ${VOCAB.length}`;
+
+      document.getElementById("scoreBox").textContent = `Score: ${score}`;
+
+      renderChipsActive();
+      loadCharacter(chars[charIndex]);
+    }
+
+    async function loadCharacter(char){
+      const status = document.getElementById("statusText");
+      status.textContent = "Loading character…";
+
+      document.getElementById("writerTarget").innerHTML = "";
+
+      try{
+        const url =
+          `https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/${encodeURIComponent(char)}.json`;
+
+        const res = await fetch(url, { cache:"no-store" });
+
+        if(!res.ok){
+          throw new Error("Data fetch failed: " + res.status);
+        }
+
+        const charData = await res.json();
+
+        writer = HanziWriter.create("writerTarget", char, {
+          width: 520,
+          height: 520,
+          padding: 20,
+          charData: charData,
+          showOutline: true,
+          showCharacter: true,
+          outlineColor: "#d0d5dd",
+          strokeColor: "#111827",
+          strokeWidth: 7,
+          drawingWidth: 42,
+          leniency: 1.0,
+          showHintAfterMisses: 1,
+          highlightOnComplete: true
+        });
+
+        status.textContent = "";
+
+        writer.quiz({
+          onComplete: function(){
+            score += 100;
+            setTimeout(nextCharOrItem, 450);
+          }
+        });
+
+      }catch(e){
+        console.error(e);
+
+        status.textContent =
+          "⚠️ 字库加载失败：请用 GitHub Pages 打开，不要用本地 file 打开。也可以换网络后刷新。";
+
+        document.getElementById("writerTarget").innerHTML =
+          `<div style="
+            font-size:220px;
+            font-weight:900;
+            opacity:.16;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            height:100%;
+          ">${char}</div>`;
+      }
+    }
+
+    function nextCharOrItem(){
+      const chars = charsFrom(VOCAB[itemIndex].hanzi);
+
+      if(charIndex < chars.length - 1){
+        charIndex += 1;
+      }else{
+        itemIndex = (itemIndex + 1) % VOCAB.length;
+        charIndex = 0;
+      }
+
+      updateUI();
+    }
+
+    function previousItem(){
+      itemIndex = (itemIndex - 1 + VOCAB.length) % VOCAB.length;
+      charIndex = 0;
+      updateUI();
+    }
+
+    function restart(){
+      score = 0;
+      itemIndex = 1;
+      charIndex = 0;
+      updateUI();
+    }
+
+    function speakCurrent(){
+      const item = VOCAB[itemIndex];
+
+      const utter = new SpeechSynthesisUtterance(item.hanzi);
+      utter.lang = "zh-CN";
+      utter.rate = 0.82;
+      utter.pitch = 1;
+
+      speechSynthesis.cancel();
+      speechSynthesis.speak(utter);
+    }
+
+    function showStrokeOrder(){
+      if(writer){
+        writer.animateCharacter();
+      }
+    }
+
+    function renderChips(){
+      const chips = document.getElementById("chips");
+      chips.innerHTML = "";
+
+      VOCAB.forEach((v, i)=>{
+        const b = document.createElement("button");
+        b.className = "chip";
+        b.textContent = v.hanzi;
+
+        b.onclick = ()=>{
+          itemIndex = i;
+          charIndex = 0;
+          updateUI();
+        };
+
+        chips.appendChild(b);
+      });
+    }
+
+    function renderChipsActive(){
+      const chipButtons = document.querySelectorAll(".chip");
+
+      chipButtons.forEach((btn, i)=>{
+        if(i === itemIndex){
+          btn.classList.add("active");
+        }else{
+          btn.classList.remove("active");
+        }
+      });
+    }
+
+    document.getElementById("nextBtn").onclick = nextCharOrItem;
+    document.getElementById("restartBtn").onclick = restart;
+    document.getElementById("speakBtn").onclick = speakCurrent;
+    document.getElementById("animateBtn").onclick = showStrokeOrder;
+
+    renderChips();
+    updateUI();
+  </script>
+</body>
+</html>
