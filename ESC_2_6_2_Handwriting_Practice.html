@@ -78,6 +78,7 @@
 
     .ghost:hover{
       border-color:#6d28d9;
+      background:#f5f3ff;
     }
 
     .score{
@@ -91,13 +92,13 @@
 
     .layout{
       display:grid;
-      grid-template-columns:360px 1fr;
+      grid-template-columns:380px 1fr;
       gap:16px;
       align-items:start;
     }
 
     .card{
-      background:rgba(255,255,255,.86);
+      background:rgba(255,255,255,.88);
       border:1px solid #e5e7eb;
       border-radius:20px;
       padding:16px;
@@ -127,15 +128,58 @@
       line-height:1.4;
     }
 
+    .clickableRead{
+      cursor:pointer;
+      border-radius:12px;
+      padding:6px 8px;
+      margin-left:-8px;
+      transition:background .15s ease;
+    }
+
+    .clickableRead:hover{
+      background:#f5f3ff;
+    }
+
+    .readHint{
+      font-size:12px;
+      color:#8b5cf6;
+      font-weight:900;
+      margin-top:3px;
+    }
+
     .sentence{
-      font-size:17px;
-      font-weight:800;
+      font-size:18px;
+      font-weight:850;
       color:#334155;
       line-height:1.55;
       background:#f8fafc;
       border:1px solid #e5e7eb;
       border-radius:14px;
       padding:12px;
+      cursor:pointer;
+    }
+
+    .sentence:hover{
+      background:#f5f3ff;
+      border-color:#ddd6fe;
+    }
+
+    .readBtns{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .readBtn{
+      background:#eef2ff;
+      color:#4338ca;
+      border:1px solid #c7d2fe;
+      width:100%;
+    }
+
+    .readBtn:hover{
+      background:#e0e7ff;
     }
 
     .chips{
@@ -143,7 +187,7 @@
       flex-wrap:wrap;
       gap:8px;
       margin-top:10px;
-      max-height:310px;
+      max-height:250px;
       overflow:auto;
       padding-right:4px;
     }
@@ -233,6 +277,39 @@
       line-height:1.5;
     }
 
+    .englishRule{
+      margin-top:12px;
+      background:#eff6ff;
+      color:#1e3a8a;
+      border:1px solid #bfdbfe;
+      border-radius:14px;
+      padding:11px 12px;
+      font-weight:800;
+      line-height:1.5;
+    }
+
+    .charList{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:8px;
+    }
+
+    .charMini{
+      background:#fff;
+      border:1px solid #e5e7eb;
+      border-radius:12px;
+      padding:8px 12px;
+      font-size:24px;
+      font-weight:950;
+      cursor:pointer;
+    }
+
+    .charMini:hover{
+      background:#f5f3ff;
+      border-color:#ddd6fe;
+    }
+
     @media (max-width: 980px){
       body{
         padding:16px;
@@ -254,12 +331,12 @@
   <div class="topbar">
     <div>
       <div class="title">ESC-2-6-2 · Handwriting Practice</div>
-      <div class="subtitle">生病单元 New Words 2｜写字练习</div>
+      <div class="subtitle">生病单元 New Words 2｜字、词、句子写字练习</div>
     </div>
 
     <div class="btns">
       <div class="score" id="scoreBox">Score: 0</div>
-      <button class="ghost" id="speakBtn">🔊 Speak</button>
+      <button class="ghost" id="speakBtn">🔊 Speak Word</button>
       <button class="ghost" id="animateBtn">✍️ Show Stroke Order</button>
       <button class="ghost" id="nextBtn">Next ▶</button>
       <button class="primary" id="restartBtn">Restart</button>
@@ -270,8 +347,13 @@
     <div class="card">
       <div class="label">Current Item</div>
 
-      <div class="label" style="margin-top:8px;">Word / Phrase</div>
-      <div class="big" id="wordBox">舒服</div>
+      <div class="label" style="margin-top:8px;">Characters</div>
+      <div class="charList" id="charList"></div>
+      <div class="readHint">Click a character to hear it.</div>
+
+      <div class="label" style="margin-top:14px;">Word / Phrase</div>
+      <div class="big clickableRead" id="wordBox">舒服</div>
+      <div class="readHint">Click the word to hear it.</div>
 
       <div class="label" style="margin-top:12px;">Pinyin</div>
       <div class="mid" id="pinyinBox">shū fu</div>
@@ -281,6 +363,13 @@
 
       <div class="label" style="margin-top:12px;">Example Sentence</div>
       <div class="sentence" id="sentenceBox">我不舒服。</div>
+      <div class="readHint">Click the sentence to hear it.</div>
+
+      <div class="readBtns">
+        <button class="readBtn" id="readCharBtn">🔊 Read Current Character</button>
+        <button class="readBtn" id="readWordBtn">🔊 Read Word / Phrase</button>
+        <button class="readBtn" id="readSentenceBtn">🔊 Read Sentence</button>
+      </div>
 
       <div class="label" style="margin-top:16px;">Choose a word / phrase</div>
       <div class="chips" id="chips"></div>
@@ -289,17 +378,23 @@
         写字规则：每个词会拆成一个一个汉字练习。写完当前字以后，自动进入下一个字。
       </div>
 
+      <div class="englishRule">
+        Writing Rule: Each word or phrase is split into individual Chinese characters.
+        Finish writing the current character, and the game will move to the next character automatically.
+      </div>
+
       <div id="statusText"></div>
     </div>
 
     <div class="card writerWrap">
       <div class="writerTop">
         <div>
-          <div class="big" id="charTitle">舒</div>
+          <div class="big clickableRead" id="charTitle">舒</div>
+          <div class="readHint">Click the big character to hear it.</div>
           <div class="miniProgress" id="charIndex">Character 1 / 2</div>
         </div>
 
-        <div class="charBadge" id="itemIndexBox">Item 1 / 19</div>
+        <div class="charBadge" id="itemIndexBox">Item 1 / 20</div>
       </div>
 
       <div id="writerTarget" aria-label="handwriting target"></div>
@@ -319,121 +414,141 @@
         hanzi:"舒",
         pinyin:"shū",
         english:"relax",
-        sentence:"舒 is used in 舒服."
+        sentence:"舒 is used in 舒服.",
+        speakSentence:"舒 is used in 舒服."
       },
       {
         hanzi:"舒服",
         pinyin:"shū fu",
         english:"be well; comfortable",
-        sentence:"我不舒服。"
+        sentence:"我不舒服。",
+        speakSentence:"我不舒服。"
       },
       {
         hanzi:"痛",
         pinyin:"tòng",
         english:"ache; pain",
-        sentence:"痛 is used in 头痛."
+        sentence:"痛 is used in 头痛.",
+        speakSentence:"痛 is used in 头痛."
       },
       {
         hanzi:"头痛",
         pinyin:"tóu tòng",
         english:"headache",
-        sentence:"我头痛。"
+        sentence:"我头痛。",
+        speakSentence:"我头痛。"
       },
       {
         hanzi:"咳",
         pinyin:"ké",
         english:"cough",
-        sentence:"咳 is used in 咳嗽."
+        sentence:"咳 is used in 咳嗽.",
+        speakSentence:"咳 is used in 咳嗽."
       },
       {
         hanzi:"嗽",
         pinyin:"sou",
         english:"cough",
-        sentence:"嗽 is used in 咳嗽."
+        sentence:"嗽 is used in 咳嗽.",
+        speakSentence:"嗽 is used in 咳嗽."
       },
       {
         hanzi:"咳嗽",
         pinyin:"ké sou",
         english:"cough",
-        sentence:"我咳嗽。"
+        sentence:"我咳嗽。",
+        speakSentence:"我咳嗽。"
       },
       {
         hanzi:"拉",
         pinyin:"lā",
         english:"empty the bowels",
-        sentence:"拉 is used in 拉肚子."
+        sentence:"拉 is used in 拉肚子.",
+        speakSentence:"拉 is used in 拉肚子."
       },
       {
         hanzi:"肚",
         pinyin:"dù",
         english:"stomach; abdomen",
-        sentence:"肚 is used in 肚子."
+        sentence:"肚 is used in 肚子.",
+        speakSentence:"肚 is used in 肚子."
       },
       {
         hanzi:"肚子",
         pinyin:"dù zi",
         english:"stomach; abdomen",
-        sentence:"我肚子痛。"
+        sentence:"我肚子痛。",
+        speakSentence:"我肚子痛。"
       },
       {
         hanzi:"拉肚子",
         pinyin:"lā dù zi",
         english:"have loose bowels",
-        sentence:"我拉肚子。"
+        sentence:"我拉肚子。",
+        speakSentence:"我拉肚子。"
       },
       {
         hanzi:"要",
         pinyin:"yào",
         english:"should; need",
-        sentence:"你要多休息。"
+        sentence:"你要多休息。",
+        speakSentence:"你要多休息。"
       },
       {
         hanzi:"不要",
         pinyin:"bú yào",
         english:"do not; should not",
-        sentence:"你今天和明天都不要去上学了。"
+        sentence:"你今天和明天都不要去上学了。",
+        speakSentence:"你今天和明天都不要去上学了。"
       },
       {
         hanzi:"休",
         pinyin:"xiū",
         english:"rest",
-        sentence:"休 is used in 休息."
+        sentence:"休 is used in 休息.",
+        speakSentence:"休 is used in 休息."
       },
       {
         hanzi:"息",
         pinyin:"xi",
         english:"rest",
-        sentence:"息 is used in 休息."
+        sentence:"息 is used in 休息.",
+        speakSentence:"息 is used in 休息."
       },
       {
         hanzi:"休息",
         pinyin:"xiū xi",
         english:"rest",
-        sentence:"你要多休息。"
+        sentence:"你要多休息。",
+        speakSentence:"你要多休息。"
       },
       {
         hanzi:"不用谢",
         pinyin:"bú yòng xiè",
         english:"never mind; you're welcome",
-        sentence:"不用谢。"
+        sentence:"不用谢。",
+        speakSentence:"不用谢。"
       },
       {
         hanzi:"厕",
         pinyin:"cè",
         english:"toilet",
-        sentence:"厕 is used in 厕所."
+        sentence:"厕 is used in 厕所.",
+        speakSentence:"厕 is used in 厕所."
       },
       {
         hanzi:"所",
         pinyin:"suǒ",
         english:"place",
-        sentence:"所 is used in 厕所."
+        sentence:"所 is used in 厕所.",
+        speakSentence:"所 is used in 厕所."
       },
       {
         hanzi:"厕所",
         pinyin:"cè suǒ",
         english:"toilet",
-        sentence:"我要上厕所。"
+        sentence:"我要上厕所。",
+        speakSentence:"我要上厕所。"
       }
     ];
 
@@ -441,9 +556,69 @@
     let charIndex = 0;
     let score = 0;
     let writer = null;
+    let voicesReady = false;
 
     function charsFrom(hanzi){
       return Array.from(hanzi).filter(ch => ch.trim() !== "");
+    }
+
+    function getChineseVoice(){
+      const voices = window.speechSynthesis.getVoices();
+
+      let voice =
+        voices.find(v => v.lang && v.lang.toLowerCase() === "zh-cn") ||
+        voices.find(v => v.lang && v.lang.toLowerCase().startsWith("zh")) ||
+        voices.find(v => v.name && v.name.toLowerCase().includes("chinese")) ||
+        null;
+
+      return voice;
+    }
+
+    function speakChinese(text){
+      const status = document.getElementById("statusText");
+
+      if(!("speechSynthesis" in window)){
+        status.textContent = "⚠️ This browser does not support speech synthesis.";
+        return;
+      }
+
+      if(!text){
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "zh-CN";
+      utter.rate = 0.78;
+      utter.pitch = 1.05;
+      utter.volume = 1;
+
+      const voice = getChineseVoice();
+      if(voice){
+        utter.voice = voice;
+      }
+
+      utter.onstart = function(){
+        status.textContent = "";
+      };
+
+      utter.onerror = function(){
+        status.textContent =
+          "⚠️ If there is no sound, click once on the page, turn on volume, then try again. Some browsers block voice until the page is clicked.";
+      };
+
+      window.speechSynthesis.speak(utter);
+
+      /*
+        Some Safari / iOS browsers pause speechSynthesis.
+        This helps wake it up.
+      */
+      setTimeout(function(){
+        if(window.speechSynthesis.paused){
+          window.speechSynthesis.resume();
+        }
+      }, 80);
     }
 
     function updateUI(){
@@ -468,8 +643,30 @@
 
       document.getElementById("scoreBox").textContent = `Score: ${score}`;
 
+      renderCharacterButtons(chars);
       renderChipsActive();
       loadCharacter(chars[charIndex]);
+    }
+
+    function renderCharacterButtons(chars){
+      const charList = document.getElementById("charList");
+      charList.innerHTML = "";
+
+      chars.forEach((ch, i)=>{
+        const b = document.createElement("button");
+        b.className = "charMini";
+        b.textContent = ch;
+
+        b.onclick = ()=>{
+          charIndex = i;
+          updateUI();
+          setTimeout(()=>{
+            speakChinese(ch);
+          }, 120);
+        };
+
+        charList.appendChild(b);
+      });
     }
 
     async function loadCharacter(char){
@@ -547,12 +744,6 @@
       updateUI();
     }
 
-    function previousItem(){
-      itemIndex = (itemIndex - 1 + VOCAB.length) % VOCAB.length;
-      charIndex = 0;
-      updateUI();
-    }
-
     function restart(){
       score = 0;
       itemIndex = 1;
@@ -560,16 +751,20 @@
       updateUI();
     }
 
-    function speakCurrent(){
+    function speakCurrentCharacter(){
+      const chars = charsFrom(VOCAB[itemIndex].hanzi);
+      const ch = chars[charIndex] || VOCAB[itemIndex].hanzi;
+      speakChinese(ch);
+    }
+
+    function speakCurrentWord(){
       const item = VOCAB[itemIndex];
+      speakChinese(item.hanzi);
+    }
 
-      const utter = new SpeechSynthesisUtterance(item.hanzi);
-      utter.lang = "zh-CN";
-      utter.rate = 0.82;
-      utter.pitch = 1;
-
-      speechSynthesis.cancel();
-      speechSynthesis.speak(utter);
+    function speakCurrentSentence(){
+      const item = VOCAB[itemIndex];
+      speakChinese(item.speakSentence || item.sentence || item.hanzi);
     }
 
     function showStrokeOrder(){
@@ -591,6 +786,10 @@
           itemIndex = i;
           charIndex = 0;
           updateUI();
+
+          setTimeout(()=>{
+            speakChinese(v.hanzi);
+          }, 120);
         };
 
         chips.appendChild(b);
@@ -611,8 +810,27 @@
 
     document.getElementById("nextBtn").onclick = nextCharOrItem;
     document.getElementById("restartBtn").onclick = restart;
-    document.getElementById("speakBtn").onclick = speakCurrent;
+    document.getElementById("speakBtn").onclick = speakCurrentWord;
     document.getElementById("animateBtn").onclick = showStrokeOrder;
+
+    document.getElementById("readCharBtn").onclick = speakCurrentCharacter;
+    document.getElementById("readWordBtn").onclick = speakCurrentWord;
+    document.getElementById("readSentenceBtn").onclick = speakCurrentSentence;
+
+    document.getElementById("wordBox").onclick = speakCurrentWord;
+    document.getElementById("sentenceBox").onclick = speakCurrentSentence;
+    document.getElementById("charTitle").onclick = speakCurrentCharacter;
+
+    /*
+      Load voices earlier. Some browsers load voices after the page opens.
+    */
+    if("speechSynthesis" in window){
+      window.speechSynthesis.onvoiceschanged = function(){
+        voicesReady = true;
+      };
+
+      window.speechSynthesis.getVoices();
+    }
 
     renderChips();
     updateUI();
