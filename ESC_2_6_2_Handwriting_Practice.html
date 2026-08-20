@@ -17,10 +17,7 @@
         Arial,
         "Noto Sans SC",
         sans-serif;
-
-      background:
-        radial-gradient(circle at top left, #e0f2fe 0%, #f6f7fb 42%, #eef2ff 100%);
-
+      background:radial-gradient(circle at top left, #e0f2fe 0%, #f6f7fb 42%, #eef2ff 100%);
       margin:0;
       padding:24px;
       color:#111827;
@@ -137,6 +134,19 @@
       line-height:1.5;
       white-space:pre-wrap;
       word-break:break-word;
+      max-height:220px;
+      overflow:auto;
+    }
+
+    .voiceSelect{
+      width:100%;
+      margin-top:10px;
+      padding:10px;
+      border-radius:12px;
+      border:1px solid #bfdbfe;
+      font-weight:850;
+      color:#1e3a8a;
+      background:#fff;
     }
 
     .label{
@@ -391,8 +401,14 @@
         <strong>Chrome Sound Test:</strong><br>
         1. First click <strong>Load Voices & Test Chrome Sound</strong>.<br>
         2. It should read “你好”.<br>
-        3. Then click any character, word, or sentence to hear it.
+        3. If one voice fails, the game will try another Chinese voice automatically.<br>
+
         <div id="soundStatus">Sound status: not tested yet</div>
+
+        <select id="voiceSelect" class="voiceSelect">
+          <option value="">Voice list loading...</option>
+        </select>
+
         <div class="debugBox" id="voiceDebug">Voice debug info will show here.</div>
       </div>
 
@@ -456,151 +472,30 @@
     </div>
   </div>
 
-  <!-- HanziWriter core -->
   <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.7.0/dist/hanzi-writer.min.js"></script>
 
   <script>
     const VOCAB = [
-      {
-        hanzi:"舒",
-        pinyin:"shū",
-        english:"relax",
-        sentence:"舒 is used in 舒服.",
-        speakSentence:"舒"
-      },
-      {
-        hanzi:"舒服",
-        pinyin:"shū fu",
-        english:"be well; comfortable",
-        sentence:"我不舒服。",
-        speakSentence:"我不舒服。"
-      },
-      {
-        hanzi:"痛",
-        pinyin:"tòng",
-        english:"ache; pain",
-        sentence:"痛 is used in 头痛.",
-        speakSentence:"痛"
-      },
-      {
-        hanzi:"头痛",
-        pinyin:"tóu tòng",
-        english:"headache",
-        sentence:"我头痛。",
-        speakSentence:"我头痛。"
-      },
-      {
-        hanzi:"咳",
-        pinyin:"ké",
-        english:"cough",
-        sentence:"咳 is used in 咳嗽.",
-        speakSentence:"咳"
-      },
-      {
-        hanzi:"嗽",
-        pinyin:"sou",
-        english:"cough",
-        sentence:"嗽 is used in 咳嗽.",
-        speakSentence:"嗽"
-      },
-      {
-        hanzi:"咳嗽",
-        pinyin:"ké sou",
-        english:"cough",
-        sentence:"我咳嗽。",
-        speakSentence:"我咳嗽。"
-      },
-      {
-        hanzi:"拉",
-        pinyin:"lā",
-        english:"empty the bowels",
-        sentence:"拉 is used in 拉肚子.",
-        speakSentence:"拉"
-      },
-      {
-        hanzi:"肚",
-        pinyin:"dù",
-        english:"stomach; abdomen",
-        sentence:"肚 is used in 肚子.",
-        speakSentence:"肚"
-      },
-      {
-        hanzi:"肚子",
-        pinyin:"dù zi",
-        english:"stomach; abdomen",
-        sentence:"我肚子痛。",
-        speakSentence:"我肚子痛。"
-      },
-      {
-        hanzi:"拉肚子",
-        pinyin:"lā dù zi",
-        english:"have loose bowels",
-        sentence:"我拉肚子。",
-        speakSentence:"我拉肚子。"
-      },
-      {
-        hanzi:"要",
-        pinyin:"yào",
-        english:"should; need",
-        sentence:"你要多休息。",
-        speakSentence:"你要多休息。"
-      },
-      {
-        hanzi:"不要",
-        pinyin:"bú yào",
-        english:"do not; should not",
-        sentence:"你今天和明天都不要去上学了。",
-        speakSentence:"你今天和明天都不要去上学了。"
-      },
-      {
-        hanzi:"休",
-        pinyin:"xiū",
-        english:"rest",
-        sentence:"休 is used in 休息.",
-        speakSentence:"休"
-      },
-      {
-        hanzi:"息",
-        pinyin:"xi",
-        english:"rest",
-        sentence:"息 is used in 休息.",
-        speakSentence:"息"
-      },
-      {
-        hanzi:"休息",
-        pinyin:"xiū xi",
-        english:"rest",
-        sentence:"你要多休息。",
-        speakSentence:"你要多休息。"
-      },
-      {
-        hanzi:"不用谢",
-        pinyin:"bú yòng xiè",
-        english:"never mind; you're welcome",
-        sentence:"不用谢。",
-        speakSentence:"不用谢。"
-      },
-      {
-        hanzi:"厕",
-        pinyin:"cè",
-        english:"toilet",
-        sentence:"厕 is used in 厕所.",
-        speakSentence:"厕"
-      },
-      {
-        hanzi:"所",
-        pinyin:"suǒ",
-        english:"place",
-        sentence:"所 is used in 厕所.",
-        speakSentence:"所"
-      },
-      {
-        hanzi:"厕所",
-        pinyin:"cè suǒ",
-        english:"toilet",
-        sentence:"我要上厕所。",
-        speakSentence:"我要上厕所。"
-      }
+      { hanzi:"舒", pinyin:"shū", english:"relax", sentence:"舒 is used in 舒服.", speakSentence:"舒" },
+      { hanzi:"舒服", pinyin:"shū fu", english:"be well; comfortable", sentence:"我不舒服。", speakSentence:"我不舒服。" },
+      { hanzi:"痛", pinyin:"tòng", english:"ache; pain", sentence:"痛 is used in 头痛.", speakSentence:"痛" },
+      { hanzi:"头痛", pinyin:"tóu tòng", english:"headache", sentence:"我头痛。", speakSentence:"我头痛。" },
+      { hanzi:"咳", pinyin:"ké", english:"cough", sentence:"咳 is used in 咳嗽.", speakSentence:"咳" },
+      { hanzi:"嗽", pinyin:"sou", english:"cough", sentence:"嗽 is used in 咳嗽.", speakSentence:"嗽" },
+      { hanzi:"咳嗽", pinyin:"ké sou", english:"cough", sentence:"我咳嗽。", speakSentence:"我咳嗽。" },
+      { hanzi:"拉", pinyin:"lā", english:"empty the bowels", sentence:"拉 is used in 拉肚子.", speakSentence:"拉" },
+      { hanzi:"肚", pinyin:"dù", english:"stomach; abdomen", sentence:"肚 is used in 肚子.", speakSentence:"肚" },
+      { hanzi:"肚子", pinyin:"dù zi", english:"stomach; abdomen", sentence:"我肚子痛。", speakSentence:"我肚子痛。" },
+      { hanzi:"拉肚子", pinyin:"lā dù zi", english:"have loose bowels", sentence:"我拉肚子。", speakSentence:"我拉肚子。" },
+      { hanzi:"要", pinyin:"yào", english:"should; need", sentence:"你要多休息。", speakSentence:"你要多休息。" },
+      { hanzi:"不要", pinyin:"bú yào", english:"do not; should not", sentence:"你今天和明天都不要去上学了。", speakSentence:"你今天和明天都不要去上学了。" },
+      { hanzi:"休", pinyin:"xiū", english:"rest", sentence:"休 is used in 休息.", speakSentence:"休" },
+      { hanzi:"息", pinyin:"xi", english:"rest", sentence:"息 is used in 休息.", speakSentence:"息" },
+      { hanzi:"休息", pinyin:"xiū xi", english:"rest", sentence:"你要多休息。", speakSentence:"你要多休息。" },
+      { hanzi:"不用谢", pinyin:"bú yòng xiè", english:"never mind; you're welcome", sentence:"不用谢。", speakSentence:"不用谢。" },
+      { hanzi:"厕", pinyin:"cè", english:"toilet", sentence:"厕 is used in 厕所.", speakSentence:"厕" },
+      { hanzi:"所", pinyin:"suǒ", english:"place", sentence:"所 is used in 厕所.", speakSentence:"所" },
+      { hanzi:"厕所", pinyin:"cè suǒ", english:"toilet", sentence:"我要上厕所。", speakSentence:"我要上厕所。" }
     ];
 
     let itemIndex = 1;
@@ -608,10 +503,12 @@
     let score = 0;
     let writer = null;
 
-    let voicesLoaded = false;
     let allVoices = [];
-    let chineseVoice = null;
+    let chineseVoices = [];
+    let selectedVoice = null;
     let lastSpokenText = "";
+
+    const voiceSelect = document.getElementById("voiceSelect");
 
     function charsFrom(hanzi){
       return Array.from(hanzi).filter(ch => ch.trim() !== "");
@@ -621,100 +518,211 @@
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    function voiceLabel(v){
+      return `${v.name} (${v.lang})`;
+    }
+
+    function isChineseVoice(v){
+      const lang = (v.lang || "").toLowerCase();
+      const name = (v.name || "").toLowerCase();
+
+      return (
+        lang.startsWith("zh") ||
+        name.includes("chinese") ||
+        name.includes("mandarin") ||
+        name.includes("tingting") ||
+        name.includes("mei-jia") ||
+        name.includes("meijia") ||
+        name.includes("reed") ||
+        name.includes("grandma") ||
+        name.includes("grandpa")
+      );
+    }
+
+    function voicePriority(v){
+      const name = (v.name || "").toLowerCase();
+      const lang = (v.lang || "").toLowerCase();
+
+      let score = 0;
+
+      if(lang === "zh-cn") score += 100;
+      if(lang.startsWith("zh-cn")) score += 80;
+      if(lang === "zh-hans") score += 70;
+      if(lang.startsWith("zh")) score += 40;
+
+      if(name.includes("tingting")) score += 1000;
+      if(name.includes("meijia") || name.includes("mei-jia")) score += 900;
+      if(name.includes("reed")) score += 800;
+      if(name.includes("grandma")) score += 700;
+      if(name.includes("grandpa")) score += 650;
+      if(name.includes("google")) score += 600;
+      if(name.includes("mandarin")) score += 550;
+      if(name.includes("chinese")) score += 500;
+
+      /*
+        These Apple novelty voices often appear in Chrome,
+        but Chrome may throw speech error with them.
+      */
+      if(name.includes("eddy")) score -= 1000;
+      if(name.includes("flo")) score -= 900;
+      if(name.includes("shelley")) score -= 900;
+      if(name.includes("rocko")) score -= 900;
+      if(name.includes("sandy")) score -= 900;
+
+      return score;
+    }
+
+    async function loadVoicesWithRetry(){
+      if(!("speechSynthesis" in window)){
+        allVoices = [];
+        chineseVoices = [];
+        updateVoiceDebug("speechSynthesis is not supported in this browser.");
+        return [];
+      }
+
+      let voices = window.speechSynthesis.getVoices();
+
+      for(let i = 0; i < 25 && voices.length === 0; i++){
+        await wait(150);
+        voices = window.speechSynthesis.getVoices();
+      }
+
+      allVoices = voices;
+
+      chineseVoices = allVoices
+        .filter(isChineseVoice)
+        .sort((a,b) => voicePriority(b) - voicePriority(a));
+
+      if(chineseVoices.length > 0){
+        selectedVoice = chineseVoices[0];
+      }else{
+        selectedVoice = null;
+      }
+
+      renderVoiceSelect();
+      updateVoiceDebug("Voices loaded.");
+
+      return voices;
+    }
+
+    function renderVoiceSelect(){
+      voiceSelect.innerHTML = "";
+
+      if(chineseVoices.length === 0){
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "No Chinese voices found";
+        voiceSelect.appendChild(opt);
+        return;
+      }
+
+      chineseVoices.forEach((v, index)=>{
+        const opt = document.createElement("option");
+        opt.value = String(index);
+        opt.textContent = `${index + 1}. ${voiceLabel(v)}`;
+        voiceSelect.appendChild(opt);
+      });
+
+      voiceSelect.value = "0";
+    }
+
+    voiceSelect.addEventListener("change", function(){
+      const index = Number(voiceSelect.value);
+      if(chineseVoices[index]){
+        selectedVoice = chineseVoices[index];
+        updateVoiceDebug("Voice manually selected.");
+        speakChineseNow("你好", selectedVoice, false);
+      }
+    });
+
     function updateVoiceDebug(extraMessage){
       const debug = document.getElementById("voiceDebug");
 
-      const zhVoices = allVoices.filter(v => {
-        const lang = (v.lang || "").toLowerCase();
-        const name = (v.name || "").toLowerCase();
+      const chosen = selectedVoice ? voiceLabel(selectedVoice) : "None selected";
 
-        return (
-          lang.startsWith("zh") ||
-          name.includes("chinese") ||
-          name.includes("mandarin") ||
-          name.includes("tingting") ||
-          name.includes("mei-jia") ||
-          name.includes("sin-ji")
-        );
-      });
-
-      const chosen = chineseVoice
-        ? `${chineseVoice.name} (${chineseVoice.lang})`
-        : "None selected";
-
-      const zhList = zhVoices.length
-        ? zhVoices.map(v => `- ${v.name} (${v.lang})`).join("\n")
+      const zhList = chineseVoices.length
+        ? chineseVoices.map((v, i) => `${i + 1}. ${voiceLabel(v)} | priority ${voicePriority(v)}`).join("\n")
         : "No Chinese voices found by Chrome.";
 
       debug.textContent =
         `Browser: ${navigator.userAgent.includes("Chrome") ? "Chrome / Chromium" : "Other browser"}\n` +
         `All voices found: ${allVoices.length}\n` +
-        `Chinese voices found: ${zhVoices.length}\n` +
+        `Chinese voices found: ${chineseVoices.length}\n` +
         `Chinese voice selected: ${chosen}\n` +
         `Last text: ${lastSpokenText || "none"}\n` +
         `\nChinese voice list:\n${zhList}` +
         (extraMessage ? `\n\nMessage:\n${extraMessage}` : "");
     }
 
-    async function loadVoicesWithRetry(){
-      if(!("speechSynthesis" in window)){
-        allVoices = [];
-        updateVoiceDebug("speechSynthesis is not supported in this browser.");
-        return [];
-      }
+    function speakWithVoice(text, voice){
+      return new Promise(resolve => {
+        const status = document.getElementById("statusText");
+        const soundStatus = document.getElementById("soundStatus");
 
-      /*
-        Chrome often returns [] at first.
-        This loop waits and checks again.
-      */
-      let voices = window.speechSynthesis.getVoices();
+        window.speechSynthesis.cancel();
 
-      for(let i = 0; i < 20 && voices.length === 0; i++){
-        await wait(150);
-        voices = window.speechSynthesis.getVoices();
-      }
+        if(window.speechSynthesis.paused){
+          window.speechSynthesis.resume();
+        }
 
-      allVoices = voices;
-      voicesLoaded = voices.length > 0;
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = "zh-CN";
+        utter.rate = 0.78;
+        utter.pitch = 1.05;
+        utter.volume = 1;
 
-      chooseChineseVoice();
-      updateVoiceDebug();
+        if(voice){
+          utter.voice = voice;
+        }
 
-      return voices;
+        let settled = false;
+
+        utter.onstart = function(){
+          status.textContent = "";
+          soundStatus.textContent = `Sound status: speaking with ${voice ? voice.name : "default"} ✅`;
+        };
+
+        utter.onend = function(){
+          if(settled) return;
+          settled = true;
+          soundStatus.textContent = `Sound status: ready ✅`;
+          resolve(true);
+        };
+
+        utter.onerror = function(e){
+          if(settled) return;
+          settled = true;
+          console.log("Speech error with voice:", voice ? voiceLabel(voice) : "default", e);
+          resolve(false);
+        };
+
+        window.speechSynthesis.speak(utter);
+
+        let nudgeCount = 0;
+        const nudge = setInterval(function(){
+          nudgeCount += 1;
+
+          if(window.speechSynthesis.paused){
+            window.speechSynthesis.resume();
+          }
+
+          if(settled || nudgeCount >= 10){
+            clearInterval(nudge);
+          }
+        }, 160);
+
+        setTimeout(function(){
+          if(settled) return;
+
+          if(!window.speechSynthesis.speaking && !window.speechSynthesis.pending){
+            settled = true;
+            resolve(false);
+          }
+        }, 1600);
+      });
     }
 
-    function chooseChineseVoice(){
-      if(!allVoices || allVoices.length === 0){
-        chineseVoice = null;
-        return null;
-      }
-
-      function langOf(v){
-        return (v.lang || "").toLowerCase();
-      }
-
-      function nameOf(v){
-        return (v.name || "").toLowerCase();
-      }
-
-      /*
-        Prefer Mandarin Chinese voices on Mac/Chrome.
-        Chrome may expose Apple voices with names like Tingting.
-      */
-      chineseVoice =
-        allVoices.find(v => langOf(v) === "zh-cn") ||
-        allVoices.find(v => langOf(v) === "zh-hans") ||
-        allVoices.find(v => langOf(v).startsWith("zh-cn")) ||
-        allVoices.find(v => nameOf(v).includes("tingting")) ||
-        allVoices.find(v => nameOf(v).includes("mandarin")) ||
-        allVoices.find(v => nameOf(v).includes("chinese")) ||
-        allVoices.find(v => langOf(v).startsWith("zh")) ||
-        null;
-
-      return chineseVoice;
-    }
-
-    function speakChineseNow(text){
+    async function speakChineseNow(text, preferredVoice, allowFallback = true){
       const status = document.getElementById("statusText");
       const soundStatus = document.getElementById("soundStatus");
 
@@ -729,113 +737,87 @@
 
       lastSpokenText = text;
 
-      window.speechSynthesis.cancel();
-
-      if(window.speechSynthesis.paused){
-        window.speechSynthesis.resume();
-      }
-
-      if(!chineseVoice){
-        chooseChineseVoice();
-      }
-
-      const utter = new SpeechSynthesisUtterance(text);
-
-      utter.lang = "zh-CN";
-      utter.rate = 0.78;
-      utter.pitch = 1.05;
-      utter.volume = 1;
-
-      if(chineseVoice){
-        utter.voice = chineseVoice;
-      }
-
-      utter.onstart = function(){
-        status.textContent = "";
-        soundStatus.textContent = "Sound status: speaking ✅";
-        updateVoiceDebug("Speech started.");
-      };
-
-      utter.onend = function(){
-        soundStatus.textContent = "Sound status: ready ✅";
-        updateVoiceDebug("Speech ended.");
-      };
-
-      utter.onerror = function(e){
-        soundStatus.textContent = "Sound status: Chrome speech error ⚠️";
-        status.textContent =
-          "⚠️ Chrome tried to speak but failed. Check the debug box above. If Chinese voices found is 0, Chrome cannot see your Chinese voice.";
-        updateVoiceDebug("Speech error: " + (e.error || "unknown error"));
-      };
-
-      window.speechSynthesis.speak(utter);
-
-      /*
-        Chrome sometimes pauses the speech queue.
-        Nudge it a few times.
-      */
-      let nudgeCount = 0;
-      const nudge = setInterval(function(){
-        nudgeCount += 1;
-
-        if(window.speechSynthesis.paused){
-          window.speechSynthesis.resume();
-        }
-
-        if(nudgeCount >= 10){
-          clearInterval(nudge);
-        }
-      }, 160);
-
-      setTimeout(function(){
-        if(!window.speechSynthesis.speaking && !window.speechSynthesis.pending){
-          soundStatus.textContent = "Sound status: no speech detected ⚠️";
-          updateVoiceDebug(
-            "Chrome did not report speaking or pending. Try clicking the green test button again."
-          );
-        }
-      }, 900);
-
-      return true;
-    }
-
-    async function speakChinese(text){
-      if(!voicesLoaded || allVoices.length === 0){
+      if(chineseVoices.length === 0){
         await loadVoicesWithRetry();
       }
 
-      return speakChineseNow(text);
+      const tryList = [];
+
+      if(preferredVoice){
+        tryList.push(preferredVoice);
+      }else if(selectedVoice){
+        tryList.push(selectedVoice);
+      }
+
+      if(allowFallback){
+        chineseVoices.forEach(v=>{
+          if(!tryList.includes(v)){
+            tryList.push(v);
+          }
+        });
+      }
+
+      if(tryList.length === 0){
+        soundStatus.textContent = "Sound status: no Chinese voice ⚠️";
+        status.textContent = "⚠️ Chrome found no Chinese voices.";
+        updateVoiceDebug("No Chinese voices available.");
+        return false;
+      }
+
+      for(let i=0; i<tryList.length; i++){
+        const voice = tryList[i];
+
+        soundStatus.textContent = `Sound status: trying ${voiceLabel(voice)}…`;
+        updateVoiceDebug(`Trying voice ${i + 1}: ${voiceLabel(voice)}`);
+
+        const ok = await speakWithVoice(text, voice);
+
+        if(ok){
+          selectedVoice = voice;
+
+          const index = chineseVoices.indexOf(voice);
+          if(index >= 0){
+            voiceSelect.value = String(index);
+          }
+
+          updateVoiceDebug(`Success with ${voiceLabel(voice)}.`);
+          return true;
+        }
+      }
+
+      soundStatus.textContent = "Sound status: all Chinese voices failed ⚠️";
+      status.textContent =
+        "⚠️ Chrome found Chinese voices, but they all failed. Try choosing another voice in the dropdown, or fully quit Chrome and reopen it.";
+      updateVoiceDebug("All Chinese voices failed.");
+      return false;
+    }
+
+    async function speakChinese(text){
+      if(chineseVoices.length === 0){
+        await loadVoicesWithRetry();
+      }
+
+      return speakChineseNow(text, selectedVoice, true);
     }
 
     async function enableChromeSound(){
       const soundStatus = document.getElementById("soundStatus");
       const status = document.getElementById("statusText");
 
-      soundStatus.textContent = "Sound status: loading Chrome voices…";
+      soundStatus.textContent = "Sound status: loading voices…";
       status.textContent = "";
 
       await loadVoicesWithRetry();
 
-      if(allVoices.length === 0){
-        soundStatus.textContent = "Sound status: no voices found ⚠️";
+      if(chineseVoices.length === 0){
+        soundStatus.textContent = "Sound status: no Chinese voices found ⚠️";
         status.textContent =
-          "⚠️ Chrome did not return any voices. Completely quit Chrome and reopen it, then try again.";
-        updateVoiceDebug("No voices returned by Chrome.");
+          "⚠️ Chrome did not find Chinese voices. Add a Chinese/Mandarin voice in macOS Spoken Content, then restart Chrome.";
         return;
       }
 
-      if(!chineseVoice){
-        soundStatus.textContent = "Sound status: no Chinese voice selected ⚠️";
-        status.textContent =
-          "⚠️ Chrome found voices, but no Chinese voice. Add a Chinese/Mandarin voice in macOS Spoken Content, then restart Chrome.";
-        updateVoiceDebug("Chrome found voices, but no Chinese voice matched.");
-        return;
-      }
-
-      soundStatus.textContent = "Sound status: testing with 你好…";
-      updateVoiceDebug("Testing speech with 你好.");
-
-      speakChineseNow("你好");
+      soundStatus.textContent = "Sound status: testing 你好…";
+      await speakChineseNow("你好", selectedVoice, true);
     }
 
     function updateUI(){
@@ -1037,21 +1019,22 @@
     if("speechSynthesis" in window){
       window.speechSynthesis.onvoiceschanged = function(){
         allVoices = window.speechSynthesis.getVoices();
-        voicesLoaded = allVoices.length > 0;
-        chooseChineseVoice();
+        chineseVoices = allVoices
+          .filter(isChineseVoice)
+          .sort((a,b) => voicePriority(b) - voicePriority(a));
+
+        if(chineseVoices.length > 0 && !selectedVoice){
+          selectedVoice = chineseVoices[0];
+        }
+
+        renderVoiceSelect();
         updateVoiceDebug("voiceschanged event fired.");
       };
-
-      allVoices = window.speechSynthesis.getVoices();
-      voicesLoaded = allVoices.length > 0;
-      chooseChineseVoice();
-      updateVoiceDebug("Initial voice check.");
-    }else{
-      updateVoiceDebug("speechSynthesis is not supported.");
     }
 
     renderChips();
     updateUI();
+    loadVoicesWithRetry();
   </script>
 </body>
 </html>
