@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ESC_2_7_2_Memory_cards</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        .perspective-1000 {
+            perspective: 1000px;
+            -webkit-perspective: 1000px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+            transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
+        }
+
+        .card-flipped .card-inner {
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .card-back {
+            z-index: 2;
+            transform: rotateY(0deg);
+            -webkit-transform: rotateY(0deg);
+        }
+
+        .card-front {
+            z-index: 1;
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+        }
+
+        .card-back-pattern {
+            background-color: #315f8f;
+            background-image:
+                radial-gradient(circle, transparent 20%, #21486f 20%, #21486f 40%, transparent 40%, transparent 60%, #21486f 60%, #21486f 80%, transparent 80%, transparent);
+            background-size: 16px 16px;
+        }
+
+        .zh-big {
+            font-size: clamp(1.55rem, 3vw, 2.2rem);
+            line-height: 1.08;
+        }
+
+        .en-small {
+            font-size: clamp(.72rem, 1.7vw, .98rem);
+            line-height: 1.18;
+        }
+
+        .shake {
+            animation: shakeCard .35s ease-in-out;
+        }
+
+        @keyframes shakeCard {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-3px); }
+        }
+    </style>
+</head>
+
+<body class="bg-cyan-50 min-h-screen font-sans text-slate-800 flex flex-col select-none">
+
+    <header class="bg-cyan-700/95 border-b-4 border-cyan-900 py-4 px-6 sticky top-0 z-30 shadow-md backdrop-blur-sm">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-white">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-yellow-300 rounded-xl flex items-center justify-center text-cyan-950 font-black text-xl shadow-inner">
+                    🃏
+                </div>
+
+                <div>
+                    <h1 class="text-xl md:text-2xl font-black tracking-wide">ESC_2_7_2_Memory_cards</h1>
+                    <p class="text-xs md:text-sm text-cyan-100 font-bold">
+                        Unit 7: School Facilities 学校设施｜New Words 2｜记忆力词汇大作战
+                    </p>
+                </div>
+            </div>
+
+            <button
+                onclick="initGame()"
+                class="px-4 py-2 bg-yellow-300 hover:bg-yellow-200 text-cyan-950 font-black rounded-xl transition-all shadow-md active:scale-95 text-sm flex items-center gap-1.5 border-b-4 border-yellow-500 active:border-b-0"
+            >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="3"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18"
+                    ></path>
+                </svg>
+                重新开始
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-6xl w-full mx-auto p-4 md:p-6 flex flex-col gap-6">
+
+        <section class="bg-white/85 border-2 border-cyan-200 p-4 rounded-2xl flex flex-col sm:flex-row gap-4 items-center justify-between text-slate-700 font-bold shadow-sm">
+            <div class="flex flex-wrap items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-cyan-800 uppercase tracking-wider">时间 / Time</span>
+                    <span
+                        id="timer-text"
+                        class="text-xl font-black font-mono text-cyan-950 bg-white px-3 py-1 rounded-lg border border-cyan-200"
+                    >
+                        00:00
+                    </span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-cyan-800 uppercase tracking-wider">匹配进度 / Match</span>
+                    <span
+                        id="progress-percent"
+                        class="text-xl font-black font-mono text-emerald-700 bg-white px-3 py-1 rounded-lg border border-cyan-200"
+                    >
+                        0%
+                    </span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-cyan-800 uppercase tracking-wider">Pairs</span>
+                    <span
+                        id="pair-count"
+                        class="text-xl font-black font-mono text-indigo-700 bg-white px-3 py-1 rounded-lg border border-cyan-200"
+                    >
+                        0 / 14
+                    </span>
+                </div>
+            </div>
+
+            <div class="w-full sm:w-1/3 bg-slate-200 h-3 rounded-full overflow-hidden border border-cyan-200">
+                <div
+                    id="progress-bar-fill"
+                    class="bg-emerald-500 h-full transition-all duration-300"
+                    style="width: 0%"
+                ></div>
+            </div>
+        </section>
+
+        <section class="bg-cyan-900/10 border-4 border-cyan-700/20 p-5 md:p-6 rounded-3xl min-h-[560px] flex flex-col items-center justify-center relative shadow-inner">
+            <canvas
+                id="confetti-canvas"
+                class="absolute inset-0 pointer-events-none z-40 w-full h-full"
+            ></canvas>
+
+            <div
+                id="card-grid"
+                class="grid grid-cols-4 md:grid-cols-7 gap-3 md:gap-4 w-full max-w-6xl perspective-1000"
+            ></div>
+        </section>
+
+    </main>
+
+    <div
+        id="victory-modal"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 transition-opacity opacity-0 pointer-events-none"
+    >
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-4 border-yellow-300 transform scale-95 transition-transform flex flex-col items-center gap-5">
+            <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center text-4xl animate-bounce">
+                👑
+            </div>
+
+            <div>
+                <h3 class="text-2xl font-black text-slate-900">太棒了，完美匹配！</h3>
+                <p class="text-sm text-slate-500 mt-2">
+                    你成功完成了 ESC-2-7 New Words 2 的词汇记忆挑战！
+                </p>
+
+                <div class="mt-4 bg-cyan-50 p-3 rounded-xl border border-cyan-100">
+                    <p class="text-xs font-semibold text-cyan-800">用时 / Duration</p>
+                    <p id="modal-time-taken" class="text-2xl font-black text-cyan-950">00:00</p>
+                </div>
+            </div>
+
+            <button
+                onclick="closeVictoryModal()"
+                class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-2xl shadow-lg shadow-emerald-200 transition-all flex items-center justify-center gap-2"
+            >
+                再玩一次 ➔
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const VOCABULARY = [
+            {
+                id: 1,
+                word: "所",
+                pinyin: "suǒ",
+                meaning: "a measure word for schools, hospitals, etc."
+            },
+            {
+                id: 2,
+                word: "际",
+                pinyin: "jì",
+                meaning: "between"
+            },
+            {
+                id: 3,
+                word: "国际",
+                pinyin: "guó jì",
+                meaning: "international"
+            },
+            {
+                id: 4,
+                word: "共",
+                pinyin: "gòng",
+                meaning: "altogether"
+            },
+            {
+                id: 5,
+                word: "一共",
+                pinyin: "yí gòng",
+                meaning: "altogether"
+            },
+            {
+                id: 6,
+                word: "千",
+                pinyin: "qiān",
+                meaning: "thousand"
+            },
+            {
+                id: 7,
+                word: "百",
+                pinyin: "bǎi",
+                meaning: "hundred"
+            },
+            {
+                id: 8,
+                word: "语",
+                pinyin: "yǔ",
+                meaning: "language"
+            },
+            {
+                id: 9,
+                word: "言",
+                pinyin: "yán",
+                meaning: "speech"
+            },
+            {
+                id: 10,
+                word: "语言",
+                pinyin: "yǔ yán",
+                meaning: "language"
+            },
+            {
+                id: 11,
+                word: "英语",
+                pinyin: "yīng yǔ",
+                meaning: "English language"
+            },
+            {
+                id: 12,
+                word: "外",
+                pinyin: "wài",
+                meaning: "foreign"
+            },
+            {
+                id: 13,
+                word: "外语",
+                pinyin: "wài yǔ",
+                meaning: "foreign language"
+            },
+            {
+                id: 14,
+                word: "门",
+                pinyin: "mén",
+                meaning: "a measure word for languages, courses, etc."
+            },
+            {
+                id: 15,
+                word: "汉",
+                pinyin: "hàn",
+                meaning: "Han ethnic group"
+            },
+            {
+                id: 16,
+                word: "汉语",
+                pinyin: "hàn yǔ",
+                meaning: "Chinese language"
+            },
+            {
+                id: 17,
+                word: "西班牙",
+                pinyin: "xī bān yá",
+                meaning: "Spain"
+            },
+            {
+                id: 18,
+                word: "西班牙语",
+                pinyin: "xī bān yá yǔ",
+                meaning: "Spanish language"
+            },
+            {
+                id: 19,
+                word: "法国",
+                pinyin: "fǎ guó",
+                meaning: "France"
+            },
+            {
+                id: 20,
+                word: "法语",
+                pinyin: "fǎ yǔ",
+                meaning: "French language"
+            },
+            {
+                id: 21,
+                word: "一点儿",
+                pinyin: "yì diǎnr",
+                meaning: "a bit; a little; some"
+            }
+        ];
+
+        const GAME_WORDS = VOCABULARY;
+
+        let cards = [];
+        let flippedCards = [];
+        let isLockBoard = false;
+        let matchedCount = 0;
+        let timerInterval = null;
+        let secondsElapsed = 0;
+
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            if (audioCtx && audioCtx.state === "suspended") {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            initAudio();
+
+            if (!audioCtx) return;
+
+            const now = audioCtx.currentTime;
+
+            if (type === "flip") {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(450, now);
+                osc.frequency.exponentialRampToValueAtTime(1000, now + 0.05);
+
+                gain.gain.setValueAtTime(0.06, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.05);
+            }
+
+            if (type === "match") {
+                const notes = [523.25, 659.25];
+
+                notes.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    const start = now + idx * 0.07;
+
+                    osc.type = "sine";
+                    osc.frequency.setValueAtTime(freq, start);
+
+                    gain.gain.setValueAtTime(0.08, start);
+                    gain.gain.exponentialRampToValueAtTime(0.01, start + 0.18);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(start);
+                    osc.stop(start + 0.18);
+                });
+            }
+
+            if (type === "error") {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = "triangle";
+                osc.frequency.setValueAtTime(160, now);
+                osc.frequency.setValueAtTime(120, now + 0.12);
+
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.18);
+            }
+
+            if (type === "win") {
+                const notes = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
+
+                notes.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    const start = now + idx * 0.08;
+
+                    osc.type = "sine";
+                    osc.frequency.setValueAtTime(freq, start);
+
+                    gain.gain.setValueAtTime(0.08, start);
+                    gain.gain.exponentialRampToValueAtTime(0.01, start + 0.25);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(start);
+                    osc.stop(start + 0.25);
+                });
+            }
+        }
+
+        function speakWord(text) {
+            if (!("speechSynthesis" in window)) return;
+
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = "zh-CN";
+            utterance.rate = 0.8;
+            utterance.pitch = 1;
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        const confettiCanvas = document.getElementById("confetti-canvas");
+        const confettiCtx = confettiCanvas.getContext("2d");
+
+        let confettiActive = false;
+        let particles = [];
+
+        function resizeConfettiCanvas() {
+            confettiCanvas.width = confettiCanvas.parentElement.clientWidth;
+            confettiCanvas.height = confettiCanvas.parentElement.clientHeight;
+        }
+
+        function createConfetti() {
+            particles = [];
+
+            const colors = ["#f59e0b", "#10b981", "#3b82f6", "#ec4899", "#8b5cf6", "#06b6d4"];
+
+            for (let i = 0; i < 70; i++) {
+                particles.push({
+                    x: Math.random() * confettiCanvas.width,
+                    y: confettiCanvas.height + Math.random() * 20,
+                    vx: (Math.random() - 0.5) * 6,
+                    vy: -Math.random() * 8 - 4,
+                    r: Math.random() * 4 + 3,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    rotation: Math.random() * 360,
+                    rotationSpeed: (Math.random() - 0.5) * 10
+                });
+            }
+        }
+
+        function updateAndRenderConfetti() {
+            if (!confettiActive) return;
+
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+            let alive = false;
+
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.16;
+                p.rotation += p.rotationSpeed;
+
+                if (p.y < confettiCanvas.height + 20) {
+                    alive = true;
+                }
+
+                confettiCtx.save();
+                confettiCtx.translate(p.x, p.y);
+                confettiCtx.rotate((p.rotation * Math.PI) / 180);
+                confettiCtx.fillStyle = p.color;
+                confettiCtx.fillRect(-p.r, -p.r, p.r * 2, p.r * 2);
+                confettiCtx.restore();
+            });
+
+            if (alive) {
+                requestAnimationFrame(updateAndRenderConfetti);
+            } else {
+                confettiActive = false;
+                confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            }
+        }
+
+        function triggerConfetti() {
+            resizeConfettiCanvas();
+            confettiActive = true;
+            createConfetti();
+            updateAndRenderConfetti();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            secondsElapsed = 0;
+
+            document.getElementById("timer-text").innerText = "00:00";
+
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+
+                const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, "0");
+                const secs = String(secondsElapsed % 60).padStart(2, "0");
+
+                document.getElementById("timer-text").innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function initGame() {
+            stopTimer();
+            startTimer();
+
+            matchedCount = 0;
+            flippedCards = [];
+            isLockBoard = false;
+
+            document.getElementById("progress-percent").innerText = "0%";
+            document.getElementById("progress-bar-fill").style.width = "0%";
+            document.getElementById("pair-count").innerText = `0 / ${GAME_WORDS.length}`;
+
+            cards = [];
+
+            GAME_WORDS.forEach(v => {
+                cards.push({
+                    id: `card-zh-${v.id}`,
+                    pairId: v.id,
+                    type: "zh",
+                    content: v.word,
+                    pinyin: v.pinyin,
+                    matched: false
+                });
+
+                cards.push({
+                    id: `card-en-${v.id}`,
+                    pairId: v.id,
+                    type: "en",
+                    content: v.meaning,
+                    matched: false
+                });
+            });
+
+            cards.sort(() => Math.random() - 0.5);
+
+            const grid = document.getElementById("card-grid");
+            grid.innerHTML = "";
+
+            cards.forEach(c => {
+                const cardEl = document.createElement("div");
+
+                cardEl.className =
+                    "w-full aspect-[4/5] relative select-none cursor-pointer active:scale-95 transition-transform duration-150";
+
+                cardEl.id = c.id;
+
+                cardEl.innerHTML = `
+                    <div class="card-inner w-full h-full relative rounded-2xl shadow-md border border-cyan-900/10">
+                        <div class="card-back card-back-pattern w-full h-full flex items-center justify-center">
+                            <div class="w-10 h-10 rounded-full border-4 border-yellow-300/40 flex items-center justify-center">
+                                <span class="text-yellow-200/60 text-base">★</span>
+                            </div>
+                        </div>
+
+                        <div class="card-front w-full h-full flex flex-col items-center justify-center p-2 text-center bg-sky-100 border-2 border-sky-400">
+                            ${
+                                c.type === "zh"
+                                ? `
+                                    <span class="text-[10px] md:text-xs font-black text-sky-600 font-mono tracking-wider">${c.pinyin}</span>
+                                    <span class="zh-big font-black text-sky-950 tracking-wide mt-1">${c.content}</span>
+                                    <span class="absolute right-2 bottom-1.5 text-[10px] opacity-40">🔊</span>
+                                  `
+                                : `
+                                    <span class="text-[9px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">English</span>
+                                    <span class="en-small font-black text-indigo-950">${c.content}</span>
+                                  `
+                            }
+                        </div>
+                    </div>
+                `;
+
+                cardEl.addEventListener("click", () => handleCardClick(cardEl, c));
+
+                grid.appendChild(cardEl);
+            });
+        }
+
+        function handleCardClick(el, cardObj) {
+            if (isLockBoard) return;
+            if (cardObj.matched) return;
+            if (flippedCards.some(f => f.data.id === cardObj.id)) return;
+
+            initAudio();
+
+            el.classList.add("card-flipped");
+            playSound("flip");
+
+            if (cardObj.type === "zh") {
+                speakWord(cardObj.content);
+            }
+
+            flippedCards.push({
+                el,
+                data: cardObj
+            });
+
+            if (flippedCards.length === 2) {
+                isLockBoard = true;
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            const [c1, c2] = flippedCards;
+
+            if (c1.data.pairId === c2.data.pairId) {
+                setTimeout(() => {
+                    c1.data.matched = true;
+                    c2.data.matched = true;
+
+                    const c1Front = c1.el.querySelector(".card-front");
+                    const c2Front = c2.el.querySelector(".card-front");
+
+                    c1Front.className =
+                        "card-front w-full h-full rounded-2xl flex flex-col items-center justify-center p-2 text-center transition-all bg-emerald-100 border-4 border-emerald-500 shadow-inner";
+
+                    c2Front.className =
+                        "card-front w-full h-full rounded-2xl flex flex-col items-center justify-center p-2 text-center transition-all bg-emerald-100 border-4 border-emerald-500 shadow-inner";
+
+                    matchedCount++;
+
+                    const totalPairs = GAME_WORDS.length;
+                    const percent = Math.floor((matchedCount / totalPairs) * 100);
+
+                    document.getElementById("progress-percent").innerText = `${percent}%`;
+                    document.getElementById("progress-bar-fill").style.width = `${percent}%`;
+                    document.getElementById("pair-count").innerText = `${matchedCount} / ${totalPairs}`;
+
+                    playSound("match");
+
+                    flippedCards = [];
+                    isLockBoard = false;
+
+                    if (matchedCount === totalPairs) {
+                        handleVictory();
+                    }
+                }, 500);
+            } else {
+                setTimeout(() => {
+                    playSound("error");
+
+                    const c1Front = c1.el.querySelector(".card-front");
+                    const c2Front = c2.el.querySelector(".card-front");
+
+                    c1.el.classList.add("shake");
+                    c2.el.classList.add("shake");
+
+                    c1Front.classList.add("border-red-500", "bg-red-50");
+                    c2Front.classList.add("border-red-500", "bg-red-50");
+
+                    setTimeout(() => {
+                        c1.el.classList.remove("card-flipped", "shake");
+                        c2.el.classList.remove("card-flipped", "shake");
+
+                        setTimeout(() => {
+                            c1Front.classList.remove("border-red-500", "bg-red-50");
+                            c2Front.classList.remove("border-red-500", "bg-red-50");
+                        }, 300);
+
+                        flippedCards = [];
+                        isLockBoard = false;
+                    }, 1200);
+                }, 500);
+            }
+        }
+
+        function handleVictory() {
+            stopTimer();
+            playSound("win");
+            triggerConfetti();
+
+            const finalTime = document.getElementById("timer-text").innerText;
+            document.getElementById("modal-time-taken").innerText = finalTime;
+
+            setTimeout(() => {
+                const modal = document.getElementById("victory-modal");
+                modal.classList.remove("opacity-0", "pointer-events-none");
+                modal.querySelector("div").classList.remove("scale-95");
+            }, 800);
+        }
+
+        function closeVictoryModal() {
+            const modal = document.getElementById("victory-modal");
+
+            modal.classList.add("opacity-0", "pointer-events-none");
+            modal.querySelector("div").classList.add("scale-95");
+
+            initGame();
+        }
+
+        window.onload = function() {
+            initGame();
+
+            window.addEventListener("resize", () => {
+                if (confettiActive) {
+                    resizeConfettiCanvas();
+                }
+            });
+        };
+    </script>
+</body>
+</html>
