@@ -1,0 +1,1025 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ESC-2-7 School Facilities 1 | Balloon Pop</title>
+
+  <style>
+    :root{
+      --sky:#7dd3fc;
+      --sky2:#bae6fd;
+      --grass:#57c45f;
+      --grass2:#2f9f47;
+      --text:#17324d;
+      --muted:#64748b;
+      --panel:rgba(255,255,255,.82);
+      --line:rgba(255,255,255,.7);
+      --good:#16a34a;
+      --bad:#ef4444;
+      --gold:#facc15;
+      --blue:#2563eb;
+      --purple:#7c3aed;
+      --shadow:0 18px 40px rgba(15,23,42,.18);
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      overflow:hidden;
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        "Noto Sans SC",
+        sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg,#86d7ff 0%,#c9f0ff 44%,#8ee37a 44%,#42b84f 100%);
+    }
+
+    .game{
+      position:relative;
+      min-height:100vh;
+      overflow:hidden;
+    }
+
+    .cloud{
+      position:absolute;
+      background:rgba(255,255,255,.82);
+      border-radius:999px;
+      filter:drop-shadow(0 6px 10px rgba(15,23,42,.08));
+      animation:cloudMove 34s linear infinite;
+      opacity:.9;
+      z-index:1;
+    }
+
+    .cloud::before,
+    .cloud::after{
+      content:"";
+      position:absolute;
+      background:rgba(255,255,255,.86);
+      border-radius:50%;
+    }
+
+    .cloud.c1{
+      width:190px;
+      height:58px;
+      top:86px;
+      left:-240px;
+      animation-duration:42s;
+    }
+
+    .cloud.c1::before{
+      width:82px;
+      height:82px;
+      left:30px;
+      top:-34px;
+    }
+
+    .cloud.c1::after{
+      width:72px;
+      height:72px;
+      right:22px;
+      top:-26px;
+    }
+
+    .cloud.c2{
+      width:150px;
+      height:48px;
+      top:172px;
+      left:-220px;
+      animation-duration:36s;
+      animation-delay:9s;
+    }
+
+    .cloud.c2::before{
+      width:64px;
+      height:64px;
+      left:24px;
+      top:-28px;
+    }
+
+    .cloud.c2::after{
+      width:56px;
+      height:56px;
+      right:18px;
+      top:-20px;
+    }
+
+    @keyframes cloudMove{
+      0%{
+        transform:translateX(0);
+      }
+      100%{
+        transform:translateX(calc(100vw + 420px));
+      }
+    }
+
+    .sun{
+      position:absolute;
+      right:54px;
+      top:54px;
+      width:120px;
+      height:120px;
+      border-radius:50%;
+      background:radial-gradient(circle at 35% 30%,#fff8c5 0%,#fde047 54%,#f59e0b 100%);
+      box-shadow:0 0 36px rgba(250,204,21,.6);
+      z-index:1;
+    }
+
+    .trees{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:235px;
+      height:125px;
+      background:
+        radial-gradient(circle at 4% 100%, #147c38 0 34px, transparent 35px),
+        radial-gradient(circle at 10% 100%, #1f9d4d 0 48px, transparent 49px),
+        radial-gradient(circle at 18% 100%, #147c38 0 44px, transparent 45px),
+        radial-gradient(circle at 28% 100%, #1d8f45 0 52px, transparent 53px),
+        radial-gradient(circle at 39% 100%, #147c38 0 38px, transparent 39px),
+        radial-gradient(circle at 50% 100%, #1f9d4d 0 54px, transparent 55px),
+        radial-gradient(circle at 63% 100%, #167a3c 0 42px, transparent 43px),
+        radial-gradient(circle at 72% 100%, #22a65a 0 58px, transparent 59px),
+        radial-gradient(circle at 84% 100%, #147c38 0 46px, transparent 47px),
+        radial-gradient(circle at 96% 100%, #1f9d4d 0 54px, transparent 55px);
+      opacity:.85;
+      z-index:1;
+    }
+
+    .grass{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      height:285px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.16) 0 2px, transparent 3px),
+        radial-gradient(circle at 64% 32%, rgba(255,255,255,.14) 0 2px, transparent 3px),
+        linear-gradient(180deg,#72db62 0%,#42b84f 48%,#238b3b 100%);
+      z-index:2;
+    }
+
+    .grass::before{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      top:0;
+      height:36px;
+      background:linear-gradient(180deg,rgba(255,255,255,.22),transparent);
+    }
+
+    .topbar{
+      position:relative;
+      z-index:10;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      padding:22px 28px 0;
+    }
+
+    .titleBox{
+      background:rgba(255,255,255,.74);
+      border:1px solid rgba(255,255,255,.82);
+      border-radius:24px;
+      padding:16px 20px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(8px);
+    }
+
+    h1{
+      margin:0;
+      font-size:42px;
+      line-height:1;
+      font-weight:950;
+      letter-spacing:.2px;
+      color:#17324d;
+    }
+
+    .subtitle{
+      margin-top:8px;
+      color:#475569;
+      font-size:16px;
+      font-weight:850;
+    }
+
+    .stats{
+      display:flex;
+      gap:12px;
+      align-items:stretch;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .stat{
+      min-width:128px;
+      background:rgba(255,255,255,.78);
+      border:1px solid rgba(255,255,255,.86);
+      border-radius:22px;
+      padding:14px 16px;
+      box-shadow:var(--shadow);
+      text-align:center;
+      backdrop-filter:blur(8px);
+    }
+
+    .stat .num{
+      font-size:34px;
+      line-height:1;
+      font-weight:950;
+      color:#1e293b;
+    }
+
+    .stat .lab{
+      margin-top:5px;
+      color:#64748b;
+      font-size:13px;
+      font-weight:950;
+      letter-spacing:1px;
+      text-transform:uppercase;
+    }
+
+    .controls{
+      position:relative;
+      z-index:10;
+      margin:14px 28px 0;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    button{
+      border:0;
+      border-radius:16px;
+      padding:12px 16px;
+      font-weight:950;
+      cursor:pointer;
+      font-size:15px;
+      box-shadow:0 8px 18px rgba(15,23,42,.12);
+    }
+
+    .btn{
+      background:#fff;
+      color:#17324d;
+      border:1px solid rgba(255,255,255,.9);
+    }
+
+    .btn.active{
+      background:#2563eb;
+      color:#fff;
+    }
+
+    .btn.restart{
+      background:#7c3aed;
+      color:#fff;
+    }
+
+    .balloonArea{
+      position:absolute;
+      left:0;
+      right:0;
+      top:150px;
+      bottom:215px;
+      z-index:5;
+      pointer-events:none;
+    }
+
+    .balloon{
+      position:absolute;
+      width:128px;
+      height:164px;
+      border-radius:64px 64px 58px 58px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-size:32px;
+      font-weight:950;
+      text-shadow:0 2px 4px rgba(15,23,42,.2);
+      cursor:pointer;
+      pointer-events:auto;
+      box-shadow:
+        inset -18px -20px 26px rgba(0,0,0,.12),
+        inset 16px 18px 24px rgba(255,255,255,.28),
+        0 18px 30px rgba(15,23,42,.22);
+      animation:floaty 3.8s ease-in-out infinite;
+      user-select:none;
+      transform-origin:center bottom;
+    }
+
+    .balloon::before{
+      content:"";
+      position:absolute;
+      left:26px;
+      top:22px;
+      width:28px;
+      height:42px;
+      border-radius:50%;
+      background:rgba(255,255,255,.38);
+      transform:rotate(22deg);
+      filter:blur(.3px);
+    }
+
+    .balloon::after{
+      content:"";
+      position:absolute;
+      bottom:-12px;
+      left:50%;
+      transform:translateX(-50%);
+      width:0;
+      height:0;
+      border-left:10px solid transparent;
+      border-right:10px solid transparent;
+      border-top:18px solid rgba(0,0,0,.18);
+    }
+
+    .balloon .string{
+      position:absolute;
+      left:50%;
+      bottom:-72px;
+      width:2px;
+      height:70px;
+      background:rgba(55,65,81,.38);
+      transform:translateX(-50%);
+    }
+
+    .balloon .label{
+      position:absolute;
+      left:50%;
+      bottom:-60px;
+      transform:translateX(-50%);
+      min-width:110px;
+      padding:8px 12px;
+      border-radius:16px;
+      background:#16a34a;
+      color:#fff;
+      border:3px solid #0f7a32;
+      box-shadow:0 8px 16px rgba(15,23,42,.18);
+      font-size:30px;
+      font-weight:950;
+      line-height:1.05;
+      text-align:center;
+      white-space:nowrap;
+    }
+
+    .balloon.small .label{
+      font-size:25px;
+    }
+
+    .balloon.tiny .label{
+      font-size:22px;
+    }
+
+    .balloon.red{
+      background:radial-gradient(circle at 32% 24%,#ff8a8a 0%,#ef4444 42%,#b91c1c 100%);
+    }
+
+    .balloon.pink{
+      background:radial-gradient(circle at 32% 24%,#ff8fc7 0%,#ec4899 42%,#be185d 100%);
+    }
+
+    .balloon.yellow{
+      background:radial-gradient(circle at 32% 24%,#fff59d 0%,#facc15 44%,#d97706 100%);
+    }
+
+    .balloon.blue{
+      background:radial-gradient(circle at 32% 24%,#9bdcff 0%,#38bdf8 42%,#0369a1 100%);
+    }
+
+    .balloon.purple{
+      background:radial-gradient(circle at 32% 24%,#c4b5fd 0%,#8b5cf6 42%,#5b21b6 100%);
+    }
+
+    .balloon.orange{
+      background:radial-gradient(circle at 32% 24%,#fdba74 0%,#f97316 42%,#c2410c 100%);
+    }
+
+    .balloon.green{
+      background:radial-gradient(circle at 32% 24%,#86efac 0%,#22c55e 42%,#15803d 100%);
+    }
+
+    @keyframes floaty{
+      0%,100%{
+        transform:translateY(0) rotate(-1.5deg);
+      }
+      50%{
+        transform:translateY(-18px) rotate(1.5deg);
+      }
+    }
+
+    .balloon.pop{
+      animation:pop .42s ease-out forwards;
+    }
+
+    @keyframes pop{
+      0%{
+        transform:scale(1);
+        opacity:1;
+      }
+      45%{
+        transform:scale(1.22);
+        opacity:.95;
+      }
+      100%{
+        transform:scale(.05);
+        opacity:0;
+      }
+    }
+
+    .balloon.wrong{
+      animation:wrongShake .38s ease-in-out 1;
+    }
+
+    @keyframes wrongShake{
+      0%,100%{
+        transform:translateX(0);
+      }
+      20%{
+        transform:translateX(-14px);
+      }
+      40%{
+        transform:translateX(14px);
+      }
+      60%{
+        transform:translateX(-9px);
+      }
+      80%{
+        transform:translateX(9px);
+      }
+    }
+
+    .promptBoard{
+      position:absolute;
+      left:50%;
+      bottom:28px;
+      transform:translateX(-50%);
+      z-index:12;
+      width:min(720px,92vw);
+      min-height:118px;
+      border-radius:18px;
+      background:
+        linear-gradient(90deg,rgba(111,78,35,.12),rgba(255,255,255,.08)),
+        linear-gradient(180deg,#b7793b 0%,#925c2a 100%);
+      border:5px solid #7a4b21;
+      box-shadow:0 20px 38px rgba(15,23,42,.25);
+      color:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:16px 22px;
+    }
+
+    .promptBoard::before,
+    .promptBoard::after{
+      content:"";
+      position:absolute;
+      bottom:-72px;
+      width:28px;
+      height:72px;
+      background:#7a4b21;
+      border-radius:0 0 10px 10px;
+    }
+
+    .promptBoard::before{
+      left:22%;
+    }
+
+    .promptBoard::after{
+      right:22%;
+    }
+
+    .promptMain{
+      font-size:46px;
+      line-height:1.05;
+      font-weight:950;
+      letter-spacing:.3px;
+      text-shadow:0 3px 3px rgba(0,0,0,.18);
+    }
+
+    .promptSub{
+      margin-top:8px;
+      font-size:18px;
+      font-weight:850;
+      color:#fff7ed;
+      opacity:.95;
+    }
+
+    .feedback{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      z-index:20;
+      min-width:280px;
+      max-width:90vw;
+      padding:24px 28px;
+      border-radius:26px;
+      background:rgba(255,255,255,.92);
+      border:1px solid rgba(255,255,255,.95);
+      box-shadow:0 20px 50px rgba(15,23,42,.25);
+      text-align:center;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .2s ease;
+    }
+
+    .feedback.show{
+      opacity:1;
+    }
+
+    .feedback .fbBig{
+      font-size:44px;
+      line-height:1.1;
+      font-weight:950;
+      color:#111827;
+    }
+
+    .feedback.good .fbBig{
+      color:#16a34a;
+    }
+
+    .feedback.bad .fbBig{
+      color:#ef4444;
+    }
+
+    .feedback .fbSub{
+      margin-top:8px;
+      color:#475569;
+      font-size:18px;
+      font-weight:850;
+      line-height:1.4;
+    }
+
+    .finalScreen{
+      position:absolute;
+      inset:0;
+      z-index:30;
+      background:rgba(15,23,42,.42);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+
+    .finalScreen.show{
+      display:flex;
+    }
+
+    .finalCard{
+      width:min(520px,92vw);
+      background:white;
+      border-radius:30px;
+      padding:28px;
+      text-align:center;
+      box-shadow:0 24px 60px rgba(15,23,42,.35);
+    }
+
+    .finalCard h2{
+      margin:0;
+      font-size:40px;
+      color:#111827;
+    }
+
+    .finalCard p{
+      margin:12px 0 0;
+      color:#475569;
+      font-size:18px;
+      font-weight:800;
+      line-height:1.5;
+    }
+
+    .finalCard button{
+      margin-top:20px;
+      background:#2563eb;
+      color:white;
+      font-size:17px;
+      padding:14px 22px;
+    }
+
+    @media (max-width:900px){
+      body{
+        overflow:auto;
+      }
+
+      .game{
+        min-height:100vh;
+      }
+
+      .topbar{
+        padding:16px 14px 0;
+      }
+
+      h1{
+        font-size:32px;
+      }
+
+      .stats{
+        width:100%;
+        justify-content:flex-start;
+      }
+
+      .controls{
+        margin:12px 14px 0;
+      }
+
+      .balloonArea{
+        top:210px;
+      }
+
+      .balloon{
+        width:104px;
+        height:134px;
+        font-size:26px;
+      }
+
+      .balloon .label{
+        font-size:24px;
+        min-width:92px;
+      }
+
+      .promptMain{
+        font-size:34px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="game">
+    <div class="sun"></div>
+    <div class="cloud c1"></div>
+    <div class="cloud c2"></div>
+    <div class="trees"></div>
+    <div class="grass"></div>
+
+    <div class="topbar">
+      <div class="titleBox">
+        <h1>Balloon Pop</h1>
+        <div class="subtitle">ESC-2-7 · School Facilities 学校设施 · New Words 1</div>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="num" id="scoreNum">0</div>
+          <div class="lab">Score</div>
+        </div>
+
+        <div class="stat">
+          <div class="num" id="progressNum">1/22</div>
+          <div class="lab">Progress</div>
+        </div>
+
+        <div class="stat">
+          <div class="num" id="modeNum">Pinyin</div>
+          <div class="lab">Prompt</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn active" id="pinyinBtn">Pinyin</button>
+      <button class="btn" id="englishBtn">English</button>
+      <button class="btn" id="mixedBtn">Mixed</button>
+      <button class="btn restart" id="restartBtn">Restart</button>
+    </div>
+
+    <div class="balloonArea" id="balloonArea"></div>
+
+    <div class="promptBoard">
+      <div>
+        <div class="promptMain" id="promptMain">bù</div>
+        <div class="promptSub" id="promptSub">Click the matching Chinese balloon.</div>
+      </div>
+    </div>
+
+    <div class="feedback" id="feedback">
+      <div class="fbBig" id="fbBig">Correct!</div>
+      <div class="fbSub" id="fbSub">部 · bù · unit; department</div>
+    </div>
+
+    <div class="finalScreen" id="finalScreen">
+      <div class="finalCard">
+        <h2>🎉 Great Job!</h2>
+        <p id="finalText">You finished the Balloon Pop game.</p>
+        <button id="playAgainBtn">Play Again</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const VOCAB = [
+      {
+        zh:"部",
+        py:"bù",
+        en:"unit; department"
+      },
+      {
+        zh:"比",
+        py:"bǐ",
+        en:"than"
+      },
+      {
+        zh:"座",
+        py:"zuò",
+        en:"a measure word for buildings"
+      },
+      {
+        zh:"教",
+        py:"jiào",
+        en:"teach"
+      },
+      {
+        zh:"教学",
+        py:"jiào xué",
+        en:"teaching"
+      },
+      {
+        zh:"教室",
+        py:"jiào shì",
+        en:"classroom"
+      },
+      {
+        zh:"楼",
+        py:"lóu",
+        en:"building"
+      },
+      {
+        zh:"教学楼",
+        py:"jiào xué lóu",
+        en:"teaching building"
+      },
+      {
+        zh:"图",
+        py:"tú",
+        en:"picture"
+      },
+      {
+        zh:"馆",
+        py:"guǎn",
+        en:"a place for sports or cultural activities"
+      },
+      {
+        zh:"图书馆",
+        py:"tú shū guǎn",
+        en:"library"
+      },
+      {
+        zh:"体育馆",
+        py:"tǐ yù guǎn",
+        en:"gymnasium"
+      },
+      {
+        zh:"礼",
+        py:"lǐ",
+        en:"ceremony"
+      },
+      {
+        zh:"堂",
+        py:"táng",
+        en:"hall"
+      },
+      {
+        zh:"礼堂",
+        py:"lǐ táng",
+        en:"assembly hall"
+      },
+      {
+        zh:"操",
+        py:"cāo",
+        en:"exercise"
+      },
+      {
+        zh:"场",
+        py:"chǎng",
+        en:"a public place"
+      },
+      {
+        zh:"操场",
+        py:"cāo chǎng",
+        en:"sports ground"
+      },
+      {
+        zh:"篮球场",
+        py:"lán qiú chǎng",
+        en:"basketball court"
+      },
+      {
+        zh:"足球场",
+        py:"zú qiú chǎng",
+        en:"football pitch"
+      },
+      {
+        zh:"友好",
+        py:"yǒu hǎo",
+        en:"friendly"
+      },
+      {
+        zh:"学校设施",
+        py:"xué xiào shè shī",
+        en:"school facilities"
+      }
+    ];
+
+    const COLORS = ["red","pink","yellow","blue","purple","orange","green"];
+
+    let order = [];
+    let currentIndex = 0;
+    let score = 0;
+    let mode = "pinyin";
+    let locked = false;
+
+    const balloonArea = document.getElementById("balloonArea");
+    const scoreNum = document.getElementById("scoreNum");
+    const progressNum = document.getElementById("progressNum");
+    const modeNum = document.getElementById("modeNum");
+    const promptMain = document.getElementById("promptMain");
+    const promptSub = document.getElementById("promptSub");
+    const feedback = document.getElementById("feedback");
+    const fbBig = document.getElementById("fbBig");
+    const fbSub = document.getElementById("fbSub");
+    const finalScreen = document.getElementById("finalScreen");
+    const finalText = document.getElementById("finalText");
+
+    const pinyinBtn = document.getElementById("pinyinBtn");
+    const englishBtn = document.getElementById("englishBtn");
+    const mixedBtn = document.getElementById("mixedBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const playAgainBtn = document.getElementById("playAgainBtn");
+
+    function shuffle(arr){
+      const a = [...arr];
+      for(let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function startGame(){
+      order = shuffle(VOCAB.map((_, i)=>i));
+      currentIndex = 0;
+      score = 0;
+      locked = false;
+      finalScreen.classList.remove("show");
+      renderRound();
+    }
+
+    function getPromptType(){
+      if(mode === "mixed"){
+        return Math.random() < .5 ? "pinyin" : "english";
+      }
+      return mode;
+    }
+
+    function renderRound(){
+      locked = false;
+      feedback.classList.remove("show","good","bad");
+
+      if(currentIndex >= order.length){
+        showFinal();
+        return;
+      }
+
+      const target = VOCAB[order[currentIndex]];
+      const promptType = getPromptType();
+
+      if(promptType === "pinyin"){
+        promptMain.textContent = target.py;
+        promptSub.textContent = "Find the Chinese word for this pinyin.";
+        modeNum.textContent = mode === "mixed" ? "Mixed" : "Pinyin";
+      }else{
+        promptMain.textContent = target.en;
+        promptSub.textContent = "Find the Chinese word for this English meaning.";
+        modeNum.textContent = mode === "mixed" ? "Mixed" : "English";
+      }
+
+      scoreNum.textContent = score;
+      progressNum.textContent = `${currentIndex + 1}/${order.length}`;
+
+      renderBalloons(target);
+    }
+
+    function renderBalloons(target){
+      balloonArea.innerHTML = "";
+
+      const wrongPool = VOCAB.filter(v => v.zh !== target.zh);
+      const wrongs = shuffle(wrongPool).slice(0,5);
+      const options = shuffle([target, ...wrongs]);
+
+      const positions = [
+        {left:7, top:30, scale:1.05},
+        {left:22, top:13, scale:1},
+        {left:39, top:27, scale:.86},
+        {left:53, top:11, scale:.98},
+        {left:68, top:29, scale:.88},
+        {left:82, top:10, scale:1.12}
+      ];
+
+      options.forEach((item, index)=>{
+        const pos = positions[index];
+        const balloon = document.createElement("div");
+
+        const color = COLORS[index % COLORS.length];
+        const len = item.zh.length;
+
+        balloon.className = `balloon ${color}`;
+        if(len >= 3){
+          balloon.classList.add("small");
+        }
+        if(len >= 4){
+          balloon.classList.add("tiny");
+        }
+
+        balloon.style.left = pos.left + "%";
+        balloon.style.top = pos.top + "%";
+        balloon.style.transform = `scale(${pos.scale})`;
+        balloon.style.animationDelay = (index * .23) + "s";
+
+        balloon.innerHTML = `
+          <div class="string"></div>
+          <div class="label">${item.zh}</div>
+        `;
+
+        balloon.onclick = ()=>{
+          handleChoice(item, target, balloon);
+        };
+
+        balloonArea.appendChild(balloon);
+      });
+    }
+
+    function handleChoice(item, target, balloon){
+      if(locked) return;
+
+      if(item.zh === target.zh){
+        locked = true;
+        score += 10;
+
+        balloon.classList.add("pop");
+        showFeedback(true, target);
+
+        setTimeout(()=>{
+          currentIndex += 1;
+          renderRound();
+        }, 900);
+      }else{
+        balloon.classList.add("wrong");
+        showFeedback(false, target);
+
+        setTimeout(()=>{
+          balloon.classList.remove("wrong");
+          feedback.classList.remove("show","bad");
+        }, 680);
+      }
+    }
+
+    function showFeedback(correct, target){
+      feedback.classList.remove("good","bad");
+
+      if(correct){
+        feedback.classList.add("show","good");
+        fbBig.textContent = "✅ Correct!";
+        fbSub.textContent = `${target.zh} · ${target.py} · ${target.en}`;
+      }else{
+        feedback.classList.add("show","bad");
+        fbBig.textContent = "Try again!";
+        fbSub.textContent = `Look for: ${target.py} / ${target.en}`;
+      }
+    }
+
+    function showFinal(){
+      finalText.textContent =
+        `You scored ${score} points. You finished ${order.length} school facilities words.`;
+      finalScreen.classList.add("show");
+    }
+
+    function setMode(newMode){
+      mode = newMode;
+
+      pinyinBtn.classList.toggle("active", mode === "pinyin");
+      englishBtn.classList.toggle("active", mode === "english");
+      mixedBtn.classList.toggle("active", mode === "mixed");
+
+      renderRound();
+    }
+
+    pinyinBtn.onclick = ()=>setMode("pinyin");
+    englishBtn.onclick = ()=>setMode("english");
+    mixedBtn.onclick = ()=>setMode("mixed");
+    restartBtn.onclick = startGame;
+    playAgainBtn.onclick = startGame;
+
+    startGame();
+  </script>
+</body>
+</html>
