@@ -111,6 +111,7 @@
       0%{
         transform:translateX(0);
       }
+
       100%{
         transform:translateX(calc(100vw + 420px));
       }
@@ -304,6 +305,7 @@
       from{
         transform:scaleX(1);
       }
+
       to{
         transform:scaleX(0);
       }
@@ -333,9 +335,11 @@
         transform:translateY(170px);
         opacity:1;
       }
+
       88%{
         opacity:1;
       }
+
       100%{
         transform:translateY(-330px);
         opacity:0;
@@ -465,6 +469,7 @@
       0%,100%{
         transform:translateX(0) rotate(-1.5deg);
       }
+
       50%{
         transform:translateX(12px) rotate(1.8deg);
       }
@@ -479,10 +484,12 @@
         transform:scale(1);
         opacity:1;
       }
+
       45%{
         transform:scale(1.22);
         opacity:.95;
       }
+
       100%{
         transform:scale(.02);
         opacity:0;
@@ -497,15 +504,19 @@
       0%,100%{
         transform:translateX(0);
       }
+
       20%{
         transform:translateX(-14px);
       }
+
       40%{
         transform:translateX(14px);
       }
+
       60%{
         transform:translateX(-9px);
       }
+
       80%{
         transform:translateX(9px);
       }
@@ -537,9 +548,11 @@
         opacity:0;
         transform:translate(0,0) scale(.5) rotate(0deg);
       }
+
       18%{
         opacity:1;
       }
+
       100%{
         opacity:0;
         transform:translate(var(--x), var(--y)) scale(1.15) rotate(160deg);
@@ -788,6 +801,7 @@
       <button class="btn" id="englishBtn">English</button>
       <button class="btn" id="mixedBtn">Mixed</button>
       <button class="btn restart" id="restartBtn">Restart</button>
+
       <div class="timerBox">
         <div class="timerFill" id="timerFill"></div>
       </div>
@@ -875,11 +889,38 @@
 
     function shuffle(arr){
       const a = [...arr];
+
       for(let i = a.length - 1; i > 0; i--){
         const j = Math.floor(Math.random() * (i + 1));
         [a[i], a[j]] = [a[j], a[i]];
       }
+
       return a;
+    }
+
+    function charLength(item){
+      return Array.from(item.zh).length;
+    }
+
+    function pickDistractorsSameLength(target, count){
+      const targetLen = charLength(target);
+
+      const sameLengthPool = VOCAB.filter(item => {
+        return item.zh !== target.zh && charLength(item) === targetLen;
+      });
+
+      const otherPool = VOCAB.filter(item => {
+        return item.zh !== target.zh && charLength(item) !== targetLen;
+      });
+
+      let distractors = shuffle(sameLengthPool).slice(0, count);
+
+      if(distractors.length < count){
+        const need = count - distractors.length;
+        distractors = distractors.concat(shuffle(otherPool).slice(0, need));
+      }
+
+      return distractors;
     }
 
     function clearRoundTimer(){
@@ -916,6 +957,7 @@
       if(mode === "mixed"){
         return Math.random() < .5 ? "pinyin" : "english";
       }
+
       return mode;
     }
 
@@ -951,8 +993,14 @@
     function renderBalloons(target){
       balloonArea.innerHTML = "";
 
-      const wrongPool = VOCAB.filter(v => v.zh !== target.zh);
-      const wrongs = shuffle(wrongPool).slice(0,5);
+      /*
+        关键修改：
+        干扰项优先选择和正确答案一样字数的词。
+        例如：
+        正确答案是“部” → 干扰项也尽量是一字词。
+        正确答案是“教学楼” → 干扰项也尽量是三字词。
+      */
+      const wrongs = pickDistractorsSameLength(target, 5);
       const options = shuffle([target, ...wrongs]);
 
       const positions = [
@@ -975,7 +1023,7 @@
 
         const balloon = document.createElement("div");
         const color = COLORS[index % COLORS.length];
-        const len = item.zh.length;
+        const len = charLength(item);
 
         balloon.className = `balloon ${color}`;
 
