@@ -1,1040 +1,112 @@
+
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ESC-2-6-2 Handwriting Practice</title>
-
   <style>
-    body{
-      font-family:
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        "Noto Sans SC",
-        sans-serif;
-      background:radial-gradient(circle at top left, #e0f2fe 0%, #f6f7fb 42%, #eef2ff 100%);
-      margin:0;
-      padding:24px;
-      color:#111827;
-    }
-
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:14px;
-      flex-wrap:wrap;
-    }
-
-    .title{
-      font-size:24px;
-      font-weight:950;
-      color:#111827;
-      line-height:1.2;
-    }
-
-    .subtitle{
-      margin-top:4px;
-      color:#64748b;
-      font-size:14px;
-      font-weight:800;
-    }
-
-    .btns{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-
-    button{
-      border:0;
-      padding:10px 14px;
-      border-radius:12px;
-      font-weight:900;
-      cursor:pointer;
-      font-size:14px;
-    }
-
-    .primary{
-      background:#6d28d9;
-      color:#fff;
-    }
-
-    .soundPrimary{
-      background:#16a34a;
-      color:#fff;
-    }
-
-    .ghost{
-      background:#fff;
-      color:#111827;
-      border:1px solid #e5e7eb;
-    }
-
-    .ghost:hover{
-      border-color:#6d28d9;
-      background:#f5f3ff;
-    }
-
-    .score{
-      background:#fff;
-      border:1px solid #e5e7eb;
-      padding:10px 14px;
-      border-radius:12px;
-      font-weight:950;
-      box-shadow:0 8px 20px rgba(15,23,42,.06);
-    }
-
-    .layout{
-      display:grid;
-      grid-template-columns:410px 1fr;
-      gap:16px;
-      align-items:start;
-    }
-
-    .card{
-      background:rgba(255,255,255,.88);
-      border:1px solid #e5e7eb;
-      border-radius:20px;
-      padding:16px;
-      box-shadow:0 12px 28px rgba(15,23,42,.08);
-    }
-
-    .soundPanel{
-      background:#ecfdf5;
-      border:1px solid #bbf7d0;
-      color:#14532d;
-      border-radius:16px;
-      padding:12px;
-      margin-bottom:14px;
-      font-weight:850;
-      line-height:1.5;
-    }
-
-    .soundPanel strong{
-      font-weight:950;
-    }
-
-    .debugBox{
-      margin-top:10px;
-      background:#f8fafc;
-      border:1px solid #dbeafe;
-      color:#1e3a8a;
-      border-radius:12px;
-      padding:10px;
-      font-size:13px;
-      font-weight:800;
-      line-height:1.5;
-      white-space:pre-wrap;
-      word-break:break-word;
-      max-height:220px;
-      overflow:auto;
-    }
-
-    .voiceSelect{
-      width:100%;
-      margin-top:10px;
-      padding:10px;
-      border-radius:12px;
-      border:1px solid #bfdbfe;
-      font-weight:850;
-      color:#1e3a8a;
-      background:#fff;
-    }
-
-    .label{
-      font-size:13px;
-      font-weight:950;
-      color:#6b7280;
-      margin-bottom:6px;
-      text-transform:uppercase;
-      letter-spacing:.5px;
-    }
-
-    .big{
-      font-size:34px;
-      font-weight:950;
-      color:#111827;
-      line-height:1.25;
-    }
-
-    .mid{
-      font-size:18px;
-      font-weight:850;
-      color:#111827;
-      line-height:1.4;
-    }
-
-    .clickableRead{
-      cursor:pointer;
-      border-radius:12px;
-      padding:6px 8px;
-      margin-left:-8px;
-      transition:background .15s ease;
-    }
-
-    .clickableRead:hover{
-      background:#f5f3ff;
-    }
-
-    .readHint{
-      font-size:12px;
-      color:#8b5cf6;
-      font-weight:900;
-      margin-top:3px;
-    }
-
-    .sentence{
-      font-size:18px;
-      font-weight:850;
-      color:#334155;
-      line-height:1.55;
-      background:#f8fafc;
-      border:1px solid #e5e7eb;
-      border-radius:14px;
-      padding:12px;
-      cursor:pointer;
-    }
-
-    .sentence:hover{
-      background:#f5f3ff;
-      border-color:#ddd6fe;
-    }
-
-    .readBtns{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:8px;
-      margin-top:14px;
-    }
-
-    .readBtn{
-      background:#eef2ff;
-      color:#4338ca;
-      border:1px solid #c7d2fe;
-      width:100%;
-    }
-
-    .readBtn:hover{
-      background:#e0e7ff;
-    }
-
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:10px;
-      max-height:240px;
-      overflow:auto;
-      padding-right:4px;
-    }
-
-    .chip{
-      border:1px solid #e5e7eb;
-      background:#fff;
-      border-radius:999px;
-      padding:8px 11px;
-      font-weight:900;
-      cursor:pointer;
-      color:#111827;
-    }
-
-    .chip:hover{
-      border-color:#6d28d9;
-      background:#f5f3ff;
-    }
-
-    .chip.active{
-      background:#6d28d9;
-      color:#fff;
-      border-color:#6d28d9;
-    }
-
-    .writerWrap{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-
-    .writerTop{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .charBadge{
-      background:#f5f3ff;
-      border:1px solid #ddd6fe;
-      color:#5b21b6;
-      border-radius:16px;
-      padding:10px 14px;
-      font-weight:950;
-    }
-
-    #writerTarget{
-      width:520px;
-      height:520px;
-      margin:0 auto;
-      background:#fff;
-      border:2px solid #e5e7eb;
-      border-radius:18px;
-      box-shadow:inset 0 0 0 1px rgba(15,23,42,.02);
-    }
-
-    .hint{
-      color:#6b7280;
-      font-weight:750;
-      line-height:1.55;
-    }
-
-    #statusText{
-      color:#b42318;
-      font-weight:900;
-      line-height:1.45;
-      margin-top:10px;
-    }
-
-    #soundStatus{
-      color:#166534;
-      font-weight:950;
-      line-height:1.45;
-      margin-top:8px;
-    }
-
-    .miniProgress{
-      color:#64748b;
-      font-weight:900;
-      font-size:14px;
-      margin-top:4px;
-    }
-
-    .footerNote{
-      margin-top:12px;
-      background:#fff7ed;
-      color:#9a3412;
-      border:1px solid #fed7aa;
-      border-radius:14px;
-      padding:11px 12px;
-      font-weight:800;
-      line-height:1.5;
-    }
-
-    .englishRule{
-      margin-top:12px;
-      background:#eff6ff;
-      color:#1e3a8a;
-      border:1px solid #bfdbfe;
-      border-radius:14px;
-      padding:11px 12px;
-      font-weight:800;
-      line-height:1.5;
-    }
-
-    .charList{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:8px;
-    }
-
-    .charMini{
-      background:#fff;
-      border:1px solid #e5e7eb;
-      border-radius:12px;
-      padding:8px 12px;
-      font-size:24px;
-      font-weight:950;
-      cursor:pointer;
-    }
-
-    .charMini:hover{
-      background:#f5f3ff;
-      border-color:#ddd6fe;
-    }
-
-    @media (max-width: 980px){
-      body{
-        padding:16px;
-      }
-
-      .layout{
-        grid-template-columns:1fr;
-      }
-
-      #writerTarget{
-        width:min(520px, 92vw);
-        height:min(520px, 92vw);
-      }
-    }
+    *{box-sizing:border-box}
+    body{font-family:system-ui,-apple-system,"Segoe UI",Arial,"Noto Sans SC",sans-serif;background:radial-gradient(circle at top left,#e0f2fe 0%,#f6f7fb 42%,#eef2ff 100%);margin:0;padding:24px;color:#111827}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+    .title{font-size:24px;font-weight:950;line-height:1.2}.subtitle{margin-top:4px;color:#64748b;font-size:14px;font-weight:800}
+    .btns{display:flex;gap:10px;align-items:center;flex-wrap:wrap}button{border:0;padding:10px 14px;border-radius:12px;font-weight:900;cursor:pointer;font-size:14px}
+    .primary{background:#6d28d9;color:#fff}.ghost{background:#fff;color:#111827;border:1px solid #e5e7eb}.ghost:hover{border-color:#6d28d9;background:#f5f3ff}
+    .score{background:#fff;border:1px solid #e5e7eb;padding:10px 14px;border-radius:12px;font-weight:950;box-shadow:0 8px 20px rgba(15,23,42,.06)}
+    .layout{display:grid;grid-template-columns:410px 1fr;gap:16px;align-items:start}.card{background:rgba(255,255,255,.9);border:1px solid #e5e7eb;border-radius:20px;padding:16px;box-shadow:0 12px 28px rgba(15,23,42,.08)}
+    .label{font-size:13px;font-weight:950;color:#6b7280;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}.big{font-size:34px;font-weight:950;line-height:1.25}.mid{font-size:18px;font-weight:850;line-height:1.4}
+    .clickableRead{cursor:pointer;border-radius:12px;padding:6px 8px;margin-left:-8px;transition:background .15s}.clickableRead:hover{background:#f5f3ff}.readHint{font-size:12px;color:#8b5cf6;font-weight:900;margin-top:3px}
+    .sentence{font-size:18px;font-weight:850;color:#334155;line-height:1.55;background:#f8fafc;border:1px solid #e5e7eb;border-radius:14px;padding:12px;cursor:pointer}.sentence:hover{background:#f5f3ff;border-color:#ddd6fe}
+    .readBtns{display:grid;gap:8px;margin-top:14px}.readBtn{background:#eef2ff;color:#4338ca;border:1px solid #c7d2fe;width:100%}.readBtn:hover{background:#e0e7ff}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;max-height:240px;overflow:auto;padding-right:4px}.chip{border:1px solid #e5e7eb;background:#fff;border-radius:999px;padding:8px 11px;font-weight:900;color:#111827}.chip:hover{border-color:#6d28d9;background:#f5f3ff}.chip.active{background:#6d28d9;color:#fff;border-color:#6d28d9}
+    .charList{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.charMini{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:8px 12px;font-size:24px;font-weight:950}.charMini.active{background:#ede9fe;border-color:#8b5cf6;color:#5b21b6}
+    .writerWrap{display:flex;flex-direction:column;gap:10px}.writerTop{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}.charBadge{background:#f5f3ff;border:1px solid #ddd6fe;color:#5b21b6;border-radius:16px;padding:10px 14px;font-weight:950}
+    #writerTarget{width:520px;height:520px;margin:0 auto;background:#fff;border:2px solid #e5e7eb;border-radius:18px;box-shadow:inset 0 0 0 1px rgba(15,23,42,.02)}
+    .hint{color:#6b7280;font-weight:750;line-height:1.55}#statusText{color:#b42318;font-weight:900;line-height:1.45;margin-top:10px;min-height:20px}.miniProgress{color:#64748b;font-weight:900;font-size:14px;margin-top:4px}
+    .note{margin-top:12px;background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;border-radius:14px;padding:11px 12px;font-weight:800;line-height:1.5}
+    @media(max-width:980px){body{padding:16px}.layout{grid-template-columns:1fr}#writerTarget{width:min(520px,92vw);height:min(520px,92vw)}}
   </style>
 </head>
-
 <body>
   <div class="topbar">
-    <div>
-      <div class="title">ESC-2-6-2 · Handwriting Practice</div>
-      <div class="subtitle">生病单元 New Words 2｜字、词、句子写字练习</div>
-    </div>
-
-    <div class="btns">
-      <div class="score" id="scoreBox">Score: 0</div>
-      <button class="soundPrimary" id="enableSoundBtn">🔊 Load Voices & Test Chrome Sound</button>
-      <button class="ghost" id="speakBtn">🔊 Speak Word</button>
-      <button class="ghost" id="animateBtn">✍️ Show Stroke Order</button>
-      <button class="ghost" id="nextBtn">Next ▶</button>
-      <button class="primary" id="restartBtn">Restart</button>
-    </div>
+    <div><div class="title">ESC-2-6-2 · Handwriting Practice</div><div class="subtitle">生病单元 New Words 2｜字、词、句子写字练习</div></div>
+    <div class="btns"><div class="score" id="scoreBox">Score: 0</div><button class="ghost" id="speakBtn">🔊 Speak Word</button><button class="ghost" id="animateBtn">✍️ Show Stroke Order</button><button class="ghost" id="nextBtn">Next ▶</button><button class="primary" id="restartBtn">Restart</button></div>
   </div>
-
   <div class="layout">
     <div class="card">
-      <div class="soundPanel">
-        <strong>Chrome Sound Test:</strong><br>
-        1. First click <strong>Load Voices & Test Chrome Sound</strong>.<br>
-        2. It should read “你好”.<br>
-        3. If one voice fails, the game will try another Chinese voice automatically.<br>
-
-        <div id="soundStatus">Sound status: not tested yet</div>
-
-        <select id="voiceSelect" class="voiceSelect">
-          <option value="">Voice list loading...</option>
-        </select>
-
-        <div class="debugBox" id="voiceDebug">Voice debug info will show here.</div>
-      </div>
-
       <div class="label">Current Item</div>
-
-      <div class="label" style="margin-top:8px;">Characters</div>
-      <div class="charList" id="charList"></div>
-      <div class="readHint">Click a character to hear it.</div>
-
-      <div class="label" style="margin-top:14px;">Word / Phrase</div>
-      <div class="big clickableRead" id="wordBox">舒服</div>
-      <div class="readHint">Click the word to hear it.</div>
-
-      <div class="label" style="margin-top:12px;">Pinyin</div>
-      <div class="mid" id="pinyinBox">shū fu</div>
-
-      <div class="label" style="margin-top:12px;">English</div>
-      <div class="mid" id="englishBox">be well; comfortable</div>
-
-      <div class="label" style="margin-top:12px;">Example Sentence</div>
-      <div class="sentence" id="sentenceBox">我不舒服。</div>
-      <div class="readHint">Click the sentence to hear it.</div>
-
-      <div class="readBtns">
-        <button class="readBtn" id="readCharBtn">🔊 Read Current Character</button>
-        <button class="readBtn" id="readWordBtn">🔊 Read Word / Phrase</button>
-        <button class="readBtn" id="readSentenceBtn">🔊 Read Sentence</button>
-      </div>
-
-      <div class="label" style="margin-top:16px;">Choose a word / phrase</div>
-      <div class="chips" id="chips"></div>
-
-      <div class="footerNote">
-        写字规则：每个词会拆成一个一个汉字练习。写完当前字以后，自动进入下一个字。
-      </div>
-
-      <div class="englishRule">
-        Writing Rule: Each word or phrase is split into individual Chinese characters.
-        Finish writing the current character, and the game will move to the next character automatically.
-      </div>
-
-      <div id="statusText"></div>
+      <div class="label" style="margin-top:8px">Characters</div><div class="charList" id="charList"></div><div class="readHint">Click a character to hear it.</div>
+      <div class="label" style="margin-top:14px">Word / Phrase</div><div class="big clickableRead" id="wordBox"></div><div class="readHint">Click the word to hear it.</div>
+      <div class="label" style="margin-top:12px">Pinyin</div><div class="mid" id="pinyinBox"></div>
+      <div class="label" style="margin-top:12px">English</div><div class="mid" id="englishBox"></div>
+      <div class="label" style="margin-top:12px">Example Sentence</div><div class="sentence" id="sentenceBox"></div><div class="readHint">Click the sentence to hear it.</div>
+      <div class="readBtns"><button class="readBtn" id="readCharBtn">🔊 Read Current Character</button><button class="readBtn" id="readWordBtn">🔊 Read Word / Phrase</button><button class="readBtn" id="readSentenceBtn">🔊 Read Sentence</button></div>
+      <div class="label" style="margin-top:16px">Choose a word / phrase</div><div class="chips" id="chips"></div>
+      <div class="note">写字规则：每写对一个汉字，就会得到礼花奖励，然后自动进入下一个字。</div><div id="statusText"></div>
     </div>
-
     <div class="card writerWrap">
-      <div class="writerTop">
-        <div>
-          <div class="big clickableRead" id="charTitle">舒</div>
-          <div class="readHint">Click the big character to hear it.</div>
-          <div class="miniProgress" id="charIndex">Character 1 / 2</div>
-        </div>
-
-        <div class="charBadge" id="itemIndexBox">Item 1 / 20</div>
-      </div>
-
-      <div id="writerTarget" aria-label="handwriting target"></div>
-
-      <div class="hint">
-        Write inside the big box. You can use “Show Stroke Order” first, then write it yourself.
-      </div>
+      <div class="writerTop"><div><div class="big clickableRead" id="charTitle"></div><div class="readHint">Click the big character to hear it.</div><div class="miniProgress" id="charIndex"></div></div><div class="charBadge" id="itemIndexBox"></div></div>
+      <div id="writerTarget" aria-label="handwriting target"></div><div class="hint">Write inside the big box. You can use “Show Stroke Order” first, then write it yourself.</div>
     </div>
   </div>
-
   <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.7.0/dist/hanzi-writer.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script>
-    const VOCAB = [
-      { hanzi:"舒", pinyin:"shū", english:"relax", sentence:"舒 is used in 舒服.", speakSentence:"舒" },
-      { hanzi:"舒服", pinyin:"shū fu", english:"be well; comfortable", sentence:"我不舒服。", speakSentence:"我不舒服。" },
-      { hanzi:"痛", pinyin:"tòng", english:"ache; pain", sentence:"痛 is used in 头痛.", speakSentence:"痛" },
-      { hanzi:"头痛", pinyin:"tóu tòng", english:"headache", sentence:"我头痛。", speakSentence:"我头痛。" },
-      { hanzi:"咳", pinyin:"ké", english:"cough", sentence:"咳 is used in 咳嗽.", speakSentence:"咳" },
-      { hanzi:"嗽", pinyin:"sou", english:"cough", sentence:"嗽 is used in 咳嗽.", speakSentence:"嗽" },
-      { hanzi:"咳嗽", pinyin:"ké sou", english:"cough", sentence:"我咳嗽。", speakSentence:"我咳嗽。" },
-      { hanzi:"拉", pinyin:"lā", english:"empty the bowels", sentence:"拉 is used in 拉肚子.", speakSentence:"拉" },
-      { hanzi:"肚", pinyin:"dù", english:"stomach; abdomen", sentence:"肚 is used in 肚子.", speakSentence:"肚" },
-      { hanzi:"肚子", pinyin:"dù zi", english:"stomach; abdomen", sentence:"我肚子痛。", speakSentence:"我肚子痛。" },
-      { hanzi:"拉肚子", pinyin:"lā dù zi", english:"have loose bowels", sentence:"我拉肚子。", speakSentence:"我拉肚子。" },
-      { hanzi:"要", pinyin:"yào", english:"should; need", sentence:"你要多休息。", speakSentence:"你要多休息。" },
-      { hanzi:"不要", pinyin:"bú yào", english:"do not; should not", sentence:"你今天和明天都不要去上学了。", speakSentence:"你今天和明天都不要去上学了。" },
-      { hanzi:"休", pinyin:"xiū", english:"rest", sentence:"休 is used in 休息.", speakSentence:"休" },
-      { hanzi:"息", pinyin:"xi", english:"rest", sentence:"息 is used in 休息.", speakSentence:"息" },
-      { hanzi:"休息", pinyin:"xiū xi", english:"rest", sentence:"你要多休息。", speakSentence:"你要多休息。" },
-      { hanzi:"不用谢", pinyin:"bú yòng xiè", english:"never mind; you're welcome", sentence:"不用谢。", speakSentence:"不用谢。" },
-      { hanzi:"厕", pinyin:"cè", english:"toilet", sentence:"厕 is used in 厕所.", speakSentence:"厕" },
-      { hanzi:"所", pinyin:"suǒ", english:"place", sentence:"所 is used in 厕所.", speakSentence:"所" },
-      { hanzi:"厕所", pinyin:"cè suǒ", english:"toilet", sentence:"我要上厕所。", speakSentence:"我要上厕所。" }
+    const VOCAB=[
+      {hanzi:"舒",pinyin:"shū",english:"relax",sentence:"舒 is used in 舒服.",speakSentence:"舒"},{hanzi:"舒服",pinyin:"shū fu",english:"be well; comfortable",sentence:"我不舒服。",speakSentence:"我不舒服。"},{hanzi:"痛",pinyin:"tòng",english:"ache; pain",sentence:"痛 is used in 头痛.",speakSentence:"痛"},{hanzi:"头痛",pinyin:"tóu tòng",english:"headache",sentence:"我头痛。",speakSentence:"我头痛。"},{hanzi:"咳",pinyin:"ké",english:"cough",sentence:"咳 is used in 咳嗽.",speakSentence:"咳"},{hanzi:"嗽",pinyin:"sou",english:"cough",sentence:"嗽 is used in 咳嗽.",speakSentence:"嗽"},{hanzi:"咳嗽",pinyin:"ké sou",english:"cough",sentence:"我咳嗽。",speakSentence:"我咳嗽。"},{hanzi:"拉",pinyin:"lā",english:"empty the bowels",sentence:"拉 is used in 拉肚子.",speakSentence:"拉"},{hanzi:"肚",pinyin:"dù",english:"stomach; abdomen",sentence:"肚 is used in 肚子.",speakSentence:"肚"},{hanzi:"肚子",pinyin:"dù zi",english:"stomach; abdomen",sentence:"我肚子痛。",speakSentence:"我肚子痛。"},{hanzi:"拉肚子",pinyin:"lā dù zi",english:"have loose bowels",sentence:"我拉肚子。",speakSentence:"我拉肚子。"},{hanzi:"要",pinyin:"yào",english:"should; need",sentence:"你要多休息。",speakSentence:"你要多休息。"},{hanzi:"不要",pinyin:"bú yào",english:"do not; should not",sentence:"你今天和明天都不要去上学了。",speakSentence:"你今天和明天都不要去上学了。"},{hanzi:"休",pinyin:"xiū",english:"rest",sentence:"休 is used in 休息.",speakSentence:"休"},{hanzi:"息",pinyin:"xi",english:"rest",sentence:"息 is used in 休息.",speakSentence:"息"},{hanzi:"休息",pinyin:"xiū xi",english:"rest",sentence:"你要多休息。",speakSentence:"你要多休息。"},{hanzi:"不用谢",pinyin:"bú yòng xiè",english:"never mind; you're welcome",sentence:"不用谢。",speakSentence:"不用谢。"},{hanzi:"厕",pinyin:"cè",english:"toilet",sentence:"厕 is used in 厕所.",speakSentence:"厕"},{hanzi:"所",pinyin:"suǒ",english:"place",sentence:"所 is used in 厕所.",speakSentence:"所"},{hanzi:"厕所",pinyin:"cè suǒ",english:"toilet",sentence:"我要上厕所。",speakSentence:"我要上厕所。"}
     ];
-
-    let itemIndex = 1;
-    let charIndex = 0;
-    let score = 0;
-    let writer = null;
-
-    let allVoices = [];
-    let chineseVoices = [];
-    let selectedVoice = null;
-    let lastSpokenText = "";
-
-    const voiceSelect = document.getElementById("voiceSelect");
-
-    function charsFrom(hanzi){
-      return Array.from(hanzi).filter(ch => ch.trim() !== "");
+    let itemIndex=0,charIndex=0,score=0,writer=null,preferredVoice=null;
+    const charsFrom=s=>Array.from(s).filter(ch=>ch.trim());
+    function chooseVoice(){
+      const voices=speechSynthesis.getVoices();
+      preferredVoice=voices.find(v=>/tingting/i.test(v.name))||voices.find(v=>/google.*普通话|google.*mandarin/i.test(v.name))||null;
     }
-
-    function wait(ms){
-      return new Promise(resolve => setTimeout(resolve, ms));
+    function speakChinese(text){
+      if(!text||!("speechSynthesis" in window))return;
+      chooseVoice(); speechSynthesis.cancel();
+      const utter=new SpeechSynthesisUtterance(text); utter.lang="zh-CN"; utter.rate=.78; utter.pitch=1.02; utter.volume=1;
+      if(preferredVoice)utter.voice=preferredVoice;
+      utter.onerror=()=>{}; speechSynthesis.speak(utter);
     }
-
-    function voiceLabel(v){
-      return `${v.name} (${v.lang})`;
+    if("speechSynthesis" in window){chooseVoice();speechSynthesis.onvoiceschanged=chooseVoice}
+    function celebrate(){
+      if(typeof confetti!=="function")return;
+      confetti({particleCount:110,spread:75,startVelocity:38,gravity:1.05,origin:{x:.5,y:0},colors:["#7c3aed","#ec4899","#f59e0b","#10b981","#3b82f6"]});
     }
-
-    function isChineseVoice(v){
-      const lang = (v.lang || "").toLowerCase();
-      const name = (v.name || "").toLowerCase();
-
-      return (
-        lang.startsWith("zh") ||
-        name.includes("chinese") ||
-        name.includes("mandarin") ||
-        name.includes("tingting") ||
-        name.includes("mei-jia") ||
-        name.includes("meijia") ||
-        name.includes("reed") ||
-        name.includes("grandma") ||
-        name.includes("grandpa")
-      );
-    }
-
-    function voicePriority(v){
-      const name = (v.name || "").toLowerCase();
-      const lang = (v.lang || "").toLowerCase();
-
-      let score = 0;
-
-      if(lang === "zh-cn") score += 100;
-      if(lang.startsWith("zh-cn")) score += 80;
-      if(lang === "zh-hans") score += 70;
-      if(lang.startsWith("zh")) score += 40;
-
-      if(name.includes("tingting")) score += 1000;
-      if(name.includes("meijia") || name.includes("mei-jia")) score += 900;
-      if(name.includes("reed")) score += 800;
-      if(name.includes("grandma")) score += 700;
-      if(name.includes("grandpa")) score += 650;
-      if(name.includes("google")) score += 600;
-      if(name.includes("mandarin")) score += 550;
-      if(name.includes("chinese")) score += 500;
-
-      /*
-        These Apple novelty voices often appear in Chrome,
-        but Chrome may throw speech error with them.
-      */
-      if(name.includes("eddy")) score -= 1000;
-      if(name.includes("flo")) score -= 900;
-      if(name.includes("shelley")) score -= 900;
-      if(name.includes("rocko")) score -= 900;
-      if(name.includes("sandy")) score -= 900;
-
-      return score;
-    }
-
-    async function loadVoicesWithRetry(){
-      if(!("speechSynthesis" in window)){
-        allVoices = [];
-        chineseVoices = [];
-        updateVoiceDebug("speechSynthesis is not supported in this browser.");
-        return [];
-      }
-
-      let voices = window.speechSynthesis.getVoices();
-
-      for(let i = 0; i < 25 && voices.length === 0; i++){
-        await wait(150);
-        voices = window.speechSynthesis.getVoices();
-      }
-
-      allVoices = voices;
-
-      chineseVoices = allVoices
-        .filter(isChineseVoice)
-        .sort((a,b) => voicePriority(b) - voicePriority(a));
-
-      if(chineseVoices.length > 0){
-        selectedVoice = chineseVoices[0];
-      }else{
-        selectedVoice = null;
-      }
-
-      renderVoiceSelect();
-      updateVoiceDebug("Voices loaded.");
-
-      return voices;
-    }
-
-    function renderVoiceSelect(){
-      voiceSelect.innerHTML = "";
-
-      if(chineseVoices.length === 0){
-        const opt = document.createElement("option");
-        opt.value = "";
-        opt.textContent = "No Chinese voices found";
-        voiceSelect.appendChild(opt);
-        return;
-      }
-
-      chineseVoices.forEach((v, index)=>{
-        const opt = document.createElement("option");
-        opt.value = String(index);
-        opt.textContent = `${index + 1}. ${voiceLabel(v)}`;
-        voiceSelect.appendChild(opt);
-      });
-
-      voiceSelect.value = "0";
-    }
-
-    voiceSelect.addEventListener("change", function(){
-      const index = Number(voiceSelect.value);
-      if(chineseVoices[index]){
-        selectedVoice = chineseVoices[index];
-        updateVoiceDebug("Voice manually selected.");
-        speakChineseNow("你好", selectedVoice, false);
-      }
-    });
-
-    function updateVoiceDebug(extraMessage){
-      const debug = document.getElementById("voiceDebug");
-
-      const chosen = selectedVoice ? voiceLabel(selectedVoice) : "None selected";
-
-      const zhList = chineseVoices.length
-        ? chineseVoices.map((v, i) => `${i + 1}. ${voiceLabel(v)} | priority ${voicePriority(v)}`).join("\n")
-        : "No Chinese voices found by Chrome.";
-
-      debug.textContent =
-        `Browser: ${navigator.userAgent.includes("Chrome") ? "Chrome / Chromium" : "Other browser"}\n` +
-        `All voices found: ${allVoices.length}\n` +
-        `Chinese voices found: ${chineseVoices.length}\n` +
-        `Chinese voice selected: ${chosen}\n` +
-        `Last text: ${lastSpokenText || "none"}\n` +
-        `\nChinese voice list:\n${zhList}` +
-        (extraMessage ? `\n\nMessage:\n${extraMessage}` : "");
-    }
-
-    function speakWithVoice(text, voice){
-      return new Promise(resolve => {
-        const status = document.getElementById("statusText");
-        const soundStatus = document.getElementById("soundStatus");
-
-        window.speechSynthesis.cancel();
-
-        if(window.speechSynthesis.paused){
-          window.speechSynthesis.resume();
-        }
-
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = "zh-CN";
-        utter.rate = 0.78;
-        utter.pitch = 1.05;
-        utter.volume = 1;
-
-        if(voice){
-          utter.voice = voice;
-        }
-
-        let settled = false;
-
-        utter.onstart = function(){
-          status.textContent = "";
-          soundStatus.textContent = `Sound status: speaking with ${voice ? voice.name : "default"} ✅`;
-        };
-
-        utter.onend = function(){
-          if(settled) return;
-          settled = true;
-          soundStatus.textContent = `Sound status: ready ✅`;
-          resolve(true);
-        };
-
-        utter.onerror = function(e){
-          if(settled) return;
-          settled = true;
-          console.log("Speech error with voice:", voice ? voiceLabel(voice) : "default", e);
-          resolve(false);
-        };
-
-        window.speechSynthesis.speak(utter);
-
-        let nudgeCount = 0;
-        const nudge = setInterval(function(){
-          nudgeCount += 1;
-
-          if(window.speechSynthesis.paused){
-            window.speechSynthesis.resume();
-          }
-
-          if(settled || nudgeCount >= 10){
-            clearInterval(nudge);
-          }
-        }, 160);
-
-        setTimeout(function(){
-          if(settled) return;
-
-          if(!window.speechSynthesis.speaking && !window.speechSynthesis.pending){
-            settled = true;
-            resolve(false);
-          }
-        }, 1600);
-      });
-    }
-
-    async function speakChineseNow(text, preferredVoice, allowFallback = true){
-      const status = document.getElementById("statusText");
-      const soundStatus = document.getElementById("soundStatus");
-
-      if(!("speechSynthesis" in window)){
-        status.textContent = "⚠️ This browser does not support speech synthesis.";
-        return false;
-      }
-
-      if(!text){
-        return false;
-      }
-
-      lastSpokenText = text;
-
-      if(chineseVoices.length === 0){
-        await loadVoicesWithRetry();
-      }
-
-      const tryList = [];
-
-      if(preferredVoice){
-        tryList.push(preferredVoice);
-      }else if(selectedVoice){
-        tryList.push(selectedVoice);
-      }
-
-      if(allowFallback){
-        chineseVoices.forEach(v=>{
-          if(!tryList.includes(v)){
-            tryList.push(v);
-          }
-        });
-      }
-
-      if(tryList.length === 0){
-        soundStatus.textContent = "Sound status: no Chinese voice ⚠️";
-        status.textContent = "⚠️ Chrome found no Chinese voices.";
-        updateVoiceDebug("No Chinese voices available.");
-        return false;
-      }
-
-      for(let i=0; i<tryList.length; i++){
-        const voice = tryList[i];
-
-        soundStatus.textContent = `Sound status: trying ${voiceLabel(voice)}…`;
-        updateVoiceDebug(`Trying voice ${i + 1}: ${voiceLabel(voice)}`);
-
-        const ok = await speakWithVoice(text, voice);
-
-        if(ok){
-          selectedVoice = voice;
-
-          const index = chineseVoices.indexOf(voice);
-          if(index >= 0){
-            voiceSelect.value = String(index);
-          }
-
-          updateVoiceDebug(`Success with ${voiceLabel(voice)}.`);
-          return true;
-        }
-      }
-
-      soundStatus.textContent = "Sound status: all Chinese voices failed ⚠️";
-      status.textContent =
-        "⚠️ Chrome found Chinese voices, but they all failed. Try choosing another voice in the dropdown, or fully quit Chrome and reopen it.";
-      updateVoiceDebug("All Chinese voices failed.");
-      return false;
-    }
-
-    async function speakChinese(text){
-      if(chineseVoices.length === 0){
-        await loadVoicesWithRetry();
-      }
-
-      return speakChineseNow(text, selectedVoice, true);
-    }
-
-    async function enableChromeSound(){
-      const soundStatus = document.getElementById("soundStatus");
-      const status = document.getElementById("statusText");
-
-      soundStatus.textContent = "Sound status: loading voices…";
-      status.textContent = "";
-
-      await loadVoicesWithRetry();
-
-      if(chineseVoices.length === 0){
-        soundStatus.textContent = "Sound status: no Chinese voices found ⚠️";
-        status.textContent =
-          "⚠️ Chrome did not find Chinese voices. Add a Chinese/Mandarin voice in macOS Spoken Content, then restart Chrome.";
-        return;
-      }
-
-      soundStatus.textContent = "Sound status: testing 你好…";
-      await speakChineseNow("你好", selectedVoice, true);
-    }
-
-    function updateUI(){
-      const item = VOCAB[itemIndex];
-      const chars = charsFrom(item.hanzi);
-
-      if(charIndex >= chars.length){
-        charIndex = 0;
-      }
-
-      document.getElementById("wordBox").textContent = item.hanzi;
-      document.getElementById("pinyinBox").textContent = item.pinyin;
-      document.getElementById("englishBox").textContent = item.english;
-      document.getElementById("sentenceBox").textContent = item.sentence;
-
-      document.getElementById("charTitle").textContent = chars[charIndex] || "";
-      document.getElementById("charIndex").textContent =
-        `Character ${charIndex + 1} / ${chars.length}`;
-
-      document.getElementById("itemIndexBox").textContent =
-        `Item ${itemIndex + 1} / ${VOCAB.length}`;
-
-      document.getElementById("scoreBox").textContent = `Score: ${score}`;
-
-      renderCharacterButtons(chars);
-      renderChipsActive();
-      loadCharacter(chars[charIndex]);
-    }
-
-    function renderCharacterButtons(chars){
-      const charList = document.getElementById("charList");
-      charList.innerHTML = "";
-
-      chars.forEach((ch, i)=>{
-        const b = document.createElement("button");
-        b.className = "charMini";
-        b.textContent = ch;
-
-        b.onclick = function(){
-          charIndex = i;
-          updateUI();
-          speakChinese(ch);
-        };
-
-        charList.appendChild(b);
-      });
-    }
-
-    async function loadCharacter(char){
-      const status = document.getElementById("statusText");
-      status.textContent = "Loading character…";
-
-      document.getElementById("writerTarget").innerHTML = "";
-
-      try{
-        const url =
-          `https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/${encodeURIComponent(char)}.json`;
-
-        const res = await fetch(url, { cache:"no-store" });
-
-        if(!res.ok){
-          throw new Error("Data fetch failed: " + res.status);
-        }
-
-        const charData = await res.json();
-
-        writer = HanziWriter.create("writerTarget", char, {
-          width: 520,
-          height: 520,
-          padding: 20,
-          charData: charData,
-          showOutline: true,
-          showCharacter: true,
-          outlineColor: "#d0d5dd",
-          strokeColor: "#111827",
-          strokeWidth: 7,
-          drawingWidth: 42,
-          leniency: 1.0,
-          showHintAfterMisses: 1,
-          highlightOnComplete: true
-        });
-
-        status.textContent = "";
-
-        writer.quiz({
-          onComplete: function(){
-            score += 100;
-            setTimeout(nextCharOrItem, 450);
-          }
-        });
-
-      }catch(e){
-        console.error(e);
-
-        status.textContent =
-          "⚠️ 字库加载失败：请用 GitHub Pages 打开，不要用本地 file 打开。也可以换网络后刷新。";
-
-        document.getElementById("writerTarget").innerHTML =
-          `<div style="
-            font-size:220px;
-            font-weight:900;
-            opacity:.16;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            height:100%;
-          ">${char}</div>`;
-      }
-    }
-
-    function nextCharOrItem(){
-      const chars = charsFrom(VOCAB[itemIndex].hanzi);
-
-      if(charIndex < chars.length - 1){
-        charIndex += 1;
-      }else{
-        itemIndex = (itemIndex + 1) % VOCAB.length;
-        charIndex = 0;
-      }
-
-      updateUI();
-    }
-
-    function restart(){
-      score = 0;
-      itemIndex = 1;
-      charIndex = 0;
-      updateUI();
-    }
-
-    function speakCurrentCharacter(){
-      const chars = charsFrom(VOCAB[itemIndex].hanzi);
-      const ch = chars[charIndex] || VOCAB[itemIndex].hanzi;
-      speakChinese(ch);
-    }
-
-    function speakCurrentWord(){
-      const item = VOCAB[itemIndex];
-      speakChinese(item.hanzi);
-    }
-
-    function speakCurrentSentence(){
-      const item = VOCAB[itemIndex];
-      speakChinese(item.speakSentence || item.sentence || item.hanzi);
-    }
-
-    function showStrokeOrder(){
-      if(writer){
-        writer.animateCharacter();
-      }
-    }
-
     function renderChips(){
-      const chips = document.getElementById("chips");
-      chips.innerHTML = "";
-
-      VOCAB.forEach((v, i)=>{
-        const b = document.createElement("button");
-        b.className = "chip";
-        b.textContent = v.hanzi;
-
-        b.onclick = function(){
-          itemIndex = i;
-          charIndex = 0;
-          updateUI();
-          speakChinese(v.hanzi);
-        };
-
-        chips.appendChild(b);
-      });
+      const box=document.getElementById("chips");box.innerHTML="";
+      VOCAB.forEach((item,i)=>{const b=document.createElement("button");b.className="chip"+(i===itemIndex?" active":"");b.textContent=item.hanzi;b.onclick=()=>{itemIndex=i;charIndex=0;updateUI()};box.appendChild(b)});
     }
-
-    function renderChipsActive(){
-      const chipButtons = document.querySelectorAll(".chip");
-
-      chipButtons.forEach((btn, i)=>{
-        if(i === itemIndex){
-          btn.classList.add("active");
-        }else{
-          btn.classList.remove("active");
-        }
-      });
+    function renderCharacters(chars){
+      const box=document.getElementById("charList");box.innerHTML="";
+      chars.forEach((ch,i)=>{const b=document.createElement("button");b.className="charMini"+(i===charIndex?" active":"");b.textContent=ch;b.onclick=()=>{charIndex=i;updateUI();speakChinese(ch)};box.appendChild(b)});
     }
-
-    document.getElementById("enableSoundBtn").onclick = enableChromeSound;
-    document.getElementById("nextBtn").onclick = nextCharOrItem;
-    document.getElementById("restartBtn").onclick = restart;
-    document.getElementById("speakBtn").onclick = speakCurrentWord;
-    document.getElementById("animateBtn").onclick = showStrokeOrder;
-
-    document.getElementById("readCharBtn").onclick = speakCurrentCharacter;
-    document.getElementById("readWordBtn").onclick = speakCurrentWord;
-    document.getElementById("readSentenceBtn").onclick = speakCurrentSentence;
-
-    document.getElementById("wordBox").onclick = speakCurrentWord;
-    document.getElementById("sentenceBox").onclick = speakCurrentSentence;
-    document.getElementById("charTitle").onclick = speakCurrentCharacter;
-
-    if("speechSynthesis" in window){
-      window.speechSynthesis.onvoiceschanged = function(){
-        allVoices = window.speechSynthesis.getVoices();
-        chineseVoices = allVoices
-          .filter(isChineseVoice)
-          .sort((a,b) => voicePriority(b) - voicePriority(a));
-
-        if(chineseVoices.length > 0 && !selectedVoice){
-          selectedVoice = chineseVoices[0];
-        }
-
-        renderVoiceSelect();
-        updateVoiceDebug("voiceschanged event fired.");
-      };
+    async function loadCharacter(ch){
+      const status=document.getElementById("statusText");status.textContent="Loading character…";document.getElementById("writerTarget").innerHTML="";
+      try{
+        const response=await fetch(`https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/${encodeURIComponent(ch)}.json`,{cache:"no-store"});
+        if(!response.ok)throw new Error("Character data unavailable");
+        const charData=await response.json();
+        const size=Math.min(520,Math.max(280,document.getElementById("writerTarget").clientWidth||520));
+        writer=HanziWriter.create("writerTarget",ch,{width:size,height:size,padding:22,charData,showOutline:true,showCharacter:true,outlineColor:"#d1d5db",strokeColor:"#111827",highlightColor:"#8b5cf6"});
+        status.textContent="";
+        writer.quiz({showHintAfterMisses:2,highlightOnComplete:true,onComplete:()=>{score+=10;document.getElementById("scoreBox").textContent=`Score: ${score}`;celebrate();status.style.color="#15803d";status.textContent="太棒了！写对了！ 🎉";setTimeout(advanceCharacter,1150)}});
+      }catch(e){status.style.color="#b42318";status.textContent="Character could not load. Please check the internet connection."}
     }
-
-    renderChips();
+    function advanceCharacter(){
+      const chars=charsFrom(VOCAB[itemIndex].hanzi);statusText.textContent="";statusText.style.color="#b42318";
+      if(charIndex<chars.length-1)charIndex++;else{charIndex=0;itemIndex=(itemIndex+1)%VOCAB.length}updateUI();
+    }
+    function updateUI(){
+      const item=VOCAB[itemIndex],chars=charsFrom(item.hanzi);if(charIndex>=chars.length)charIndex=0;
+      wordBox.textContent=item.hanzi;pinyinBox.textContent=item.pinyin;englishBox.textContent=item.english;sentenceBox.textContent=item.sentence;charTitle.textContent=chars[charIndex];
+      document.getElementById("charIndex").textContent=`Character ${charIndex+1} / ${chars.length}`;itemIndexBox.textContent=`Item ${itemIndex+1} / ${VOCAB.length}`;scoreBox.textContent=`Score: ${score}`;
+      renderCharacters(chars);renderChips();loadCharacter(chars[charIndex]);
+    }
+    speakBtn.onclick=()=>speakChinese(VOCAB[itemIndex].hanzi);wordBox.onclick=()=>speakChinese(VOCAB[itemIndex].hanzi);sentenceBox.onclick=()=>speakChinese(VOCAB[itemIndex].speakSentence);charTitle.onclick=()=>speakChinese(charsFrom(VOCAB[itemIndex].hanzi)[charIndex]);
+    readCharBtn.onclick=()=>speakChinese(charsFrom(VOCAB[itemIndex].hanzi)[charIndex]);readWordBtn.onclick=()=>speakChinese(VOCAB[itemIndex].hanzi);readSentenceBtn.onclick=()=>speakChinese(VOCAB[itemIndex].speakSentence);
+    animateBtn.onclick=()=>writer&&writer.animateCharacter();nextBtn.onclick=()=>{itemIndex=(itemIndex+1)%VOCAB.length;charIndex=0;updateUI()};restartBtn.onclick=()=>{itemIndex=0;charIndex=0;score=0;updateUI()};
     updateUI();
-    loadVoicesWithRetry();
   </script>
 </body>
 </html>
