@@ -7,14 +7,8 @@
 
   <style>
     :root{
-      --sky:#7dd3fc;
-      --sky2:#bae6fd;
-      --grass:#57c45f;
-      --grass2:#2f9f47;
       --text:#17324d;
       --muted:#64748b;
-      --panel:rgba(255,255,255,.82);
-      --line:rgba(255,255,255,.7);
       --good:#16a34a;
       --bad:#ef4444;
       --gold:#facc15;
@@ -255,6 +249,7 @@
       display:flex;
       gap:10px;
       flex-wrap:wrap;
+      align-items:center;
     }
 
     button{
@@ -283,6 +278,37 @@
       color:#fff;
     }
 
+    .timerBox{
+      width:220px;
+      height:18px;
+      border-radius:999px;
+      background:rgba(255,255,255,.72);
+      border:1px solid rgba(255,255,255,.9);
+      overflow:hidden;
+      box-shadow:0 8px 18px rgba(15,23,42,.12);
+    }
+
+    .timerFill{
+      height:100%;
+      width:100%;
+      background:linear-gradient(90deg,#22c55e,#facc15,#ef4444);
+      border-radius:999px;
+      transform-origin:left center;
+    }
+
+    .timerFill.run{
+      animation:timerShrink 15s linear forwards;
+    }
+
+    @keyframes timerShrink{
+      from{
+        transform:scaleX(1);
+      }
+      to{
+        transform:scaleX(0);
+      }
+    }
+
     .balloonArea{
       position:absolute;
       left:0;
@@ -291,10 +317,39 @@
       bottom:215px;
       z-index:5;
       pointer-events:none;
+      overflow:hidden;
+    }
+
+    .balloonWrap{
+      position:absolute;
+      width:140px;
+      height:245px;
+      pointer-events:auto;
+      animation:riseUp var(--riseTime, 15s) linear forwards;
+    }
+
+    @keyframes riseUp{
+      0%{
+        transform:translateY(170px);
+        opacity:1;
+      }
+      88%{
+        opacity:1;
+      }
+      100%{
+        transform:translateY(-330px);
+        opacity:0;
+      }
+    }
+
+    .balloonWrap.freeze{
+      animation-play-state:paused;
     }
 
     .balloon{
       position:absolute;
+      left:6px;
+      top:0;
       width:128px;
       height:164px;
       border-radius:64px 64px 58px 58px;
@@ -306,12 +361,11 @@
       font-weight:950;
       text-shadow:0 2px 4px rgba(15,23,42,.2);
       cursor:pointer;
-      pointer-events:auto;
       box-shadow:
         inset -18px -20px 26px rgba(0,0,0,.12),
         inset 16px 18px 24px rgba(255,255,255,.28),
         0 18px 30px rgba(15,23,42,.22);
-      animation:floaty 3.8s ease-in-out infinite;
+      animation:sway 3.2s ease-in-out infinite;
       user-select:none;
       transform-origin:center bottom;
     }
@@ -407,20 +461,20 @@
       background:radial-gradient(circle at 32% 24%,#86efac 0%,#22c55e 42%,#15803d 100%);
     }
 
-    @keyframes floaty{
+    @keyframes sway{
       0%,100%{
-        transform:translateY(0) rotate(-1.5deg);
+        transform:translateX(0) rotate(-1.5deg);
       }
       50%{
-        transform:translateY(-18px) rotate(1.5deg);
+        transform:translateX(12px) rotate(1.8deg);
       }
     }
 
     .balloon.pop{
-      animation:pop .42s ease-out forwards;
+      animation:popBalloon .42s ease-out forwards;
     }
 
-    @keyframes pop{
+    @keyframes popBalloon{
       0%{
         transform:scale(1);
         opacity:1;
@@ -430,7 +484,7 @@
         opacity:.95;
       }
       100%{
-        transform:scale(.05);
+        transform:scale(.02);
         opacity:0;
       }
     }
@@ -454,6 +508,41 @@
       }
       80%{
         transform:translateX(9px);
+      }
+    }
+
+    .burst{
+      position:absolute;
+      left:70px;
+      top:76px;
+      width:0;
+      height:0;
+      pointer-events:none;
+      z-index:9;
+    }
+
+    .particle{
+      position:absolute;
+      left:0;
+      top:0;
+      font-size:22px;
+      opacity:0;
+      animation:particleFly .72s ease-out forwards;
+      transform:translate(0,0) scale(.6);
+      filter:drop-shadow(0 3px 5px rgba(15,23,42,.16));
+    }
+
+    @keyframes particleFly{
+      0%{
+        opacity:0;
+        transform:translate(0,0) scale(.5) rotate(0deg);
+      }
+      18%{
+        opacity:1;
+      }
+      100%{
+        opacity:0;
+        transform:translate(var(--x), var(--y)) scale(1.15) rotate(160deg);
       }
     }
 
@@ -552,6 +641,10 @@
       color:#ef4444;
     }
 
+    .feedback.warn .fbBig{
+      color:#d97706;
+    }
+
     .feedback .fbSub{
       margin-top:8px;
       color:#475569;
@@ -633,7 +726,11 @@
       }
 
       .balloonArea{
-        top:210px;
+        top:230px;
+      }
+
+      .balloonWrap{
+        width:112px;
       }
 
       .balloon{
@@ -691,6 +788,9 @@
       <button class="btn" id="englishBtn">English</button>
       <button class="btn" id="mixedBtn">Mixed</button>
       <button class="btn restart" id="restartBtn">Restart</button>
+      <div class="timerBox">
+        <div class="timerFill" id="timerFill"></div>
+      </div>
     </div>
 
     <div class="balloonArea" id="balloonArea"></div>
@@ -718,116 +818,28 @@
 
   <script>
     const VOCAB = [
-      {
-        zh:"部",
-        py:"bù",
-        en:"unit; department"
-      },
-      {
-        zh:"比",
-        py:"bǐ",
-        en:"than"
-      },
-      {
-        zh:"座",
-        py:"zuò",
-        en:"a measure word for buildings"
-      },
-      {
-        zh:"教",
-        py:"jiào",
-        en:"teach"
-      },
-      {
-        zh:"教学",
-        py:"jiào xué",
-        en:"teaching"
-      },
-      {
-        zh:"教室",
-        py:"jiào shì",
-        en:"classroom"
-      },
-      {
-        zh:"楼",
-        py:"lóu",
-        en:"building"
-      },
-      {
-        zh:"教学楼",
-        py:"jiào xué lóu",
-        en:"teaching building"
-      },
-      {
-        zh:"图",
-        py:"tú",
-        en:"picture"
-      },
-      {
-        zh:"馆",
-        py:"guǎn",
-        en:"a place for sports or cultural activities"
-      },
-      {
-        zh:"图书馆",
-        py:"tú shū guǎn",
-        en:"library"
-      },
-      {
-        zh:"体育馆",
-        py:"tǐ yù guǎn",
-        en:"gymnasium"
-      },
-      {
-        zh:"礼",
-        py:"lǐ",
-        en:"ceremony"
-      },
-      {
-        zh:"堂",
-        py:"táng",
-        en:"hall"
-      },
-      {
-        zh:"礼堂",
-        py:"lǐ táng",
-        en:"assembly hall"
-      },
-      {
-        zh:"操",
-        py:"cāo",
-        en:"exercise"
-      },
-      {
-        zh:"场",
-        py:"chǎng",
-        en:"a public place"
-      },
-      {
-        zh:"操场",
-        py:"cāo chǎng",
-        en:"sports ground"
-      },
-      {
-        zh:"篮球场",
-        py:"lán qiú chǎng",
-        en:"basketball court"
-      },
-      {
-        zh:"足球场",
-        py:"zú qiú chǎng",
-        en:"football pitch"
-      },
-      {
-        zh:"友好",
-        py:"yǒu hǎo",
-        en:"friendly"
-      },
-      {
-        zh:"学校设施",
-        py:"xué xiào shè shī",
-        en:"school facilities"
-      }
+      { zh:"部", py:"bù", en:"unit; department" },
+      { zh:"比", py:"bǐ", en:"than" },
+      { zh:"座", py:"zuò", en:"a measure word for buildings" },
+      { zh:"教", py:"jiào", en:"teach" },
+      { zh:"教学", py:"jiào xué", en:"teaching" },
+      { zh:"教室", py:"jiào shì", en:"classroom" },
+      { zh:"楼", py:"lóu", en:"building" },
+      { zh:"教学楼", py:"jiào xué lóu", en:"teaching building" },
+      { zh:"图", py:"tú", en:"picture" },
+      { zh:"馆", py:"guǎn", en:"a place for sports or cultural activities" },
+      { zh:"图书馆", py:"tú shū guǎn", en:"library" },
+      { zh:"体育馆", py:"tǐ yù guǎn", en:"gymnasium" },
+      { zh:"礼", py:"lǐ", en:"ceremony" },
+      { zh:"堂", py:"táng", en:"hall" },
+      { zh:"礼堂", py:"lǐ táng", en:"assembly hall" },
+      { zh:"操", py:"cāo", en:"exercise" },
+      { zh:"场", py:"chǎng", en:"a public place" },
+      { zh:"操场", py:"cāo chǎng", en:"sports ground" },
+      { zh:"篮球场", py:"lán qiú chǎng", en:"basketball court" },
+      { zh:"足球场", py:"zú qiú chǎng", en:"football pitch" },
+      { zh:"友好", py:"yǒu hǎo", en:"friendly" },
+      { zh:"学校设施", py:"xué xiào shè shī", en:"school facilities" }
     ];
 
     const COLORS = ["red","pink","yellow","blue","purple","orange","green"];
@@ -837,6 +849,10 @@
     let score = 0;
     let mode = "pinyin";
     let locked = false;
+    let currentPromptType = "pinyin";
+    let roundTimer = null;
+
+    const ROUND_TIME = 15000;
 
     const balloonArea = document.getElementById("balloonArea");
     const scoreNum = document.getElementById("scoreNum");
@@ -849,6 +865,7 @@
     const fbSub = document.getElementById("fbSub");
     const finalScreen = document.getElementById("finalScreen");
     const finalText = document.getElementById("finalText");
+    const timerFill = document.getElementById("timerFill");
 
     const pinyinBtn = document.getElementById("pinyinBtn");
     const englishBtn = document.getElementById("englishBtn");
@@ -863,6 +880,27 @@
         [a[i], a[j]] = [a[j], a[i]];
       }
       return a;
+    }
+
+    function clearRoundTimer(){
+      if(roundTimer){
+        clearTimeout(roundTimer);
+        roundTimer = null;
+      }
+    }
+
+    function startTimer(){
+      clearRoundTimer();
+
+      timerFill.classList.remove("run");
+      void timerFill.offsetWidth;
+      timerFill.classList.add("run");
+
+      roundTimer = setTimeout(()=>{
+        if(!locked){
+          balloonsFlyAway();
+        }
+      }, ROUND_TIME);
     }
 
     function startGame(){
@@ -883,7 +921,7 @@
 
     function renderRound(){
       locked = false;
-      feedback.classList.remove("show","good","bad");
+      feedback.classList.remove("show","good","bad","warn");
 
       if(currentIndex >= order.length){
         showFinal();
@@ -891,9 +929,9 @@
       }
 
       const target = VOCAB[order[currentIndex]];
-      const promptType = getPromptType();
+      currentPromptType = getPromptType();
 
-      if(promptType === "pinyin"){
+      if(currentPromptType === "pinyin"){
         promptMain.textContent = target.py;
         promptSub.textContent = "Find the Chinese word for this pinyin.";
         modeNum.textContent = mode === "mixed" ? "Mixed" : "Pinyin";
@@ -907,6 +945,7 @@
       progressNum.textContent = `${currentIndex + 1}/${order.length}`;
 
       renderBalloons(target);
+      startTimer();
     }
 
     function renderBalloons(target){
@@ -917,33 +956,39 @@
       const options = shuffle([target, ...wrongs]);
 
       const positions = [
-        {left:7, top:30, scale:1.05},
-        {left:22, top:13, scale:1},
-        {left:39, top:27, scale:.86},
-        {left:53, top:11, scale:.98},
-        {left:68, top:29, scale:.88},
-        {left:82, top:10, scale:1.12}
+        {left:7, top:40, scale:1.05, rise:15.5},
+        {left:22, top:26, scale:1, rise:16.5},
+        {left:39, top:42, scale:.86, rise:14.5},
+        {left:53, top:25, scale:.98, rise:15.8},
+        {left:68, top:40, scale:.88, rise:14.8},
+        {left:82, top:24, scale:1.12, rise:16.2}
       ];
 
       options.forEach((item, index)=>{
         const pos = positions[index];
-        const balloon = document.createElement("div");
 
+        const wrap = document.createElement("div");
+        wrap.className = "balloonWrap";
+        wrap.style.left = pos.left + "%";
+        wrap.style.top = pos.top + "%";
+        wrap.style.setProperty("--riseTime", pos.rise + "s");
+
+        const balloon = document.createElement("div");
         const color = COLORS[index % COLORS.length];
         const len = item.zh.length;
 
         balloon.className = `balloon ${color}`;
+
         if(len >= 3){
           balloon.classList.add("small");
         }
+
         if(len >= 4){
           balloon.classList.add("tiny");
         }
 
-        balloon.style.left = pos.left + "%";
-        balloon.style.top = pos.top + "%";
         balloon.style.transform = `scale(${pos.scale})`;
-        balloon.style.animationDelay = (index * .23) + "s";
+        balloon.style.animationDelay = (index * .2) + "s";
 
         balloon.innerHTML = `
           <div class="string"></div>
@@ -951,27 +996,64 @@
         `;
 
         balloon.onclick = ()=>{
-          handleChoice(item, target, balloon);
+          handleChoice(item, target, balloon, wrap);
         };
 
-        balloonArea.appendChild(balloon);
+        wrap.appendChild(balloon);
+        balloonArea.appendChild(wrap);
       });
     }
 
-    function handleChoice(item, target, balloon){
+    function createBurst(wrap){
+      const burst = document.createElement("div");
+      burst.className = "burst";
+
+      const pieces = ["💥","✨","🫧","⭐","💫","🫧","✨","💥"];
+      const angles = [
+        [-60,-54],
+        [-26,-72],
+        [16,-66],
+        [58,-46],
+        [-72,4],
+        [70,8],
+        [-36,54],
+        [38,58]
+      ];
+
+      pieces.forEach((p, i)=>{
+        const span = document.createElement("span");
+        span.className = "particle";
+        span.textContent = p;
+        span.style.setProperty("--x", angles[i][0] + "px");
+        span.style.setProperty("--y", angles[i][1] + "px");
+        span.style.animationDelay = (i * .025) + "s";
+        burst.appendChild(span);
+      });
+
+      wrap.appendChild(burst);
+    }
+
+    function handleChoice(item, target, balloon, wrap){
       if(locked) return;
 
       if(item.zh === target.zh){
         locked = true;
-        score += 10;
+        clearRoundTimer();
+        timerFill.classList.remove("run");
 
+        score += 10;
+        scoreNum.textContent = score;
+
+        wrap.classList.add("freeze");
+        createBurst(wrap);
         balloon.classList.add("pop");
+
         showFeedback(true, target);
 
         setTimeout(()=>{
           currentIndex += 1;
           renderRound();
-        }, 900);
+        }, 1050);
       }else{
         balloon.classList.add("wrong");
         showFeedback(false, target);
@@ -979,16 +1061,34 @@
         setTimeout(()=>{
           balloon.classList.remove("wrong");
           feedback.classList.remove("show","bad");
-        }, 680);
+        }, 720);
       }
     }
 
+    function balloonsFlyAway(){
+      locked = true;
+      clearRoundTimer();
+      timerFill.classList.remove("run");
+
+      showFlyAwayFeedback();
+
+      document.querySelectorAll(".balloonWrap").forEach((wrap, i)=>{
+        wrap.style.transition = "transform .9s ease-in, opacity .9s ease-in";
+        wrap.style.transform = `translateY(-420px) translateX(${i % 2 === 0 ? -30 : 30}px)`;
+        wrap.style.opacity = "0";
+      });
+
+      setTimeout(()=>{
+        renderRound();
+      }, 1050);
+    }
+
     function showFeedback(correct, target){
-      feedback.classList.remove("good","bad");
+      feedback.classList.remove("good","bad","warn");
 
       if(correct){
         feedback.classList.add("show","good");
-        fbBig.textContent = "✅ Correct!";
+        fbBig.textContent = "💥 Pop! Correct!";
         fbSub.textContent = `${target.zh} · ${target.py} · ${target.en}`;
       }else{
         feedback.classList.add("show","bad");
@@ -997,9 +1097,20 @@
       }
     }
 
+    function showFlyAwayFeedback(){
+      feedback.classList.remove("good","bad","warn");
+      feedback.classList.add("show","warn");
+      fbBig.textContent = "🎈 Flew away!";
+      fbSub.textContent = "Too slow! Try this one again.";
+    }
+
     function showFinal(){
+      clearRoundTimer();
+      timerFill.classList.remove("run");
+
       finalText.textContent =
         `You scored ${score} points. You finished ${order.length} school facilities words.`;
+
       finalScreen.classList.add("show");
     }
 
