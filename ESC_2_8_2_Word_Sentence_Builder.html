@@ -1,0 +1,1365 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ESC_2_8_2_Word_Sentence_Builder</title>
+
+  <style>
+    :root{
+      --bg1:#eef7ff;
+      --bg2:#f8fbff;
+      --ink:#172033;
+      --muted:#64748b;
+      --blue:#2563eb;
+      --purple:#7c3aed;
+      --green:#16a34a;
+      --orange:#f59e0b;
+      --red:#ef4444;
+      --cyan:#06b6d4;
+      --line:#dbeafe;
+      --shadow:0 18px 42px rgba(15,23,42,.13);
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        "Noto Sans SC",
+        sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 8% 0%, #dff7ff 0%, transparent 34%),
+        radial-gradient(circle at 92% 12%, #ede9fe 0%, transparent 30%),
+        linear-gradient(180deg,var(--bg1),var(--bg2));
+    }
+
+    .wrap{
+      max-width:1280px;
+      margin:0 auto;
+      padding:18px 16px 28px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .titleBox{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .logo{
+      width:64px;
+      height:64px;
+      border-radius:22px;
+      background:linear-gradient(135deg,#22d3ee,#2563eb,#7c3aed);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-size:34px;
+      box-shadow:var(--shadow);
+    }
+
+    h1{
+      margin:0;
+      font-size:32px;
+      line-height:1.05;
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+
+    .subtitle{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:15px;
+      font-weight:850;
+    }
+
+    button{
+      border:0;
+      border-radius:16px;
+      padding:12px 16px;
+      font-weight:950;
+      cursor:pointer;
+      font-size:15px;
+      box-shadow:0 8px 18px rgba(15,23,42,.10);
+      background:#fff;
+      color:var(--ink);
+    }
+
+    button:hover{
+      filter:brightness(.985);
+      transform:translateY(-1px);
+    }
+
+    button:active{
+      transform:translateY(1px) scale(.99);
+    }
+
+    .primary{
+      background:linear-gradient(90deg,#2563eb,#7c3aed);
+      color:white;
+    }
+
+    .green{
+      background:linear-gradient(90deg,#22c55e,#16a34a);
+      color:white;
+    }
+
+    .orange{
+      background:linear-gradient(90deg,#fbbf24,#f59e0b);
+      color:#422006;
+    }
+
+    .red{
+      background:linear-gradient(90deg,#fb7185,#ef4444);
+      color:white;
+    }
+
+    .tabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .tabBtn{
+      border:2px solid #bfdbfe;
+      background:white;
+      color:#1e40af;
+      box-shadow:none;
+      min-width:210px;
+    }
+
+    .tabBtn.active{
+      background:#2563eb;
+      color:white;
+      border-color:#2563eb;
+      box-shadow:0 10px 22px rgba(37,99,235,.22);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:minmax(620px,1.35fr) minmax(330px,.75fr);
+      gap:18px;
+      align-items:start;
+    }
+
+    .panel{
+      background:rgba(255,255,255,.86);
+      border:1px solid rgba(255,255,255,.95);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(8px);
+      overflow:hidden;
+    }
+
+    .gamePanel{
+      padding:18px;
+    }
+
+    .sidePanel{
+      padding:18px;
+    }
+
+    .modeBar{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .modeTabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .modeBtn{
+      padding:10px 12px;
+      border:1px solid #e2e8f0;
+      background:#fff;
+      color:#334155;
+      box-shadow:none;
+      border-radius:14px;
+      font-size:14px;
+    }
+
+    .modeBtn.active{
+      background:#2563eb;
+      color:white;
+      border-color:#2563eb;
+    }
+
+    .stats{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .stat{
+      background:#fff;
+      border:1px solid #e2e8f0;
+      border-radius:18px;
+      padding:10px 14px;
+      min-width:108px;
+      text-align:center;
+      box-shadow:0 6px 14px rgba(15,23,42,.06);
+    }
+
+    .stat .num{
+      font-size:24px;
+      font-weight:950;
+      line-height:1;
+      color:#0f172a;
+    }
+
+    .stat .lab{
+      margin-top:4px;
+      font-size:11px;
+      color:#64748b;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+    }
+
+    .promptCard{
+      background:linear-gradient(180deg,#ffffff,#f8fafc);
+      border:1px solid #e2e8f0;
+      border-radius:24px;
+      padding:18px;
+      box-shadow:0 10px 22px rgba(15,23,42,.08);
+      margin-bottom:16px;
+    }
+
+    .promptLabel{
+      color:#64748b;
+      font-size:13px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-bottom:8px;
+    }
+
+    .promptMain{
+      min-height:82px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      background:#eff6ff;
+      border:1px solid #bfdbfe;
+      border-radius:20px;
+      padding:14px;
+      font-size:34px;
+      font-weight:950;
+      color:#1e3a8a;
+      line-height:1.15;
+      word-break:break-word;
+    }
+
+    .promptMain.english{
+      font-size:26px;
+    }
+
+    .promptSub{
+      margin-top:10px;
+      min-height:30px;
+      color:#475569;
+      font-weight:850;
+      line-height:1.45;
+      text-align:center;
+    }
+
+    .answerBox{
+      margin-top:12px;
+      display:none;
+      background:#ecfdf5;
+      border:1px solid #bbf7d0;
+      border-radius:18px;
+      padding:12px;
+      text-align:center;
+    }
+
+    .answerBox.show{
+      display:block;
+    }
+
+    .answerZh{
+      font-size:30px;
+      font-weight:950;
+      color:#14532d;
+      line-height:1.15;
+    }
+
+    .answerPy{
+      margin-top:4px;
+      font-size:15px;
+      font-weight:900;
+      color:#166534;
+    }
+
+    .answerEn{
+      margin-top:4px;
+      font-size:14px;
+      font-weight:850;
+      color:#475569;
+      line-height:1.35;
+    }
+
+    .sectionTitle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+      flex-wrap:wrap;
+    }
+
+    .sectionTitle h2{
+      margin:0;
+      font-size:22px;
+      font-weight:950;
+      color:#0f172a;
+    }
+
+    .hint{
+      color:#64748b;
+      font-size:13px;
+      font-weight:850;
+    }
+
+    .choiceArea{
+      background:#f8fafc;
+      border:2px dashed #cbd5e1;
+      border-radius:24px;
+      padding:16px;
+      min-height:155px;
+      display:flex;
+      flex-wrap:wrap;
+      align-content:flex-start;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .tile{
+      border:2px solid #bfdbfe;
+      background:white;
+      color:#172033;
+      border-radius:16px;
+      padding:12px 15px;
+      font-size:26px;
+      font-weight:950;
+      min-width:54px;
+      min-height:54px;
+      box-shadow:0 8px 16px rgba(15,23,42,.08);
+    }
+
+    .tile.wordTile{
+      font-size:20px;
+      padding:11px 14px;
+      min-height:50px;
+    }
+
+    .tile.used{
+      opacity:.32;
+      pointer-events:none;
+      transform:scale(.98);
+    }
+
+    .buildArea{
+      background:#ffffff;
+      border:2px solid #bfdbfe;
+      border-radius:24px;
+      padding:16px;
+      min-height:112px;
+      display:flex;
+      flex-wrap:wrap;
+      align-content:center;
+      justify-content:center;
+      gap:10px;
+      margin-bottom:14px;
+      box-shadow:inset 0 2px 14px rgba(15,23,42,.04);
+    }
+
+    .slotTile{
+      background:linear-gradient(180deg,#e0f2fe,#bfdbfe);
+      color:#0f172a;
+      border:2px solid #60a5fa;
+      border-radius:16px;
+      padding:12px 15px;
+      font-size:28px;
+      font-weight:950;
+      min-width:54px;
+      min-height:54px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .slotTile.wordSlot{
+      font-size:21px;
+      padding:11px 14px;
+      min-height:50px;
+    }
+
+    .emptyText{
+      color:#94a3b8;
+      font-weight:900;
+      font-size:18px;
+      align-self:center;
+    }
+
+    .actionRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      margin-top:8px;
+    }
+
+    .feedback{
+      margin-top:12px;
+      min-height:42px;
+      border-radius:18px;
+      padding:11px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-size:17px;
+      font-weight:950;
+      line-height:1.35;
+      background:#f1f5f9;
+      color:#475569;
+    }
+
+    .feedback.good{
+      background:#dcfce7;
+      color:#14532d;
+      border:1px solid #bbf7d0;
+    }
+
+    .feedback.bad{
+      background:#fee2e2;
+      color:#991b1b;
+      border:1px solid #fecaca;
+      animation:shake .36s ease-in-out;
+    }
+
+    @keyframes shake{
+      0%,100%{transform:translateX(0);}
+      25%{transform:translateX(-7px);}
+      50%{transform:translateX(7px);}
+      75%{transform:translateX(-4px);}
+    }
+
+    .sideBtns{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .sideBtns button{
+      padding:11px 10px;
+      font-size:14px;
+      border-radius:15px;
+    }
+
+    .fullBtn{
+      grid-column:1 / -1;
+    }
+
+    .listBox{
+      margin-top:16px;
+      background:#fff;
+      border:1px solid #e2e8f0;
+      border-radius:22px;
+      padding:14px;
+    }
+
+    .listTitle{
+      color:#64748b;
+      font-size:13px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+      margin-bottom:8px;
+    }
+
+    .doneList{
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+      max-height:150px;
+      overflow:auto;
+    }
+
+    .doneChip{
+      background:#eef2ff;
+      color:#3730a3;
+      border:1px solid #c7d2fe;
+      border-radius:999px;
+      padding:6px 9px;
+      font-weight:900;
+      font-size:13px;
+    }
+
+    .instructions{
+      margin-top:16px;
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      color:#9a3412;
+      border-radius:22px;
+      padding:14px;
+      font-size:14px;
+      font-weight:800;
+      line-height:1.55;
+    }
+
+    .winOverlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(15,23,42,.46);
+      backdrop-filter:blur(5px);
+      z-index:50;
+      padding:20px;
+    }
+
+    .winOverlay.show{
+      display:flex;
+    }
+
+    .winCard{
+      width:min(520px,92vw);
+      background:white;
+      border-radius:32px;
+      padding:30px;
+      text-align:center;
+      box-shadow:0 26px 70px rgba(15,23,42,.35);
+      border:5px solid #fbbf24;
+    }
+
+    .winEmoji{
+      font-size:64px;
+      animation:bounce 1s ease-in-out infinite;
+    }
+
+    @keyframes bounce{
+      0%,100%{transform:translateY(0);}
+      50%{transform:translateY(-10px);}
+    }
+
+    .winCard h2{
+      margin:10px 0 6px;
+      font-size:40px;
+      color:#111827;
+    }
+
+    .winCard p{
+      margin:8px 0 0;
+      color:#475569;
+      font-size:17px;
+      font-weight:800;
+      line-height:1.5;
+    }
+
+    .winBtns{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:20px;
+    }
+
+    canvas{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      width:100%;
+      height:100%;
+      z-index:60;
+    }
+
+    @media (max-width:1050px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+
+      .sidePanel{
+        order:-1;
+      }
+    }
+
+    @media (max-width:720px){
+      .wrap{
+        padding:12px 8px 22px;
+      }
+
+      h1{
+        font-size:24px;
+      }
+
+      .logo{
+        width:52px;
+        height:52px;
+        font-size:28px;
+      }
+
+      .tabBtn{
+        min-width:100%;
+      }
+
+      .promptMain{
+        font-size:26px;
+        min-height:68px;
+      }
+
+      .promptMain.english{
+        font-size:21px;
+      }
+
+      .tile{
+        font-size:22px;
+        min-width:48px;
+        min-height:48px;
+      }
+
+      .tile.wordTile{
+        font-size:18px;
+      }
+
+      .slotTile{
+        font-size:24px;
+      }
+
+      .slotTile.wordSlot{
+        font-size:18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="wrap">
+    <div class="topbar">
+      <div class="titleBox">
+        <div class="logo">📚</div>
+        <div>
+          <h1>ESC_2_8_2_Word_Sentence_Builder</h1>
+          <div class="subtitle">School Subjects 科目｜Word Builder + Sentence Builder</div>
+        </div>
+      </div>
+
+      <button class="primary" id="restartBtn">Restart</button>
+    </div>
+
+    <div class="tabs">
+      <button class="tabBtn active" id="wordTab">Part 1 · Word Builder</button>
+      <button class="tabBtn" id="sentenceTab">Part 2 · Sentence Builder</button>
+    </div>
+
+    <div class="layout">
+      <section class="panel gamePanel">
+        <div class="modeBar">
+          <div class="modeTabs">
+            <button class="modeBtn active" data-mode="easy">Easy</button>
+            <button class="modeBtn" data-mode="medium">Medium</button>
+            <button class="modeBtn" data-mode="hard">Hard</button>
+            <button class="modeBtn" data-mode="mixed">Mixed</button>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="num" id="scoreNum">0</div>
+              <div class="lab">Score</div>
+            </div>
+            <div class="stat">
+              <div class="num" id="progressNum">1/10</div>
+              <div class="lab">Progress</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sectionTitle">
+          <h2 id="gameTitle">Build the Word</h2>
+          <div class="hint" id="gameHint">Tap characters to build the target word.</div>
+        </div>
+
+        <div class="choiceArea" id="choiceArea"></div>
+
+        <div class="sectionTitle">
+          <h2 id="buildTitle">Your Answer</h2>
+          <div class="hint">Tap selected tiles to remove them.</div>
+        </div>
+
+        <div class="buildArea" id="buildArea">
+          <div class="emptyText">Your answer will appear here.</div>
+        </div>
+
+        <div class="actionRow">
+          <button class="green" id="checkBtn">Check</button>
+          <button id="clearBtn">Clear</button>
+          <button id="undoBtn">Undo</button>
+          <button class="primary" id="nextBtn">Next</button>
+        </div>
+
+        <div class="feedback" id="feedback">Choose the tiles in the correct order.</div>
+      </section>
+
+      <aside class="panel sidePanel">
+        <div class="promptCard">
+          <div class="promptLabel">Prompt</div>
+          <div class="promptMain english" id="promptMain">chemistry</div>
+          <div class="promptSub" id="promptSub">Easy: English + pinyin.</div>
+
+          <div class="answerBox" id="answerBox">
+            <div class="answerZh" id="answerZh">化学</div>
+            <div class="answerPy" id="answerPy">huà xué</div>
+            <div class="answerEn" id="answerEn">chemistry</div>
+          </div>
+
+          <div class="sideBtns">
+            <button id="showPinyinBtn">Show Pinyin</button>
+            <button id="showAnswerBtn">Show Answer</button>
+            <button class="green" id="readBtn">🔊 Read Chinese</button>
+            <button class="orange" id="shuffleBtn">Shuffle</button>
+            <button class="primary fullBtn" id="nextPromptBtn">Next Task</button>
+          </div>
+        </div>
+
+        <div class="listBox">
+          <div class="listTitle">Completed</div>
+          <div class="doneList" id="doneList"></div>
+        </div>
+
+        <div class="instructions" id="instructions">
+          <strong>How to Play:</strong><br>
+          Part 1: Tap Chinese characters to build a word.<br>
+          Part 2: Tap word tiles to organize a sentence.<br>
+          Use Easy / Medium / Hard to change the prompt.
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="winOverlay" id="winOverlay">
+    <div class="winCard">
+      <div class="winEmoji">🎉</div>
+      <h2>Great Job!</h2>
+      <p id="winText">You completed this part.</p>
+      <div class="winBtns">
+        <button class="green" id="keepBtn">Keep Playing</button>
+        <button class="primary" id="restartWinBtn">Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const WORD_TASKS = [
+      {
+        zh:"英文",
+        py:"yīng wén",
+        en:"English",
+        chars:["英","文"],
+        distractors:["化","物","生","戏","政","科"]
+      },
+      {
+        zh:"化学",
+        py:"huà xué",
+        en:"chemistry",
+        chars:["化","学"],
+        distractors:["物","理","生","剧","政","英"]
+      },
+      {
+        zh:"物理",
+        py:"wù lǐ",
+        en:"physics",
+        chars:["物","理"],
+        distractors:["化","学","生","戏","剧","科"]
+      },
+      {
+        zh:"生物",
+        py:"shēng wù",
+        en:"biology",
+        chars:["生","物"],
+        distractors:["化","理","戏","剧","政","目"]
+      },
+      {
+        zh:"戏剧",
+        py:"xì jù",
+        en:"drama",
+        chars:["戏","剧"],
+        distractors:["化","物","理","生","政","科"]
+      },
+      {
+        zh:"家政",
+        py:"jiā zhèng",
+        en:"home economics",
+        chars:["家","政"],
+        distractors:["化","学","物","理","戏","剧"]
+      },
+      {
+        zh:"科目",
+        py:"kē mù",
+        en:"subject of study",
+        chars:["科","目"],
+        distractors:["开","始","节","业","吧","是"]
+      },
+      {
+        zh:"开始",
+        py:"kāi shǐ",
+        en:"start",
+        chars:["开","始"],
+        distractors:["科","目","节","业","吧","的"]
+      },
+      {
+        zh:"作业",
+        py:"zuò yè",
+        en:"homework",
+        chars:["作","业"],
+        distractors:["开","始","节","吧","是","的"]
+      },
+      {
+        zh:"是的",
+        py:"shì de",
+        en:"yes; right",
+        chars:["是","的"],
+        distractors:["作","业","吧","开","始","节"]
+      },
+      {
+        zh:"差不多",
+        py:"chà bu duō",
+        en:"almost",
+        chars:["差","不","多"],
+        distractors:["是","的","吧","作","业","节"]
+      }
+    ];
+
+    const SENTENCE_TASKS = [
+      {
+        zh:"我今年学九门课，有英文、汉语、化学、物理、生物、戏剧、家政等。",
+        py:"wǒ jīn nián xué jiǔ mén kè, yǒu yīng wén, hàn yǔ, huà xué, wù lǐ, shēng wù, xì jù, jiā zhèng děng.",
+        en:"This year I study nine classes, including English, Chinese, chemistry, physics, biology, drama, home economics, and so on.",
+        tokens:["我","今年","学","九门课","，","有","英文","、","汉语","、","化学","、","物理","、","生物","、","戏剧","、","家政","等","。"]
+      },
+      {
+        zh:"你喜欢学什么科目？",
+        py:"nǐ xǐ huan xué shén me kē mù?",
+        en:"What subjects do you like to study?",
+        tokens:["你","喜欢","学","什么","科目","？"]
+      },
+      {
+        zh:"你们早上几点开始上课？",
+        py:"nǐ men zǎo shang jǐ diǎn kāi shǐ shàng kè?",
+        en:"What time do you start class in the morning?",
+        tokens:["你们","早上","几点","开始","上课","？"]
+      },
+      {
+        zh:"你们每天上几节课？",
+        py:"nǐ men měi tiān shàng jǐ jié kè?",
+        en:"How many class periods do you have every day?",
+        tokens:["你们","每天","上","几节课","？"]
+      },
+      {
+        zh:"你们每天都有作业吧？",
+        py:"nǐ men měi tiān dōu yǒu zuò yè ba?",
+        en:"You have homework every day, right?",
+        tokens:["你们","每天","都","有","作业","吧","？"]
+      },
+      {
+        zh:"是的，我们差不多每天都有作业。",
+        py:"shì de, wǒ men chà bu duō měi tiān dōu yǒu zuò yè.",
+        en:"Yes, we have homework almost every day.",
+        tokens:["是的","，","我们","差不多","每天","都","有","作业","。"]
+      },
+      {
+        zh:"我喜欢学语言，所以我喜欢上中文课和英语课。",
+        py:"wǒ xǐ huan xué yǔ yán, suǒ yǐ wǒ xǐ huan shàng zhōng wén kè hé yīng yǔ kè.",
+        en:"I like studying languages, so I like taking Chinese class and English class.",
+        tokens:["我","喜欢","学","语言","，","所以","我","喜欢","上","中文课","和","英语课","。"]
+      },
+      {
+        zh:"我不喜欢上美术课，因为我不喜欢画画儿。",
+        py:"wǒ bù xǐ huan shàng měi shù kè, yīn wèi wǒ bù xǐ huan huà huàr.",
+        en:"I do not like taking art class because I do not like drawing.",
+        tokens:["我","不喜欢","上","美术课","，","因为","我","不喜欢","画画儿","。"]
+      }
+    ];
+
+    let currentPart = "word";
+    let mode = "easy";
+    let taskOrder = [];
+    let currentIndex = 0;
+    let selected = [];
+    let score = 0;
+    let completed = [];
+    let currentPromptMode = "easy";
+
+    const wordTab = document.getElementById("wordTab");
+    const sentenceTab = document.getElementById("sentenceTab");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const scoreNum = document.getElementById("scoreNum");
+    const progressNum = document.getElementById("progressNum");
+
+    const gameTitle = document.getElementById("gameTitle");
+    const gameHint = document.getElementById("gameHint");
+    const choiceArea = document.getElementById("choiceArea");
+    const buildArea = document.getElementById("buildArea");
+    const buildTitle = document.getElementById("buildTitle");
+    const feedback = document.getElementById("feedback");
+
+    const promptMain = document.getElementById("promptMain");
+    const promptSub = document.getElementById("promptSub");
+    const answerBox = document.getElementById("answerBox");
+    const answerZh = document.getElementById("answerZh");
+    const answerPy = document.getElementById("answerPy");
+    const answerEn = document.getElementById("answerEn");
+    const doneList = document.getElementById("doneList");
+
+    const showPinyinBtn = document.getElementById("showPinyinBtn");
+    const showAnswerBtn = document.getElementById("showAnswerBtn");
+    const readBtn = document.getElementById("readBtn");
+    const shuffleBtn = document.getElementById("shuffleBtn");
+    const nextPromptBtn = document.getElementById("nextPromptBtn");
+
+    const checkBtn = document.getElementById("checkBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const undoBtn = document.getElementById("undoBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    const winOverlay = document.getElementById("winOverlay");
+    const winText = document.getElementById("winText");
+    const keepBtn = document.getElementById("keepBtn");
+    const restartWinBtn = document.getElementById("restartWinBtn");
+
+    function shuffle(arr){
+      const a = [...arr];
+      for(let i=a.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [a[i],a[j]] = [a[j],a[i]];
+      }
+      return a;
+    }
+
+    function tasks(){
+      return currentPart === "word" ? WORD_TASKS : SENTENCE_TASKS;
+    }
+
+    function currentTask(){
+      return tasks()[taskOrder[currentIndex]];
+    }
+
+    function startPart(part){
+      currentPart = part;
+      wordTab.classList.toggle("active", part === "word");
+      sentenceTab.classList.toggle("active", part === "sentence");
+      restartGame();
+    }
+
+    function restartGame(){
+      taskOrder = shuffle(tasks().map((_,i)=>i));
+      currentIndex = 0;
+      selected = [];
+      score = 0;
+      completed = [];
+      winOverlay.classList.remove("show");
+      renderTask();
+    }
+
+    function getPromptMode(){
+      if(mode === "mixed"){
+        const modes = ["easy","medium","hard"];
+        return modes[Math.floor(Math.random()*modes.length)];
+      }
+      return mode;
+    }
+
+    function renderTask(){
+      const task = currentTask();
+      selected = [];
+      currentPromptMode = getPromptMode();
+      answerBox.classList.remove("show");
+      feedback.className = "feedback";
+      feedback.textContent = "Choose the tiles in the correct order.";
+
+      scoreNum.textContent = score;
+      progressNum.textContent = `${currentIndex + 1}/${tasks().length}`;
+
+      answerZh.textContent = task.zh;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+
+      if(currentPart === "word"){
+        gameTitle.textContent = "Build the Word";
+        gameHint.textContent = "Tap characters to build the target word.";
+        buildTitle.textContent = "Your Word";
+        renderWordChoices(task);
+      }else{
+        gameTitle.textContent = "Build the Sentence";
+        gameHint.textContent = "Tap word tiles to organize the sentence.";
+        buildTitle.textContent = "Your Sentence";
+        renderSentenceChoices(task);
+      }
+
+      renderPrompt(task);
+      renderBuildArea();
+      renderDoneList();
+    }
+
+    function renderPrompt(task){
+      promptMain.classList.remove("english");
+
+      if(currentPromptMode === "easy"){
+        promptMain.innerHTML = `${task.en}<br><span style="font-size:21px;color:#475569;">${task.py}</span>`;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Easy: English + pinyin.";
+      }else if(currentPromptMode === "medium"){
+        promptMain.textContent = task.py;
+        promptSub.textContent = "Medium: pinyin only.";
+      }else{
+        promptMain.textContent = task.en;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Hard: English only.";
+      }
+    }
+
+    function renderWordChoices(task){
+      choiceArea.innerHTML = "";
+
+      const allChars = shuffle([...task.chars, ...task.distractors]);
+
+      allChars.forEach((ch, index)=>{
+        const btn = document.createElement("button");
+        btn.className = "tile";
+        btn.textContent = ch;
+        btn.dataset.value = ch;
+        btn.dataset.index = index;
+
+        btn.onclick = ()=>{
+          if(btn.classList.contains("used")) return;
+          selected.push({
+            value: ch,
+            button: btn
+          });
+          btn.classList.add("used");
+          renderBuildArea();
+        };
+
+        choiceArea.appendChild(btn);
+      });
+    }
+
+    function renderSentenceChoices(task){
+      choiceArea.innerHTML = "";
+
+      const shuffledTokens = shuffle(task.tokens.map((tok, index)=>({
+        value: tok,
+        originalIndex: index
+      })));
+
+      shuffledTokens.forEach((obj, index)=>{
+        const btn = document.createElement("button");
+        btn.className = "tile wordTile";
+        btn.textContent = obj.value;
+        btn.dataset.value = obj.value;
+        btn.dataset.index = index;
+
+        btn.onclick = ()=>{
+          if(btn.classList.contains("used")) return;
+          selected.push({
+            value: obj.value,
+            button: btn
+          });
+          btn.classList.add("used");
+          renderBuildArea();
+        };
+
+        choiceArea.appendChild(btn);
+      });
+    }
+
+    function renderBuildArea(){
+      buildArea.innerHTML = "";
+
+      if(selected.length === 0){
+        const empty = document.createElement("div");
+        empty.className = "emptyText";
+        empty.textContent = currentPart === "word"
+          ? "Tap characters to build the word."
+          : "Tap word tiles to build the sentence.";
+        buildArea.appendChild(empty);
+        return;
+      }
+
+      selected.forEach((item, index)=>{
+        const slot = document.createElement("button");
+        slot.className = currentPart === "word" ? "slotTile" : "slotTile wordSlot";
+        slot.textContent = item.value;
+
+        slot.onclick = ()=>{
+          removeSelected(index);
+        };
+
+        buildArea.appendChild(slot);
+      });
+    }
+
+    function removeSelected(index){
+      const item = selected[index];
+      if(item && item.button){
+        item.button.classList.remove("used");
+      }
+      selected.splice(index,1);
+      renderBuildArea();
+    }
+
+    function clearAnswer(){
+      selected.forEach(item=>{
+        if(item.button){
+          item.button.classList.remove("used");
+        }
+      });
+      selected = [];
+      renderBuildArea();
+      feedback.className = "feedback";
+      feedback.textContent = "Cleared. Try again.";
+    }
+
+    function undo(){
+      if(selected.length === 0) return;
+      removeSelected(selected.length - 1);
+    }
+
+    function checkAnswer(){
+      const task = currentTask();
+      const answer = selected.map(x=>x.value).join("");
+      const correct = task.zh.replace(/\s/g,"");
+
+      if(answer === correct){
+        score += 10;
+        completed.push(task);
+        scoreNum.textContent = score;
+
+        feedback.className = "feedback good";
+        feedback.textContent = `✅ Correct! ${task.zh} · ${task.py} · ${task.en}`;
+
+        renderDoneList();
+        speakChinese(task.zh);
+
+        setTimeout(()=>{
+          nextTask();
+        }, 850);
+      }else{
+        feedback.className = "feedback bad";
+        feedback.textContent = "❌ Not yet. Check the order and try again.";
+      }
+    }
+
+    function nextTask(){
+      if(currentIndex < tasks().length - 1){
+        currentIndex++;
+        renderTask();
+      }else{
+        showWin();
+      }
+    }
+
+    function showPinyin(){
+      const task = currentTask();
+      answerBox.classList.add("show");
+      answerZh.textContent = "???";
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+    }
+
+    function showAnswer(){
+      const task = currentTask();
+      answerBox.classList.add("show");
+      answerZh.textContent = task.zh;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+    }
+
+    function renderDoneList(){
+      doneList.innerHTML = "";
+
+      completed.slice().reverse().forEach(item=>{
+        const chip = document.createElement("div");
+        chip.className = "doneChip";
+        chip.textContent = item.zh;
+        doneList.appendChild(chip);
+      });
+    }
+
+    function shuffleCurrentChoices(){
+      const task = currentTask();
+
+      selected = [];
+
+      if(currentPart === "word"){
+        renderWordChoices(task);
+      }else{
+        renderSentenceChoices(task);
+      }
+
+      renderBuildArea();
+    }
+
+    function speakChinese(text){
+      if(!("speechSynthesis" in window)) return;
+
+      window.speechSynthesis.cancel();
+
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "zh-CN";
+      utter.rate = 0.82;
+      utter.pitch = 1;
+
+      window.speechSynthesis.speak(utter);
+    }
+
+    function readCurrent(){
+      speakChinese(currentTask().zh);
+    }
+
+    function showWin(){
+      const label = currentPart === "word" ? "Word Builder" : "Sentence Builder";
+      winText.textContent = `You completed ${label}. Score: ${score}`;
+      winOverlay.classList.add("show");
+      triggerConfetti();
+    }
+
+    function setMode(newMode){
+      mode = newMode;
+
+      document.querySelectorAll(".modeBtn").forEach(btn=>{
+        btn.classList.toggle("active", btn.dataset.mode === mode);
+      });
+
+      renderTask();
+    }
+
+    wordTab.onclick = ()=>startPart("word");
+    sentenceTab.onclick = ()=>startPart("sentence");
+    restartBtn.onclick = restartGame;
+    checkBtn.onclick = checkAnswer;
+    clearBtn.onclick = clearAnswer;
+    undoBtn.onclick = undo;
+    nextBtn.onclick = nextTask;
+    nextPromptBtn.onclick = nextTask;
+    showPinyinBtn.onclick = showPinyin;
+    showAnswerBtn.onclick = showAnswer;
+    readBtn.onclick = readCurrent;
+    shuffleBtn.onclick = shuffleCurrentChoices;
+
+    keepBtn.onclick = ()=>{
+      winOverlay.classList.remove("show");
+    };
+
+    restartWinBtn.onclick = ()=>{
+      winOverlay.classList.remove("show");
+      restartGame();
+    };
+
+    document.querySelectorAll(".modeBtn").forEach(btn=>{
+      btn.onclick = ()=>setMode(btn.dataset.mode);
+    });
+
+    const confettiCanvas = document.getElementById("confettiCanvas");
+    const ctx = confettiCanvas.getContext("2d");
+    let particles = [];
+    let confettiRunning = false;
+
+    function sizeCanvas(){
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+
+    function triggerConfetti(){
+      sizeCanvas();
+      particles = [];
+
+      const colors = ["#f59e0b","#22c55e","#3b82f6","#ec4899","#8b5cf6","#06b6d4"];
+
+      for(let i=0;i<120;i++){
+        particles.push({
+          x: Math.random() * confettiCanvas.width,
+          y: -20 - Math.random()*80,
+          vx: (Math.random()-.5)*5,
+          vy: Math.random()*4 + 2,
+          r: Math.random()*5 + 3,
+          color: colors[Math.floor(Math.random()*colors.length)],
+          rot: Math.random()*360,
+          spin: (Math.random()-.5)*12
+        });
+      }
+
+      if(!confettiRunning){
+        confettiRunning = true;
+        requestAnimationFrame(drawConfetti);
+      }
+    }
+
+    function drawConfetti(){
+      ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+
+      let alive = false;
+
+      particles.forEach(p=>{
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += .06;
+        p.rot += p.spin;
+
+        if(p.y < confettiCanvas.height + 40){
+          alive = true;
+        }
+
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.r,-p.r,p.r*2,p.r*2);
+        ctx.restore();
+      });
+
+      if(alive){
+        requestAnimationFrame(drawConfetti);
+      }else{
+        confettiRunning = false;
+        ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+      }
+    }
+
+    window.addEventListener("resize", sizeCanvas);
+
+    restartGame();
+  </script>
+</body>
+</html>
