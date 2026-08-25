@@ -1,0 +1,1778 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ESC_2_10_1_Fruit_Basket</title>
+
+  <style>
+    :root{
+      --ink:#172033;
+      --muted:#64748b;
+      --blue:#2563eb;
+      --purple:#7c3aed;
+      --green:#16a34a;
+      --orange:#f59e0b;
+      --red:#ef4444;
+      --pink:#ec4899;
+      --yellow:#facc15;
+      --card:#ffffff;
+      --line:#dbeafe;
+      --shadow:0 18px 42px rgba(15,23,42,.13);
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        "Noto Sans SC",
+        "Microsoft YaHei",
+        sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 8% 0%, #fff7d6 0%, transparent 31%),
+        radial-gradient(circle at 92% 9%, #ffe4f0 0%, transparent 31%),
+        linear-gradient(180deg,#effaf2,#f8fbff);
+      padding:18px;
+      overflow-x:hidden;
+    }
+
+    .app{
+      max-width:1320px;
+      margin:0 auto;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .logo{
+      width:64px;
+      height:64px;
+      border-radius:22px;
+      display:grid;
+      place-items:center;
+      font-size:35px;
+      color:white;
+      background:linear-gradient(135deg,#fb7185,#f59e0b,#22c55e);
+      box-shadow:var(--shadow);
+    }
+
+    h1{
+      margin:0;
+      font-size:32px;
+      line-height:1.05;
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+
+    .subtitle{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:15px;
+      font-weight:850;
+    }
+
+    button{
+      border:0;
+      border-radius:16px;
+      padding:12px 16px;
+      font-weight:950;
+      cursor:pointer;
+      font-size:15px;
+      font-family:inherit;
+      background:#fff;
+      color:var(--ink);
+      box-shadow:0 8px 18px rgba(15,23,42,.10);
+      transition:transform .12s ease, filter .12s ease, box-shadow .12s ease;
+    }
+
+    button:hover{
+      filter:brightness(.985);
+      transform:translateY(-1px);
+    }
+
+    button:active{
+      transform:translateY(1px) scale(.99);
+    }
+
+    button:disabled{
+      opacity:.48;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .primary{
+      background:linear-gradient(90deg,#2563eb,#7c3aed);
+      color:white;
+    }
+
+    .green{
+      background:linear-gradient(90deg,#22c55e,#16a34a);
+      color:white;
+    }
+
+    .orange{
+      background:linear-gradient(90deg,#fbbf24,#f59e0b);
+      color:#422006;
+    }
+
+    .red{
+      background:linear-gradient(90deg,#fb7185,#ef4444);
+      color:white;
+    }
+
+    .tabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .tabBtn{
+      border:2px solid #bbf7d0;
+      background:white;
+      color:#166534;
+      box-shadow:none;
+      min-width:220px;
+    }
+
+    .tabBtn.active{
+      background:#16a34a;
+      color:white;
+      border-color:#16a34a;
+      box-shadow:0 10px 22px rgba(22,163,74,.22);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:minmax(570px,1.15fr) minmax(390px,.85fr);
+      gap:18px;
+      align-items:start;
+    }
+
+    .panel{
+      background:rgba(255,255,255,.86);
+      border:1px solid rgba(255,255,255,.96);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(8px);
+      overflow:hidden;
+    }
+
+    .scenePanel{
+      padding:18px;
+      min-height:690px;
+      position:relative;
+    }
+
+    .taskPanel{
+      padding:18px;
+    }
+
+    .picnic{
+      min-height:650px;
+      border-radius:28px;
+      background:
+        radial-gradient(circle at 16% 18%, rgba(255,255,255,.70) 0 2px, transparent 3px),
+        radial-gradient(circle at 74% 12%, rgba(255,255,255,.70) 0 2px, transparent 3px),
+        linear-gradient(180deg,#bbf7d0 0%,#86efac 50%,#4ade80 100%);
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.9);
+      box-shadow:inset 0 0 32px rgba(255,255,255,.32);
+    }
+
+    .skyTitle{
+      position:absolute;
+      left:22px;
+      top:18px;
+      background:rgba(255,255,255,.78);
+      border:1px solid rgba(255,255,255,.95);
+      border-radius:22px;
+      padding:12px 16px;
+      box-shadow:0 10px 24px rgba(15,23,42,.09);
+      z-index:5;
+    }
+
+    .skyTitle .big{
+      font-size:22px;
+      font-weight:950;
+      color:#14532d;
+    }
+
+    .skyTitle .small{
+      margin-top:3px;
+      font-size:13px;
+      font-weight:850;
+      color:#64748b;
+    }
+
+    .sun{
+      position:absolute;
+      right:42px;
+      top:34px;
+      width:105px;
+      height:105px;
+      border-radius:50%;
+      background:radial-gradient(circle at 32% 30%,#fffbd1 0%,#fde047 52%,#f59e0b 100%);
+      box-shadow:0 0 36px rgba(250,204,21,.48);
+      z-index:1;
+    }
+
+    .cloud{
+      position:absolute;
+      width:170px;
+      height:54px;
+      left:46%;
+      top:72px;
+      background:rgba(255,255,255,.72);
+      border-radius:999px;
+      opacity:.88;
+      z-index:1;
+    }
+
+    .cloud::before,
+    .cloud::after{
+      content:"";
+      position:absolute;
+      background:rgba(255,255,255,.78);
+      border-radius:50%;
+    }
+
+    .cloud::before{
+      width:72px;
+      height:72px;
+      left:24px;
+      top:-30px;
+    }
+
+    .cloud::after{
+      width:64px;
+      height:64px;
+      right:22px;
+      top:-22px;
+    }
+
+    .blanket{
+      position:absolute;
+      left:50%;
+      bottom:36px;
+      transform:translateX(-50%);
+      width:82%;
+      height:270px;
+      border-radius:40px;
+      background:
+        linear-gradient(45deg,rgba(255,255,255,.34) 25%,transparent 25% 50%,rgba(255,255,255,.34) 50% 75%,transparent 75%),
+        linear-gradient(135deg,#fecdd3,#f9a8d4);
+      background-size:58px 58px;
+      box-shadow:0 18px 32px rgba(15,23,42,.18);
+      border:5px solid rgba(255,255,255,.72);
+      rotate:-1.5deg;
+      z-index:2;
+    }
+
+    .basketWrap{
+      position:absolute;
+      left:50%;
+      bottom:94px;
+      transform:translateX(-50%);
+      width:360px;
+      height:260px;
+      z-index:6;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      pointer-events:none;
+    }
+
+    .basketWrap.bump{
+      animation:basketBump .46s ease-out;
+    }
+
+    @keyframes basketBump{
+      0%{ transform:translateX(-50%) scale(1); }
+      32%{ transform:translateX(-50%) scale(1.045) translateY(-4px); }
+      100%{ transform:translateX(-50%) scale(1); }
+    }
+
+    .basketHandle{
+      position:absolute;
+      left:50%;
+      bottom:70px;
+      transform:translateX(-50%);
+      width:310px;
+      height:188px;
+      border:20px solid #9a5b24;
+      border-bottom:0;
+      border-radius:170px 170px 0 0;
+      background:transparent;
+      z-index:1;
+      opacity:.92;
+    }
+
+    .basket{
+      position:relative;
+      width:330px;
+      height:150px;
+      border-radius:36px 36px 55px 55px;
+      background:
+        repeating-linear-gradient(35deg,rgba(255,255,255,.14) 0 9px,transparent 9px 18px),
+        repeating-linear-gradient(-35deg,rgba(101,60,24,.20) 0 10px,transparent 10px 20px),
+        linear-gradient(180deg,#c47a2c 0%,#9a5b24 100%);
+      border:8px solid #7a4217;
+      box-shadow:inset 0 10px 18px rgba(255,255,255,.18), 0 18px 28px rgba(15,23,42,.22);
+      z-index:3;
+      overflow:hidden;
+    }
+
+    .basket::before{
+      content:"";
+      position:absolute;
+      left:-10px;
+      right:-10px;
+      top:-12px;
+      height:36px;
+      border-radius:50%;
+      background:linear-gradient(180deg,#d08a37,#8a4a19);
+      border:6px solid #7a4217;
+      z-index:4;
+    }
+
+    .basketShine{
+      position:absolute;
+      left:34px;
+      top:36px;
+      width:70px;
+      height:30px;
+      border-radius:50%;
+      background:rgba(255,255,255,.18);
+      rotate:-14deg;
+    }
+
+    .fruitPile{
+      position:absolute;
+      left:50%;
+      bottom:62px;
+      transform:translateX(-50%);
+      width:310px;
+      min-height:86px;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      align-items:flex-end;
+      gap:2px;
+      z-index:8;
+      pointer-events:none;
+    }
+
+    .pileFruit{
+      font-size:34px;
+      line-height:1;
+      animation:pileIn .24s ease-out both;
+      filter:drop-shadow(0 4px 5px rgba(15,23,42,.16));
+    }
+
+    @keyframes pileIn{
+      from{
+        opacity:0;
+        transform:translateY(-8px) scale(.75) rotate(-12deg);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0) scale(1) rotate(0deg);
+      }
+    }
+
+    .captionCard{
+      position:absolute;
+      left:50%;
+      top:135px;
+      transform:translateX(-50%);
+      min-width:360px;
+      max-width:88%;
+      background:rgba(255,255,255,.82);
+      border:1px solid rgba(255,255,255,.96);
+      border-radius:24px;
+      padding:14px 18px;
+      text-align:center;
+      box-shadow:0 12px 28px rgba(15,23,42,.12);
+      z-index:5;
+    }
+
+    .captionCard .line1{
+      font-size:22px;
+      font-weight:950;
+      color:#14532d;
+    }
+
+    .captionCard .line2{
+      margin-top:4px;
+      font-size:14px;
+      font-weight:850;
+      color:#64748b;
+    }
+
+    .modeBar{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .modeTabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .modeBtn{
+      padding:10px 12px;
+      border:1px solid #e2e8f0;
+      background:#fff;
+      color:#334155;
+      box-shadow:none;
+      border-radius:14px;
+      font-size:14px;
+    }
+
+    .modeBtn.active{
+      background:#16a34a;
+      color:white;
+      border-color:#16a34a;
+    }
+
+    .stats{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .stat{
+      background:#fff;
+      border:1px solid #e2e8f0;
+      border-radius:18px;
+      padding:10px 14px;
+      min-width:108px;
+      text-align:center;
+      box-shadow:0 6px 14px rgba(15,23,42,.06);
+    }
+
+    .stat .num{
+      font-size:24px;
+      font-weight:950;
+      line-height:1;
+      color:#0f172a;
+    }
+
+    .stat .lab{
+      margin-top:4px;
+      font-size:11px;
+      color:#64748b;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+    }
+
+    .taskCard{
+      background:linear-gradient(180deg,#ffffff,#f8fafc);
+      border:1px solid #e2e8f0;
+      border-radius:24px;
+      padding:18px;
+      box-shadow:0 10px 22px rgba(15,23,42,.08);
+    }
+
+    .taskLabel{
+      color:#64748b;
+      font-size:13px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-bottom:8px;
+    }
+
+    .promptMain{
+      min-height:105px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      background:#f0fdf4;
+      border:1px solid #bbf7d0;
+      border-radius:20px;
+      padding:14px;
+      font-size:32px;
+      font-weight:950;
+      color:#14532d;
+      line-height:1.18;
+      word-break:break-word;
+    }
+
+    .promptMain.english{
+      font-size:25px;
+    }
+
+    .promptSub{
+      margin-top:10px;
+      min-height:34px;
+      color:#475569;
+      font-weight:850;
+      line-height:1.45;
+      text-align:center;
+    }
+
+    .answerBox{
+      margin-top:12px;
+      display:none;
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      border-radius:18px;
+      padding:12px;
+      text-align:center;
+    }
+
+    .answerBox.show{
+      display:block;
+    }
+
+    .answerZh{
+      font-size:30px;
+      font-weight:950;
+      color:#9a3412;
+      line-height:1.15;
+    }
+
+    .answerPy{
+      margin-top:4px;
+      font-size:15px;
+      font-weight:900;
+      color:#c2410c;
+    }
+
+    .answerEn{
+      margin-top:4px;
+      font-size:14px;
+      font-weight:850;
+      color:#475569;
+      line-height:1.35;
+    }
+
+    .choices{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .choice{
+      min-height:78px;
+      border:2px solid #dcfce7;
+      background:white;
+      color:#172033;
+      border-radius:20px;
+      padding:10px 12px;
+      font-size:20px;
+      font-weight:950;
+      line-height:1.2;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:3px;
+    }
+
+    .choice .emoji{
+      font-size:28px;
+      line-height:1;
+    }
+
+    .choice .zh{
+      font-size:22px;
+      line-height:1.05;
+    }
+
+    .choice .small{
+      font-size:12px;
+      color:#64748b;
+      font-weight:850;
+      line-height:1.15;
+    }
+
+    .choice:hover{
+      border-color:#86efac;
+      background:#f0fdf4;
+    }
+
+    .choice.correct{
+      background:#dcfce7;
+      color:#14532d;
+      border-color:#22c55e;
+    }
+
+    .choice.wrong{
+      background:#fee2e2;
+      color:#991b1b;
+      border-color:#ef4444;
+      animation:shake .36s ease-in-out;
+    }
+
+    @keyframes shake{
+      0%,100%{transform:translateX(0);}
+      25%{transform:translateX(-7px);}
+      50%{transform:translateX(7px);}
+      75%{transform:translateX(-4px);}
+    }
+
+    .builderArea{
+      margin-top:14px;
+      display:none;
+    }
+
+    .builderArea.show{
+      display:block;
+    }
+
+    .wordBank{
+      background:#f8fafc;
+      border:2px dashed #cbd5e1;
+      border-radius:22px;
+      padding:14px;
+      min-height:130px;
+      display:flex;
+      flex-wrap:wrap;
+      align-content:flex-start;
+      gap:9px;
+      margin-bottom:12px;
+    }
+
+    .sentenceBox{
+      background:white;
+      border:2px solid #bbf7d0;
+      border-radius:22px;
+      padding:14px;
+      min-height:94px;
+      display:flex;
+      flex-wrap:wrap;
+      align-content:center;
+      justify-content:center;
+      gap:9px;
+    }
+
+    .tile{
+      background:white;
+      color:#172033;
+      border:2px solid #bbf7d0;
+      border-radius:15px;
+      padding:10px 13px;
+      font-size:19px;
+      font-weight:950;
+      min-height:48px;
+      box-shadow:0 7px 15px rgba(15,23,42,.08);
+    }
+
+    .tile.used{
+      opacity:.32;
+      pointer-events:none;
+    }
+
+    .slotTile{
+      background:linear-gradient(180deg,#dcfce7,#bbf7d0);
+      color:#0f172a;
+      border:2px solid #22c55e;
+      border-radius:15px;
+      padding:10px 13px;
+      font-size:19px;
+      font-weight:950;
+      min-height:48px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .emptyText{
+      color:#94a3b8;
+      font-weight:900;
+      font-size:17px;
+      align-self:center;
+    }
+
+    .sideBtns{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .sideBtns button{
+      padding:11px 10px;
+      font-size:14px;
+      border-radius:15px;
+    }
+
+    .fullBtn{
+      grid-column:1 / -1;
+    }
+
+    .feedback{
+      margin-top:12px;
+      min-height:42px;
+      border-radius:18px;
+      padding:11px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-size:17px;
+      font-weight:950;
+      line-height:1.35;
+      background:#f1f5f9;
+      color:#475569;
+    }
+
+    .feedback.good{
+      background:#dcfce7;
+      color:#14532d;
+      border:1px solid #bbf7d0;
+    }
+
+    .feedback.bad{
+      background:#fee2e2;
+      color:#991b1b;
+      border:1px solid #fecaca;
+      animation:shake .36s ease-in-out;
+    }
+
+    .doneBox{
+      margin-top:16px;
+      background:#fff;
+      border:1px solid #e2e8f0;
+      border-radius:22px;
+      padding:14px;
+    }
+
+    .doneTitle{
+      color:#64748b;
+      font-size:13px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+      margin-bottom:8px;
+    }
+
+    .doneList{
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+      max-height:120px;
+      overflow:auto;
+    }
+
+    .doneChip{
+      background:#fef3c7;
+      color:#92400e;
+      border:1px solid #fde68a;
+      border-radius:999px;
+      padding:6px 9px;
+      font-weight:900;
+      font-size:13px;
+    }
+
+    .instructions{
+      margin-top:16px;
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      color:#9a3412;
+      border-radius:22px;
+      padding:14px;
+      font-size:14px;
+      font-weight:800;
+      line-height:1.55;
+    }
+
+    .flyingFruit{
+      position:fixed;
+      z-index:100;
+      pointer-events:none;
+      font-size:42px;
+      filter:drop-shadow(0 9px 11px rgba(15,23,42,.24));
+      transform-origin:center;
+    }
+
+    .winOverlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(15,23,42,.46);
+      backdrop-filter:blur(5px);
+      z-index:80;
+      padding:20px;
+      opacity:0;
+      transition:opacity .26s ease;
+    }
+
+    .winOverlay.show{
+      display:flex;
+      opacity:1;
+    }
+
+    .winCard{
+      width:min(540px,92vw);
+      background:white;
+      border-radius:34px;
+      padding:30px;
+      text-align:center;
+      box-shadow:0 26px 70px rgba(15,23,42,.35);
+      border:5px solid #fbbf24;
+      transform:translateY(14px) scale(.94);
+      opacity:0;
+      animation:modalIn .34s cubic-bezier(.22,1,.36,1) forwards;
+    }
+
+    @keyframes modalIn{
+      to{
+        transform:translateY(0) scale(1);
+        opacity:1;
+      }
+    }
+
+    .winEmoji{
+      font-size:68px;
+      animation:bounce 1s ease-in-out infinite;
+    }
+
+    @keyframes bounce{
+      0%,100%{transform:translateY(0);}
+      50%{transform:translateY(-10px);}
+    }
+
+    .winCard h2{
+      margin:10px 0 6px;
+      font-size:40px;
+      color:#111827;
+    }
+
+    .winCard p{
+      margin:8px 0 0;
+      color:#475569;
+      font-size:17px;
+      font-weight:800;
+      line-height:1.5;
+    }
+
+    .winBtns{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:20px;
+    }
+
+    canvas{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      width:100%;
+      height:100%;
+      z-index:90;
+    }
+
+    @media (max-width:1050px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+
+      .taskPanel{
+        order:-1;
+      }
+
+      .scenePanel{
+        min-height:auto;
+      }
+
+      .picnic{
+        min-height:520px;
+      }
+
+      .basketWrap{
+        bottom:72px;
+      }
+
+      .captionCard{
+        top:118px;
+      }
+    }
+
+    @media (max-width:720px){
+      body{
+        padding:10px;
+      }
+
+      h1{
+        font-size:24px;
+      }
+
+      .logo{
+        width:52px;
+        height:52px;
+        font-size:28px;
+      }
+
+      .tabBtn{
+        min-width:100%;
+      }
+
+      .choices{
+        grid-template-columns:1fr;
+      }
+
+      .promptMain{
+        font-size:25px;
+        min-height:78px;
+      }
+
+      .promptMain.english{
+        font-size:20px;
+      }
+
+      .basketWrap{
+        width:300px;
+        transform:translateX(-50%) scale(.86);
+      }
+
+      .basketWrap.bump{
+        animation:basketBumpSmall .46s ease-out;
+      }
+
+      @keyframes basketBumpSmall{
+        0%{ transform:translateX(-50%) scale(.86); }
+        32%{ transform:translateX(-50%) scale(.91) translateY(-4px); }
+        100%{ transform:translateX(-50%) scale(.86); }
+      }
+
+      .captionCard{
+        min-width:260px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">🍎</div>
+        <div>
+          <h1>ESC_2_10_1_Fruit_Basket</h1>
+          <div class="subtitle">Fruit and vegetables 水果、蔬菜｜Word List 1</div>
+        </div>
+      </div>
+
+      <button class="primary" id="restartBtn">Restart</button>
+    </header>
+
+    <div class="tabs">
+      <button class="tabBtn active" id="basketTab">Part 1 · Fruit Basket</button>
+      <button class="tabBtn" id="sentenceTab">Part 2 · Sentence Builder</button>
+    </div>
+
+    <main class="layout">
+      <section class="panel scenePanel">
+        <div class="picnic">
+          <div class="sun"></div>
+          <div class="cloud"></div>
+
+          <div class="skyTitle">
+            <div class="big">Fruit Basket</div>
+            <div class="small">Collect words and build sentences.</div>
+          </div>
+
+          <div class="captionCard">
+            <div class="line1" id="sceneLine1">Put the correct fruit in the basket!</div>
+            <div class="line2" id="sceneLine2">答对以后，水果会掉进篮子里。</div>
+          </div>
+
+          <div class="blanket"></div>
+
+          <div class="basketWrap" id="basketWrap">
+            <div class="basketHandle"></div>
+            <div class="fruitPile" id="fruitPile"></div>
+            <div class="basket">
+              <div class="basketShine"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel taskPanel">
+        <div class="modeBar">
+          <div class="modeTabs">
+            <button class="modeBtn active" data-mode="easy">Easy</button>
+            <button class="modeBtn" data-mode="medium">Medium</button>
+            <button class="modeBtn" data-mode="hard">Hard</button>
+            <button class="modeBtn" data-mode="mixed">Mixed</button>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="num" id="scoreNum">0</div>
+              <div class="lab">Score</div>
+            </div>
+            <div class="stat">
+              <div class="num" id="progressNum">1/10</div>
+              <div class="lab">Progress</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="taskCard">
+          <div class="taskLabel" id="taskLabel">Prompt</div>
+          <div class="promptMain english" id="promptMain">apple</div>
+          <div class="promptSub" id="promptSub">Choose the matching Chinese word.</div>
+
+          <div class="answerBox" id="answerBox">
+            <div class="answerZh" id="answerZh">苹果</div>
+            <div class="answerPy" id="answerPy">píng guǒ</div>
+            <div class="answerEn" id="answerEn">apple</div>
+          </div>
+
+          <div class="choices" id="choices"></div>
+
+          <div class="builderArea" id="builderArea">
+            <div class="taskLabel" style="margin-top:14px;">Word Bank</div>
+            <div class="wordBank" id="wordBank"></div>
+
+            <div class="taskLabel">Your Sentence</div>
+            <div class="sentenceBox" id="sentenceBox">
+              <div class="emptyText">Tap word tiles to build the sentence.</div>
+            </div>
+          </div>
+
+          <div class="sideBtns">
+            <button id="showPinyinBtn">Show Pinyin</button>
+            <button id="showAnswerBtn">Show Answer</button>
+            <button class="green" id="readBtn">🔊 Read Chinese</button>
+            <button class="orange" id="clearBtn">Clear</button>
+            <button id="checkBtn">Check</button>
+            <button id="nextBtn">Next</button>
+            <button class="primary fullBtn" id="nextTaskBtn">Next Task</button>
+          </div>
+
+          <div class="feedback" id="feedback">Choose the correct answer.</div>
+        </div>
+
+        <div class="doneBox">
+          <div class="doneTitle">Collected / Completed</div>
+          <div class="doneList" id="doneList"></div>
+        </div>
+
+        <div class="instructions">
+          <strong>How to Play:</strong><br>
+          Part 1: Choose the Chinese word for the fruit or vocabulary clue.<br>
+          Part 2: Put word tiles in order to build sentences from the text.<br>
+          Use Easy / Medium / Hard / Mixed to change the clue.
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <div class="winOverlay" id="winOverlay">
+    <div class="winCard">
+      <div class="winEmoji">🍓</div>
+      <h2>Basket Full!</h2>
+      <p id="winText">Great job! Your fruit basket is full.</p>
+      <div class="winBtns">
+        <button class="green" id="keepPlayingBtn">Keep Playing</button>
+        <button class="primary" id="restartWinBtn">Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const VOCAB_TASKS = [
+      { zh:"苹果", py:"píng guǒ", en:"apple", emoji:"🍎", options:["苹果","香蕉","橙子","西瓜"] },
+      { zh:"香", py:"xiāng", en:"fragrant", emoji:"🌸", options:["香","蕉","草","莓"] },
+      { zh:"蕉", py:"jiāo", en:"some broadleaf plants", emoji:"🌿", options:["蕉","香","瓜","梨"] },
+      { zh:"香蕉", py:"xiāng jiāo", en:"banana", emoji:"🍌", options:["香蕉","苹果","西瓜","草莓"] },
+      { zh:"橙子", py:"chéng zi", en:"orange", emoji:"🍊", options:["橙子","苹果","梨","草莓"] },
+      { zh:"西", py:"xī", en:"west", emoji:"🧭", options:["西","瓜","草","种"] },
+      { zh:"瓜", py:"guā", en:"melon", emoji:"🍈", options:["瓜","西","梨","莓"] },
+      { zh:"西瓜", py:"xī guā", en:"watermelon", emoji:"🍉", options:["西瓜","香蕉","橙子","苹果"] },
+      { zh:"梨", py:"lí", en:"pear", emoji:"🍐", options:["梨","瓜","草","莓"] },
+      { zh:"草", py:"cǎo", en:"grass", emoji:"🌱", options:["草","莓","香","西"] },
+      { zh:"莓", py:"méi", en:"berry", emoji:"🫐", options:["莓","草","瓜","梨"] },
+      { zh:"草莓", py:"cǎo méi", en:"strawberry", emoji:"🍓", options:["草莓","西瓜","香蕉","橙子"] },
+      { zh:"种", py:"zhǒng", en:"type; kind", emoji:"🔢", options:["种","应","该","香"] },
+      { zh:"应", py:"yīng", en:"should", emoji:"✅", options:["应","该","种","草"] },
+      { zh:"该", py:"gāi", en:"should", emoji:"✅", options:["该","应","西","瓜"] },
+      { zh:"应该", py:"yīng gāi", en:"should", emoji:"✅", options:["应该","草莓","西瓜","橙子"] },
+      { zh:"水果", py:"shuǐ guǒ", en:"fruit", emoji:"🍇", options:["水果","苹果","香蕉","草莓"] },
+      { zh:"三四种", py:"sān sì zhǒng", en:"three or four kinds", emoji:"3️⃣", options:["三四种","应该","水果","每天"] }
+    ];
+
+    const SENTENCE_TASKS = [
+      {
+        zh:"我非常喜欢吃水果。",
+        py:"wǒ fēi cháng xǐ huan chī shuǐ guǒ.",
+        en:"I really like eating fruit.",
+        emoji:"🍇",
+        tokens:["我","非常","喜欢","吃","水果","。"]
+      },
+      {
+        zh:"苹果、香蕉、橙子、西瓜、梨和草莓，我都喜欢吃。",
+        py:"píng guǒ, xiāng jiāo, chéng zi, xī guā, lí hé cǎo méi, wǒ dōu xǐ huan chī.",
+        en:"Apples, bananas, oranges, watermelon, pears, and strawberries—I like eating all of them.",
+        emoji:"🍎",
+        tokens:["苹果","、","香蕉","、","橙子","、","西瓜","、","梨","和","草莓","，","我","都","喜欢","吃","。"]
+      },
+      {
+        zh:"我每天都吃三四种水果。",
+        py:"wǒ měi tiān dōu chī sān sì zhǒng shuǐ guǒ.",
+        en:"I eat three or four kinds of fruit every day.",
+        emoji:"🍽️",
+        tokens:["我","每天","都","吃","三四种","水果","。"]
+      },
+      {
+        zh:"早上吃一个橙子。",
+        py:"zǎo shang chī yí ge chéng zi.",
+        en:"In the morning, I eat one orange.",
+        emoji:"🍊",
+        tokens:["早上","吃","一个","橙子","。"]
+      },
+      {
+        zh:"中午吃一个苹果。",
+        py:"zhōng wǔ chī yí ge píng guǒ.",
+        en:"At noon, I eat one apple.",
+        emoji:"🍎",
+        tokens:["中午","吃","一个","苹果","。"]
+      },
+      {
+        zh:"晚上有时候吃西瓜。",
+        py:"wǎn shang yǒu shí hou chī xī guā.",
+        en:"In the evening, sometimes I eat watermelon.",
+        emoji:"🍉",
+        tokens:["晚上","有时候","吃","西瓜","。"]
+      },
+      {
+        zh:"有时候吃梨，有时候吃草莓。",
+        py:"yǒu shí hou chī lí, yǒu shí hou chī cǎo méi.",
+        en:"Sometimes I eat pears, and sometimes I eat strawberries.",
+        emoji:"🍐",
+        tokens:["有时候","吃","梨","，","有时候","吃","草莓","。"]
+      },
+      {
+        zh:"我们应该每天吃水果。",
+        py:"wǒ men yīng gāi měi tiān chī shuǐ guǒ.",
+        en:"We should eat fruit every day.",
+        emoji:"✅",
+        tokens:["我们","应该","每天","吃","水果","。"]
+      },
+      {
+        zh:"我弟弟不喜欢吃水果。",
+        py:"wǒ dì di bù xǐ huan chī shuǐ guǒ.",
+        en:"My younger brother does not like eating fruit.",
+        emoji:"🙅",
+        tokens:["我弟弟","不喜欢","吃","水果","。"]
+      }
+    ];
+
+    let currentPart = "basket";
+    let mode = "easy";
+    let order = [];
+    let currentIndex = 0;
+    let score = 0;
+    let completed = [];
+    let selectedTiles = [];
+    let currentPromptMode = "easy";
+    let locked = false;
+
+    const basketTab = document.getElementById("basketTab");
+    const sentenceTab = document.getElementById("sentenceTab");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const scoreNum = document.getElementById("scoreNum");
+    const progressNum = document.getElementById("progressNum");
+    const promptMain = document.getElementById("promptMain");
+    const promptSub = document.getElementById("promptSub");
+    const taskLabel = document.getElementById("taskLabel");
+
+    const answerBox = document.getElementById("answerBox");
+    const answerZh = document.getElementById("answerZh");
+    const answerPy = document.getElementById("answerPy");
+    const answerEn = document.getElementById("answerEn");
+
+    const choices = document.getElementById("choices");
+    const builderArea = document.getElementById("builderArea");
+    const wordBank = document.getElementById("wordBank");
+    const sentenceBox = document.getElementById("sentenceBox");
+    const feedback = document.getElementById("feedback");
+    const doneList = document.getElementById("doneList");
+    const fruitPile = document.getElementById("fruitPile");
+    const basketWrap = document.getElementById("basketWrap");
+    const sceneLine1 = document.getElementById("sceneLine1");
+    const sceneLine2 = document.getElementById("sceneLine2");
+
+    const showPinyinBtn = document.getElementById("showPinyinBtn");
+    const showAnswerBtn = document.getElementById("showAnswerBtn");
+    const readBtn = document.getElementById("readBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const checkBtn = document.getElementById("checkBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const nextTaskBtn = document.getElementById("nextTaskBtn");
+
+    const winOverlay = document.getElementById("winOverlay");
+    const winText = document.getElementById("winText");
+    const keepPlayingBtn = document.getElementById("keepPlayingBtn");
+    const restartWinBtn = document.getElementById("restartWinBtn");
+
+    function shuffle(arr){
+      const a = [...arr];
+      for(let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function tasks(){
+      return currentPart === "basket" ? VOCAB_TASKS : SENTENCE_TASKS;
+    }
+
+    function currentTask(){
+      return tasks()[order[currentIndex]];
+    }
+
+    function startPart(part){
+      currentPart = part;
+      basketTab.classList.toggle("active", part === "basket");
+      sentenceTab.classList.toggle("active", part === "sentence");
+      restartGame();
+    }
+
+    function restartGame(){
+      order = shuffle(tasks().map((_,i)=>i));
+      currentIndex = 0;
+      score = 0;
+      completed = [];
+      selectedTiles = [];
+      locked = false;
+      fruitPile.innerHTML = "";
+      winOverlay.classList.remove("show");
+      renderTask();
+    }
+
+    function getPromptMode(){
+      if(mode === "mixed"){
+        const list = ["easy","medium","hard"];
+        return list[Math.floor(Math.random() * list.length)];
+      }
+      return mode;
+    }
+
+    function renderTask(){
+      locked = false;
+      const task = currentTask();
+      currentPromptMode = getPromptMode();
+      selectedTiles = [];
+
+      scoreNum.textContent = score;
+      progressNum.textContent = `${currentIndex + 1}/${tasks().length}`;
+
+      answerBox.classList.remove("show");
+      feedback.className = "feedback";
+      feedback.textContent = currentPart === "basket"
+        ? "Choose the correct word and put it in the basket."
+        : "Tap word tiles in the correct order.";
+
+      choices.innerHTML = "";
+      wordBank.innerHTML = "";
+      sentenceBox.innerHTML = "";
+      builderArea.classList.remove("show");
+
+      answerZh.textContent = task.zh;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+
+      if(currentPart === "basket"){
+        renderBasketTask(task);
+      }else{
+        renderSentenceTask(task);
+      }
+
+      renderDoneList();
+    }
+
+    function renderBasketTask(task){
+      taskLabel.textContent = "Part 1 · Fruit Basket";
+      sceneLine1.textContent = "Put the correct word in the basket!";
+      sceneLine2.textContent = "答对以后，水果会自然掉进篮子里。";
+      clearBtn.disabled = true;
+      checkBtn.disabled = true;
+      promptMain.classList.remove("english");
+
+      if(currentPromptMode === "easy"){
+        promptMain.innerHTML = `${task.en}<br><span style="font-size:21px;color:#475569;">${task.py}</span>`;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Easy: English + pinyin. Choose the matching Chinese word.";
+      }else if(currentPromptMode === "medium"){
+        promptMain.textContent = task.py;
+        promptSub.textContent = "Medium: Pinyin only.";
+      }else{
+        promptMain.textContent = task.en;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Hard: English only.";
+      }
+
+      renderChoiceButtons(task);
+    }
+
+    function renderChoiceButtons(task){
+      choices.innerHTML = "";
+      builderArea.classList.remove("show");
+
+      shuffle(task.options).forEach(option=>{
+        const vocab = VOCAB_TASKS.find(v => v.zh === option) || {zh:option, py:"", en:"", emoji:"🍇"};
+
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.dataset.answer = option;
+        btn.innerHTML = `
+          <div class="emoji">${vocab.emoji || "🍇"}</div>
+          <div class="zh">${option}</div>
+          <div class="small">${vocab.py || ""}</div>
+        `;
+
+        btn.onclick = ()=>{
+          handleBasketChoice(btn, option, task);
+        };
+
+        choices.appendChild(btn);
+      });
+    }
+
+    function handleBasketChoice(btn, option, task){
+      if(locked) return;
+
+      const correct = option === task.zh;
+
+      if(correct){
+        locked = true;
+
+        document.querySelectorAll(".choice").forEach(el=>{
+          el.disabled = true;
+          if(el.dataset.answer === task.zh){
+            el.classList.add("correct");
+          }
+        });
+
+        score += 10;
+        scoreNum.textContent = score;
+        completed.push(task.zh);
+
+        feedback.className = "feedback good";
+        feedback.textContent = `✅ Correct! ${task.zh} · ${task.py} · ${task.en}`;
+
+        speakChinese(task.zh);
+        flyFruitToBasket(btn, task);
+
+        renderDoneList();
+
+        setTimeout(()=>{
+          nextTask();
+        }, 1150);
+      }else{
+        btn.classList.add("wrong");
+        feedback.className = "feedback bad";
+        feedback.textContent = "❌ Not yet. Try again.";
+        setTimeout(()=>btn.classList.remove("wrong"), 520);
+      }
+    }
+
+    function flyFruitToBasket(sourceBtn, task){
+      const rect = sourceBtn.getBoundingClientRect();
+      const basketRect = basketWrap.getBoundingClientRect();
+
+      const fruit = document.createElement("div");
+      fruit.className = "flyingFruit";
+      fruit.textContent = task.emoji || "🍇";
+
+      const startX = rect.left + rect.width / 2;
+      const startY = rect.top + rect.height / 2;
+      const endX = basketRect.left + basketRect.width / 2 + (Math.random() * 70 - 35);
+      const endY = basketRect.top + basketRect.height * .58 + (Math.random() * 22 - 11);
+
+      fruit.style.left = startX + "px";
+      fruit.style.top = startY + "px";
+
+      document.body.appendChild(fruit);
+
+      const midX = (startX + endX) / 2 + (Math.random() * 90 - 45);
+      const midY = Math.min(startY, endY) - 120;
+
+      fruit.animate([
+        {
+          transform:"translate(-50%,-50%) scale(.82) rotate(0deg)",
+          left:startX + "px",
+          top:startY + "px",
+          opacity:1
+        },
+        {
+          transform:"translate(-50%,-50%) scale(1.18) rotate(18deg)",
+          left:midX + "px",
+          top:midY + "px",
+          opacity:1,
+          offset:.52
+        },
+        {
+          transform:"translate(-50%,-50%) scale(.96) rotate(-12deg)",
+          left:endX + "px",
+          top:endY + "px",
+          opacity:1
+        }
+      ], {
+        duration:850,
+        easing:"cubic-bezier(.22,1,.36,1)",
+        fill:"forwards"
+      }).onfinish = ()=>{
+        fruit.remove();
+        addFruitToPile(task.emoji || "🍇");
+        bumpBasket();
+      };
+    }
+
+    function addFruitToPile(emoji){
+      const item = document.createElement("div");
+      item.className = "pileFruit";
+      item.textContent = emoji;
+      item.style.rotate = (Math.random() * 28 - 14) + "deg";
+      fruitPile.appendChild(item);
+    }
+
+    function bumpBasket(){
+      basketWrap.classList.remove("bump");
+      void basketWrap.offsetWidth;
+      basketWrap.classList.add("bump");
+    }
+
+    function renderSentenceTask(task){
+      taskLabel.textContent = "Part 2 · Sentence Builder";
+      sceneLine1.textContent = "Build the sentence from the text.";
+      sceneLine2.textContent = "把词块按顺序点出来，组成完整句子。";
+      builderArea.classList.add("show");
+      choices.innerHTML = "";
+      clearBtn.disabled = false;
+      checkBtn.disabled = false;
+      promptMain.classList.remove("english");
+
+      if(currentPromptMode === "easy"){
+        promptMain.innerHTML = `${task.en}<br><span style="font-size:21px;color:#475569;">${task.py}</span>`;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Easy: English + pinyin. Build the Chinese sentence.";
+      }else if(currentPromptMode === "medium"){
+        promptMain.textContent = task.en;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Medium: English clue only.";
+      }else{
+        promptMain.textContent = "Build the correct Chinese sentence.";
+        promptSub.textContent = "Hard: Use the word tiles only.";
+      }
+
+      renderWordTiles(task);
+    }
+
+    function renderWordTiles(task){
+      wordBank.innerHTML = "";
+      sentenceBox.innerHTML = "";
+
+      const shuffled = shuffle(task.tokens.map((token,index)=>({token,index})));
+
+      shuffled.forEach(obj=>{
+        const btn = document.createElement("button");
+        btn.className = "tile";
+        btn.textContent = obj.token;
+
+        btn.onclick = ()=>{
+          if(btn.classList.contains("used")) return;
+
+          selectedTiles.push({
+            token:obj.token,
+            button:btn
+          });
+
+          btn.classList.add("used");
+          renderSentenceBox();
+        };
+
+        wordBank.appendChild(btn);
+      });
+
+      renderSentenceBox();
+    }
+
+    function renderSentenceBox(){
+      sentenceBox.innerHTML = "";
+
+      if(selectedTiles.length === 0){
+        const empty = document.createElement("div");
+        empty.className = "emptyText";
+        empty.textContent = "Tap word tiles to build the sentence.";
+        sentenceBox.appendChild(empty);
+        return;
+      }
+
+      selectedTiles.forEach((item,index)=>{
+        const slot = document.createElement("button");
+        slot.className = "slotTile";
+        slot.textContent = item.token;
+
+        slot.onclick = ()=>{
+          if(item.button){
+            item.button.classList.remove("used");
+          }
+          selectedTiles.splice(index,1);
+          renderSentenceBox();
+        };
+
+        sentenceBox.appendChild(slot);
+      });
+    }
+
+    function checkSentence(){
+      if(currentPart !== "sentence") return;
+
+      const task = currentTask();
+      const answer = selectedTiles.map(x=>x.token).join("");
+      const correct = task.zh.replace(/\s/g,"");
+
+      if(answer === correct){
+        score += 10;
+        scoreNum.textContent = score;
+        completed.push(task.zh);
+
+        feedback.className = "feedback good";
+        feedback.textContent = `✅ Correct! ${task.zh}`;
+
+        speakChinese(task.zh);
+        addFruitToPile(task.emoji || "🍇");
+        bumpBasket();
+        renderDoneList();
+
+        setTimeout(()=>{
+          nextTask();
+        }, 1000);
+      }else{
+        feedback.className = "feedback bad";
+        feedback.textContent = "❌ Not yet. Check the order and try again.";
+      }
+    }
+
+    function clearBuild(){
+      if(currentPart !== "sentence") return;
+
+      selectedTiles.forEach(item=>{
+        if(item.button){
+          item.button.classList.remove("used");
+        }
+      });
+
+      selectedTiles = [];
+      renderSentenceBox();
+      feedback.className = "feedback";
+      feedback.textContent = "Cleared. Try again.";
+    }
+
+    function showPinyin(){
+      const task = currentTask();
+      answerBox.classList.add("show");
+      answerZh.textContent = "???";
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+    }
+
+    function showAnswer(){
+      const task = currentTask();
+
+      answerBox.classList.add("show");
+      answerZh.textContent = task.zh;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+    }
+
+    function readCurrent(){
+      const task = currentTask();
+      speakChinese(task.zh);
+    }
+
+    function nextTask(){
+      if(currentIndex < tasks().length - 1){
+        currentIndex++;
+        renderTask();
+      }else{
+        showWin();
+      }
+    }
+
+    function showWin(){
+      const label = currentPart === "basket" ? "Fruit Basket" : "Sentence Builder";
+      winText.textContent = `Great job! You completed ${label}. Score: ${score}`;
+      winOverlay.classList.add("show");
+      triggerConfetti();
+    }
+
+    function renderDoneList(){
+      doneList.innerHTML = "";
+
+      completed.slice().reverse().forEach(text=>{
+        const chip = document.createElement("div");
+        chip.className = "doneChip";
+        chip.textContent = text;
+        doneList.appendChild(chip);
+      });
+    }
+
+    function setMode(newMode){
+      mode = newMode;
+
+      document.querySelectorAll(".modeBtn").forEach(btn=>{
+        btn.classList.toggle("active", btn.dataset.mode === mode);
+      });
+
+      renderTask();
+    }
+
+    function speakChinese(text){
+      if(!("speechSynthesis" in window)) return;
+
+      window.speechSynthesis.cancel();
+
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "zh-CN";
+      utter.rate = 0.82;
+      utter.pitch = 1;
+
+      window.speechSynthesis.speak(utter);
+    }
+
+    basketTab.onclick = ()=>startPart("basket");
+    sentenceTab.onclick = ()=>startPart("sentence");
+    restartBtn.onclick = restartGame;
+
+    showPinyinBtn.onclick = showPinyin;
+    showAnswerBtn.onclick = showAnswer;
+    readBtn.onclick = readCurrent;
+    clearBtn.onclick = clearBuild;
+    checkBtn.onclick = checkSentence;
+    nextBtn.onclick = nextTask;
+    nextTaskBtn.onclick = nextTask;
+
+    keepPlayingBtn.onclick = ()=>{
+      winOverlay.classList.remove("show");
+    };
+
+    restartWinBtn.onclick = ()=>{
+      winOverlay.classList.remove("show");
+      restartGame();
+    };
+
+    document.querySelectorAll(".modeBtn").forEach(btn=>{
+      btn.onclick = ()=>setMode(btn.dataset.mode);
+    });
+
+    const confettiCanvas = document.getElementById("confettiCanvas");
+    const ctx = confettiCanvas.getContext("2d");
+    let particles = [];
+    let confettiRunning = false;
+
+    function sizeCanvas(){
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+
+    function triggerConfetti(){
+      sizeCanvas();
+      particles = [];
+
+      const colors = ["#f59e0b","#22c55e","#3b82f6","#ec4899","#8b5cf6","#06b6d4"];
+
+      for(let i=0;i<130;i++){
+        particles.push({
+          x:Math.random() * confettiCanvas.width,
+          y:-20 - Math.random() * 80,
+          vx:(Math.random() - .5) * 5,
+          vy:Math.random() * 4 + 2,
+          r:Math.random() * 5 + 3,
+          color:colors[Math.floor(Math.random() * colors.length)],
+          rot:Math.random() * 360,
+          spin:(Math.random() - .5) * 12
+        });
+      }
+
+      if(!confettiRunning){
+        confettiRunning = true;
+        requestAnimationFrame(drawConfetti);
+      }
+    }
+
+    function drawConfetti(){
+      ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+
+      let alive = false;
+
+      particles.forEach(p=>{
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += .06;
+        p.rot += p.spin;
+
+        if(p.y < confettiCanvas.height + 40){
+          alive = true;
+        }
+
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.r,-p.r,p.r * 2,p.r * 2);
+        ctx.restore();
+      });
+
+      if(alive){
+        requestAnimationFrame(drawConfetti);
+      }else{
+        confettiRunning = false;
+        ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+      }
+    }
+
+    window.addEventListener("resize", sizeCanvas);
+
+    restartGame();
+  </script>
+</body>
+</html>
