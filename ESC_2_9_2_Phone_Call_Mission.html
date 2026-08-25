@@ -1,0 +1,1854 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ESC_2_9_2_Phone_Call_Mission</title>
+
+  <style>
+    :root{
+      --ink:#172033;
+      --muted:#64748b;
+      --blue:#2563eb;
+      --purple:#7c3aed;
+      --green:#16a34a;
+      --orange:#f59e0b;
+      --red:#ef4444;
+      --cyan:#06b6d4;
+      --card:#ffffff;
+      --line:#dbeafe;
+      --shadow:0 18px 42px rgba(15,23,42,.13);
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        "Noto Sans SC",
+        "Microsoft YaHei",
+        sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 10% 0%, #dff7ff 0%, transparent 35%),
+        radial-gradient(circle at 90% 10%, #ede9fe 0%, transparent 32%),
+        linear-gradient(180deg,#eef7ff,#f8fbff);
+      padding:18px;
+    }
+
+    .app{
+      max-width:1320px;
+      margin:0 auto;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .logo{
+      width:64px;
+      height:64px;
+      border-radius:22px;
+      display:grid;
+      place-items:center;
+      font-size:34px;
+      color:white;
+      background:linear-gradient(135deg,#22d3ee,#2563eb,#7c3aed);
+      box-shadow:var(--shadow);
+    }
+
+    h1{
+      margin:0;
+      font-size:32px;
+      line-height:1.05;
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+
+    .subtitle{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:15px;
+      font-weight:850;
+    }
+
+    .topBtns{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    button{
+      border:0;
+      border-radius:16px;
+      padding:12px 16px;
+      font-weight:950;
+      cursor:pointer;
+      font-size:15px;
+      font-family:inherit;
+      background:#fff;
+      color:var(--ink);
+      box-shadow:0 8px 18px rgba(15,23,42,.10);
+      transition:transform .12s ease, filter .12s ease;
+    }
+
+    button:hover{
+      filter:brightness(.985);
+      transform:translateY(-1px);
+    }
+
+    button:active{
+      transform:translateY(1px) scale(.99);
+    }
+
+    button:disabled{
+      opacity:.48;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .primary{
+      background:linear-gradient(90deg,#2563eb,#7c3aed);
+      color:white;
+    }
+
+    .green{
+      background:linear-gradient(90deg,#22c55e,#16a34a);
+      color:white;
+    }
+
+    .orange{
+      background:linear-gradient(90deg,#fbbf24,#f59e0b);
+      color:#422006;
+    }
+
+    .red{
+      background:linear-gradient(90deg,#fb7185,#ef4444);
+      color:white;
+    }
+
+    .tabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .tabBtn{
+      border:2px solid #bfdbfe;
+      background:white;
+      color:#1e40af;
+      box-shadow:none;
+      min-width:220px;
+    }
+
+    .tabBtn.active{
+      background:#2563eb;
+      color:white;
+      border-color:#2563eb;
+      box-shadow:0 10px 22px rgba(37,99,235,.22);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:minmax(560px,1.15fr) minmax(390px,.85fr);
+      gap:18px;
+      align-items:start;
+    }
+
+    .panel{
+      background:rgba(255,255,255,.86);
+      border:1px solid rgba(255,255,255,.96);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(8px);
+      overflow:hidden;
+    }
+
+    .phonePanel{
+      padding:18px;
+    }
+
+    .taskPanel{
+      padding:18px;
+    }
+
+    .phoneShell{
+      max-width:620px;
+      margin:0 auto;
+      border-radius:38px;
+      background:#111827;
+      padding:16px;
+      box-shadow:0 22px 50px rgba(15,23,42,.24);
+    }
+
+    .phoneScreen{
+      border-radius:30px;
+      background:
+        radial-gradient(circle at 20% 0%, #e0f2fe 0%, transparent 36%),
+        linear-gradient(180deg,#f8fafc,#eef6ff);
+      min-height:660px;
+      padding:16px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .phoneHeader{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background:rgba(255,255,255,.74);
+      border:1px solid #e2e8f0;
+      border-radius:22px;
+      padding:12px 14px;
+      margin-bottom:14px;
+    }
+
+    .contact{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .avatar{
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      color:white;
+      font-size:23px;
+      font-weight:950;
+      background:linear-gradient(135deg,#06b6d4,#2563eb);
+    }
+
+    .contactName{
+      font-size:18px;
+      font-weight:950;
+      line-height:1.1;
+    }
+
+    .contactSub{
+      margin-top:3px;
+      color:#64748b;
+      font-size:12px;
+      font-weight:850;
+    }
+
+    .callIcon{
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      background:#22c55e;
+      color:white;
+      display:grid;
+      place-items:center;
+      font-size:22px;
+      box-shadow:0 8px 18px rgba(34,197,94,.28);
+    }
+
+    .chat{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      max-height:520px;
+      overflow:auto;
+      padding-right:4px;
+    }
+
+    .bubble{
+      max-width:86%;
+      border-radius:22px;
+      padding:12px 14px;
+      box-shadow:0 8px 18px rgba(15,23,42,.08);
+      line-height:1.45;
+      font-weight:850;
+      position:relative;
+      animation:popIn .22s ease-out both;
+    }
+
+    @keyframes popIn{
+      from{
+        opacity:0;
+        transform:translateY(8px) scale(.98);
+      }
+
+      to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+      }
+    }
+
+    .bubble.left{
+      align-self:flex-start;
+      background:white;
+      color:#172033;
+      border-bottom-left-radius:7px;
+      border:1px solid #e2e8f0;
+    }
+
+    .bubble.right{
+      align-self:flex-end;
+      background:#2563eb;
+      color:white;
+      border-bottom-right-radius:7px;
+    }
+
+    .speaker{
+      font-size:12px;
+      font-weight:950;
+      opacity:.72;
+      margin-bottom:4px;
+    }
+
+    .zhLine{
+      font-size:20px;
+      font-weight:950;
+      line-height:1.35;
+    }
+
+    .pyLine{
+      margin-top:4px;
+      font-size:13px;
+      font-weight:850;
+      opacity:.78;
+    }
+
+    .enLine{
+      margin-top:3px;
+      font-size:13px;
+      font-weight:800;
+      opacity:.74;
+    }
+
+    .modeBar{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .modeTabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .modeBtn{
+      padding:10px 12px;
+      border:1px solid #e2e8f0;
+      background:#fff;
+      color:#334155;
+      box-shadow:none;
+      border-radius:14px;
+      font-size:14px;
+    }
+
+    .modeBtn.active{
+      background:#2563eb;
+      color:white;
+      border-color:#2563eb;
+    }
+
+    .stats{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .stat{
+      background:#fff;
+      border:1px solid #e2e8f0;
+      border-radius:18px;
+      padding:10px 14px;
+      min-width:108px;
+      text-align:center;
+      box-shadow:0 6px 14px rgba(15,23,42,.06);
+    }
+
+    .stat .num{
+      font-size:24px;
+      font-weight:950;
+      line-height:1;
+      color:#0f172a;
+    }
+
+    .stat .lab{
+      margin-top:4px;
+      font-size:11px;
+      color:#64748b;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+    }
+
+    .taskCard{
+      background:linear-gradient(180deg,#ffffff,#f8fafc);
+      border:1px solid #e2e8f0;
+      border-radius:24px;
+      padding:18px;
+      box-shadow:0 10px 22px rgba(15,23,42,.08);
+    }
+
+    .taskLabel{
+      color:#64748b;
+      font-size:13px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-bottom:8px;
+    }
+
+    .promptMain{
+      min-height:105px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      background:#eff6ff;
+      border:1px solid #bfdbfe;
+      border-radius:20px;
+      padding:14px;
+      font-size:30px;
+      font-weight:950;
+      color:#1e3a8a;
+      line-height:1.18;
+      word-break:break-word;
+    }
+
+    .promptMain.english{
+      font-size:24px;
+    }
+
+    .promptSub{
+      margin-top:10px;
+      min-height:34px;
+      color:#475569;
+      font-weight:850;
+      line-height:1.45;
+      text-align:center;
+    }
+
+    .answerBox{
+      margin-top:12px;
+      display:none;
+      background:#ecfdf5;
+      border:1px solid #bbf7d0;
+      border-radius:18px;
+      padding:12px;
+      text-align:center;
+    }
+
+    .answerBox.show{
+      display:block;
+    }
+
+    .answerZh{
+      font-size:30px;
+      font-weight:950;
+      color:#14532d;
+      line-height:1.15;
+    }
+
+    .answerPy{
+      margin-top:4px;
+      font-size:15px;
+      font-weight:900;
+      color:#166534;
+    }
+
+    .answerEn{
+      margin-top:4px;
+      font-size:14px;
+      font-weight:850;
+      color:#475569;
+      line-height:1.35;
+    }
+
+    .choices{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .choice{
+      min-height:56px;
+      border:2px solid #dbeafe;
+      background:white;
+      color:#172033;
+      border-radius:18px;
+      padding:11px 12px;
+      font-size:18px;
+      font-weight:950;
+      line-height:1.25;
+    }
+
+    .choice:hover{
+      border-color:#60a5fa;
+      background:#eff6ff;
+    }
+
+    .choice.correct{
+      background:#dcfce7;
+      color:#14532d;
+      border-color:#22c55e;
+    }
+
+    .choice.wrong{
+      background:#fee2e2;
+      color:#991b1b;
+      border-color:#ef4444;
+      animation:shake .36s ease-in-out;
+    }
+
+    @keyframes shake{
+      0%,100%{transform:translateX(0);}
+      25%{transform:translateX(-7px);}
+      50%{transform:translateX(7px);}
+      75%{transform:translateX(-4px);}
+    }
+
+    .builderArea{
+      margin-top:14px;
+      display:none;
+    }
+
+    .builderArea.show{
+      display:block;
+    }
+
+    .wordBank{
+      background:#f8fafc;
+      border:2px dashed #cbd5e1;
+      border-radius:22px;
+      padding:14px;
+      min-height:130px;
+      display:flex;
+      flex-wrap:wrap;
+      align-content:flex-start;
+      gap:9px;
+      margin-bottom:12px;
+    }
+
+    .sentenceBox{
+      background:white;
+      border:2px solid #bfdbfe;
+      border-radius:22px;
+      padding:14px;
+      min-height:94px;
+      display:flex;
+      flex-wrap:wrap;
+      align-content:center;
+      justify-content:center;
+      gap:9px;
+    }
+
+    .tile{
+      background:white;
+      color:#172033;
+      border:2px solid #bfdbfe;
+      border-radius:15px;
+      padding:10px 13px;
+      font-size:19px;
+      font-weight:950;
+      min-height:48px;
+      box-shadow:0 7px 15px rgba(15,23,42,.08);
+    }
+
+    .tile.used{
+      opacity:.32;
+      pointer-events:none;
+    }
+
+    .slotTile{
+      background:linear-gradient(180deg,#e0f2fe,#bfdbfe);
+      color:#0f172a;
+      border:2px solid #60a5fa;
+      border-radius:15px;
+      padding:10px 13px;
+      font-size:19px;
+      font-weight:950;
+      min-height:48px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .emptyText{
+      color:#94a3b8;
+      font-weight:900;
+      font-size:17px;
+      align-self:center;
+    }
+
+    .sideBtns{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .sideBtns button{
+      padding:11px 10px;
+      font-size:14px;
+      border-radius:15px;
+    }
+
+    .fullBtn{
+      grid-column:1 / -1;
+    }
+
+    .feedback{
+      margin-top:12px;
+      min-height:42px;
+      border-radius:18px;
+      padding:11px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-size:17px;
+      font-weight:950;
+      line-height:1.35;
+      background:#f1f5f9;
+      color:#475569;
+    }
+
+    .feedback.good{
+      background:#dcfce7;
+      color:#14532d;
+      border:1px solid #bbf7d0;
+    }
+
+    .feedback.bad{
+      background:#fee2e2;
+      color:#991b1b;
+      border:1px solid #fecaca;
+      animation:shake .36s ease-in-out;
+    }
+
+    .doneBox{
+      margin-top:16px;
+      background:#fff;
+      border:1px solid #e2e8f0;
+      border-radius:22px;
+      padding:14px;
+    }
+
+    .doneTitle{
+      color:#64748b;
+      font-size:13px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+      margin-bottom:8px;
+    }
+
+    .doneList{
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+      max-height:120px;
+      overflow:auto;
+    }
+
+    .doneChip{
+      background:#eef2ff;
+      color:#3730a3;
+      border:1px solid #c7d2fe;
+      border-radius:999px;
+      padding:6px 9px;
+      font-weight:900;
+      font-size:13px;
+    }
+
+    .instructions{
+      margin-top:16px;
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      color:#9a3412;
+      border-radius:22px;
+      padding:14px;
+      font-size:14px;
+      font-weight:800;
+      line-height:1.55;
+    }
+
+    .winOverlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(15,23,42,.46);
+      backdrop-filter:blur(5px);
+      z-index:50;
+      padding:20px;
+    }
+
+    .winOverlay.show{
+      display:flex;
+    }
+
+    .winCard{
+      width:min(520px,92vw);
+      background:white;
+      border-radius:32px;
+      padding:30px;
+      text-align:center;
+      box-shadow:0 26px 70px rgba(15,23,42,.35);
+      border:5px solid #fbbf24;
+    }
+
+    .winEmoji{
+      font-size:64px;
+      animation:bounce 1s ease-in-out infinite;
+    }
+
+    @keyframes bounce{
+      0%,100%{transform:translateY(0);}
+      50%{transform:translateY(-10px);}
+    }
+
+    .winCard h2{
+      margin:10px 0 6px;
+      font-size:40px;
+      color:#111827;
+    }
+
+    .winCard p{
+      margin:8px 0 0;
+      color:#475569;
+      font-size:17px;
+      font-weight:800;
+      line-height:1.5;
+    }
+
+    .winBtns{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:20px;
+    }
+
+    canvas{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      width:100%;
+      height:100%;
+      z-index:60;
+    }
+
+    @media (max-width:1050px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+
+      .taskPanel{
+        order:-1;
+      }
+
+      .phoneScreen{
+        min-height:480px;
+      }
+
+      .chat{
+        max-height:350px;
+      }
+    }
+
+    @media (max-width:720px){
+      body{
+        padding:10px;
+      }
+
+      h1{
+        font-size:24px;
+      }
+
+      .logo{
+        width:52px;
+        height:52px;
+        font-size:28px;
+      }
+
+      .tabBtn{
+        min-width:100%;
+      }
+
+      .choices{
+        grid-template-columns:1fr;
+      }
+
+      .promptMain{
+        font-size:25px;
+        min-height:78px;
+      }
+
+      .promptMain.english{
+        font-size:20px;
+      }
+
+      .phoneShell{
+        padding:10px;
+        border-radius:28px;
+      }
+
+      .phoneScreen{
+        border-radius:22px;
+        padding:12px;
+      }
+
+      .zhLine{
+        font-size:18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">☎️</div>
+        <div>
+          <h1>ESC_2_9_2_Phone_Call_Mission</h1>
+          <div class="subtitle">Making phone calls 打电话｜Word List 2 + Word List 1 Review</div>
+        </div>
+      </div>
+
+      <div class="topBtns">
+        <button class="primary" id="restartBtn">Restart</button>
+      </div>
+    </header>
+
+    <div class="tabs">
+      <button class="tabBtn active" id="fillTab">Part 1 · Fill in the Word</button>
+      <button class="tabBtn" id="sentenceTab">Part 2 · Build the Sentence</button>
+      <button class="tabBtn" id="replyTab">Part 3 · Best Reply</button>
+    </div>
+
+    <main class="layout">
+      <section class="panel phonePanel">
+        <div class="phoneShell">
+          <div class="phoneScreen">
+            <div class="phoneHeader">
+              <div class="contact">
+                <div class="avatar">王</div>
+                <div>
+                  <div class="contactName" id="phoneTitle">Phone Call Mission</div>
+                  <div class="contactSub" id="phoneSub">Practice polite phone conversations</div>
+                </div>
+              </div>
+              <div class="callIcon">☎️</div>
+            </div>
+
+            <div class="chat" id="chat"></div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel taskPanel">
+        <div class="modeBar">
+          <div class="modeTabs">
+            <button class="modeBtn active" data-mode="easy">Easy</button>
+            <button class="modeBtn" data-mode="medium">Medium</button>
+            <button class="modeBtn" data-mode="hard">Hard</button>
+            <button class="modeBtn" data-mode="mixed">Mixed</button>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="num" id="scoreNum">0</div>
+              <div class="lab">Score</div>
+            </div>
+            <div class="stat">
+              <div class="num" id="progressNum">1/10</div>
+              <div class="lab">Progress</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="taskCard">
+          <div class="taskLabel" id="taskLabel">Mission</div>
+          <div class="promptMain english" id="promptMain">Choose the missing word.</div>
+          <div class="promptSub" id="promptSub">Read the phone sentence and choose the best answer.</div>
+
+          <div class="answerBox" id="answerBox">
+            <div class="answerZh" id="answerZh">没问题</div>
+            <div class="answerPy" id="answerPy">méi wèn tí</div>
+            <div class="answerEn" id="answerEn">no problem</div>
+          </div>
+
+          <div class="choices" id="choices"></div>
+
+          <div class="builderArea" id="builderArea">
+            <div class="taskLabel" style="margin-top:14px;">Word Bank</div>
+            <div class="wordBank" id="wordBank"></div>
+
+            <div class="taskLabel">Your Sentence</div>
+            <div class="sentenceBox" id="sentenceBox">
+              <div class="emptyText">Tap word tiles to build the sentence.</div>
+            </div>
+          </div>
+
+          <div class="sideBtns">
+            <button id="showPinyinBtn">Show Pinyin</button>
+            <button id="showAnswerBtn">Show Answer</button>
+            <button class="green" id="readBtn">🔊 Read Chinese</button>
+            <button class="orange" id="clearBtn">Clear</button>
+            <button id="checkBtn">Check</button>
+            <button id="nextBtn">Next</button>
+            <button class="primary fullBtn" id="nextTaskBtn">Next Task</button>
+          </div>
+
+          <div class="feedback" id="feedback">Choose the correct answer.</div>
+        </div>
+
+        <div class="doneBox">
+          <div class="doneTitle">Completed</div>
+          <div class="doneList" id="doneList"></div>
+        </div>
+
+        <div class="instructions">
+          <strong>How to Play:</strong><br>
+          Part 1: Choose the missing phone-call word.<br>
+          Part 2: Put word tiles in order to build a sentence.<br>
+          Part 3: Choose the best reply in a phone conversation.<br>
+          Use Easy / Medium / Hard / Mixed to change the clue.
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <div class="winOverlay" id="winOverlay">
+    <div class="winCard">
+      <div class="winEmoji">🎉</div>
+      <h2>Great Job!</h2>
+      <p id="winText">You completed this mission.</p>
+      <div class="winBtns">
+        <button class="green" id="keepPlayingBtn">Keep Playing</button>
+        <button class="primary" id="restartWinBtn">Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const WL1 = [
+      { zh:"喂", py:"wèi", en:"hello; greeting on the phone" },
+      { zh:"空儿", py:"kòngr", en:"free time" },
+      { zh:"有空儿", py:"yǒu kòngr", en:"be free" },
+      { zh:"没空儿", py:"méi kòngr", en:"not free" },
+      { zh:"问", py:"wèn", en:"ask" },
+      { zh:"请问", py:"qǐng wèn", en:"excuse me; may I ask" },
+      { zh:"位", py:"wèi", en:"a polite measure word for people" },
+      { zh:"对不起", py:"duì bu qǐ", en:"I'm sorry; excuse me" },
+      { zh:"打电话", py:"dǎ diàn huà", en:"make a telephone call" },
+      { zh:"错", py:"cuò", en:"wrong" },
+      { zh:"没关系", py:"méi guān xi", en:"it doesn't matter; never mind" },
+      { zh:"事儿", py:"shìr", en:"matter; thing" },
+      { zh:"怎么样", py:"zěn me yàng", en:"how about" },
+      { zh:"行", py:"xíng", en:"okay" }
+    ];
+
+    const WL2 = [
+      { zh:"太太", py:"tài tai", en:"Mrs.; wife" },
+      { zh:"办", py:"bàn", en:"do; manage" },
+      { zh:"办公", py:"bàn gōng", en:"work; usually in an office" },
+      { zh:"办公室", py:"bàn gōng shì", en:"office" },
+      { zh:"小姐", py:"xiǎo jie", en:"Miss" },
+      { zh:"告", py:"gào", en:"tell" },
+      { zh:"诉", py:"sù", en:"tell" },
+      { zh:"告诉", py:"gào su", en:"tell" },
+      { zh:"先生", py:"xiān sheng", en:"Mr.; sir; husband" },
+      { zh:"能", py:"néng", en:"can; may" },
+      { zh:"题", py:"tí", en:"problem" },
+      { zh:"问题", py:"wèn tí", en:"question; problem" },
+      { zh:"没问题", py:"méi wèn tí", en:"no problem" },
+      { zh:"不客气", py:"bú kè qi", en:"you're welcome" }
+    ];
+
+    const FILL_TASKS = [
+      {
+        sentence:"我是高小春的妈妈，高____。",
+        answer:"太太",
+        py:"tài tai",
+        en:"Mrs.; wife",
+        options:["太太","小姐","先生","哪一位"],
+        speaker:"高太太"
+      },
+      {
+        sentence:"我是学校____的秘书，王小姐。",
+        answer:"办公室",
+        py:"bàn gōng shì",
+        en:"office",
+        options:["办公室","空儿","问题","电话"],
+        speaker:"王小姐"
+      },
+      {
+        sentence:"请____周老师，我先生今天没空儿。",
+        answer:"告诉",
+        py:"gào su",
+        en:"tell",
+        options:["告诉","请问","打电话","办公"],
+        speaker:"高太太"
+      },
+      {
+        sentence:"我先生今天不____去学校见周老师了。",
+        answer:"能",
+        py:"néng",
+        en:"can; may",
+        options:["能","行","错","问"],
+        speaker:"高太太"
+      },
+      {
+        sentence:"____，我会告诉周老师。",
+        answer:"没问题",
+        py:"méi wèn tí",
+        en:"no problem",
+        options:["没问题","没关系","不客气","对不起"],
+        speaker:"王小姐"
+      },
+      {
+        sentence:"谢谢您！ ____。",
+        answer:"不客气",
+        py:"bú kè qi",
+        en:"you're welcome",
+        options:["不客气","没空儿","怎么样","什么事儿"],
+        speaker:"王小姐"
+      },
+      {
+        sentence:"对不起，她正在____。",
+        answer:"上课",
+        py:"shàng kè",
+        en:"having class",
+        options:["上课","办公","打电话","有空儿"],
+        speaker:"王小姐"
+      },
+      {
+        sentence:"请问，您是哪一____？",
+        answer:"位",
+        py:"wèi",
+        en:"a polite measure word for people",
+        options:["位","题","空儿","事儿"],
+        speaker:"王小姐"
+      },
+      {
+        sentence:"您有什么____？",
+        answer:"事儿",
+        py:"shìr",
+        en:"matter; thing",
+        options:["事儿","问题","电话","办公室"],
+        speaker:"王小姐"
+      },
+      {
+        sentence:"我打____电话了。",
+        answer:"错",
+        py:"cuò",
+        en:"wrong",
+        options:["错","告","诉","问"],
+        speaker:"王琴"
+      }
+    ];
+
+    const SENTENCE_TASKS = [
+      {
+        zh:"对不起，她正在上课。",
+        py:"duì bu qǐ, tā zhèng zài shàng kè.",
+        en:"Sorry, she is having class.",
+        speaker:"王小姐",
+        tokens:["对不起","，","她","正在","上课","。"]
+      },
+      {
+        zh:"请问，您是哪一位？",
+        py:"qǐng wèn, nín shì nǎ yí wèi?",
+        en:"Excuse me, who are you?",
+        speaker:"王小姐",
+        tokens:["请问","，","您","是","哪一位","？"]
+      },
+      {
+        zh:"我是高小春的妈妈，高太太。",
+        py:"wǒ shì gāo xiǎo chūn de mā ma, gāo tài tai.",
+        en:"I am Gao Xiaochun's mother, Mrs. Gao.",
+        speaker:"高太太",
+        tokens:["我","是","高小春","的","妈妈","，","高太太","。"]
+      },
+      {
+        zh:"我是学校办公室的秘书，王小姐。",
+        py:"wǒ shì xué xiào bàn gōng shì de mì shū, wáng xiǎo jie.",
+        en:"I am the school office secretary, Miss Wang.",
+        speaker:"王小姐",
+        tokens:["我","是","学校","办公室","的","秘书","，","王小姐","。"]
+      },
+      {
+        zh:"您有什么事儿？",
+        py:"nín yǒu shén me shìr?",
+        en:"What can I do for you?",
+        speaker:"王小姐",
+        tokens:["您","有","什么","事儿","？"]
+      },
+      {
+        zh:"请告诉周老师，我先生今天没空儿。",
+        py:"qǐng gào su zhōu lǎo shī, wǒ xiān sheng jīn tiān méi kòngr.",
+        en:"Please tell Teacher Zhou that my husband is not free today.",
+        speaker:"高太太",
+        tokens:["请","告诉","周老师","，","我先生","今天","没空儿","。"]
+      },
+      {
+        zh:"他不能去学校见周老师了。",
+        py:"tā bù néng qù xué xiào jiàn zhōu lǎo shī le.",
+        en:"He cannot go to school to see Teacher Zhou.",
+        speaker:"高太太",
+        tokens:["他","不能","去","学校","见","周老师","了","。"]
+      },
+      {
+        zh:"没问题，我会告诉周老师。",
+        py:"méi wèn tí, wǒ huì gào su zhōu lǎo shī.",
+        en:"No problem. I will tell Teacher Zhou.",
+        speaker:"王小姐",
+        tokens:["没问题","，","我","会","告诉","周老师","。"]
+      },
+      {
+        zh:"谢谢您！",
+        py:"xiè xie nín!",
+        en:"Thank you!",
+        speaker:"高太太",
+        tokens:["谢谢","您","！"]
+      },
+      {
+        zh:"不客气。",
+        py:"bú kè qi.",
+        en:"You're welcome.",
+        speaker:"王小姐",
+        tokens:["不客气","。"]
+      }
+    ];
+
+    const REPLY_TASKS = [
+      {
+        prompt:"请问，周老师在吗？",
+        answer:"对不起，她正在上课。",
+        py:"duì bu qǐ, tā zhèng zài shàng kè.",
+        en:"Sorry, she is having class.",
+        options:["对不起，她正在上课。","我是高小春的妈妈，高太太。","谢谢您！","不客气。"],
+        speakerA:"高太太",
+        speakerB:"王小姐"
+      },
+      {
+        prompt:"请问，您是哪一位？",
+        answer:"我是高小春的妈妈，高太太。",
+        py:"wǒ shì gāo xiǎo chūn de mā ma, gāo tài tai.",
+        en:"I am Gao Xiaochun's mother, Mrs. Gao.",
+        options:["我是高小春的妈妈，高太太。","没问题，我会告诉周老师。","不客气。","她正在上课。"],
+        speakerA:"王小姐",
+        speakerB:"高太太"
+      },
+      {
+        prompt:"我是学校办公室的秘书，王小姐。您有什么事儿？",
+        answer:"请告诉周老师，我先生今天没空儿。",
+        py:"qǐng gào su zhōu lǎo shī, wǒ xiān sheng jīn tiān méi kòngr.",
+        en:"Please tell Teacher Zhou that my husband is not free today.",
+        options:["请告诉周老师，我先生今天没空儿。","不客气。","我打错电话了。","下午见！"],
+        speakerA:"王小姐",
+        speakerB:"高太太"
+      },
+      {
+        prompt:"请告诉周老师，我先生今天没空儿。",
+        answer:"没问题，我会告诉周老师。",
+        py:"méi wèn tí, wǒ huì gào su zhōu lǎo shī.",
+        en:"No problem. I will tell Teacher Zhou.",
+        options:["没问题，我会告诉周老师。","谢谢您！","你现在有空儿吗？","我不是谢文。"],
+        speakerA:"高太太",
+        speakerB:"王小姐"
+      },
+      {
+        prompt:"谢谢您！",
+        answer:"不客气。",
+        py:"bú kè qi.",
+        en:"You're welcome.",
+        options:["不客气。","对不起。","请问，您是哪一位？","他不能去学校见周老师了。"],
+        speakerA:"高太太",
+        speakerB:"王小姐"
+      },
+      {
+        prompt:"我打错电话了。",
+        answer:"没关系。",
+        py:"méi guān xi.",
+        en:"It doesn't matter.",
+        options:["没关系。","没问题。","不客气。","怎么样？"],
+        speakerA:"王琴",
+        speakerB:"XX"
+      },
+      {
+        prompt:"你现在有空儿吗？",
+        answer:"我上午没空儿。",
+        py:"wǒ shàng wǔ méi kòngr.",
+        en:"I am not free in the morning.",
+        options:["我上午没空儿。","请问，您是哪一位？","我是王小姐。","不客气。"],
+        speakerA:"王琴",
+        speakerB:"谢文"
+      },
+      {
+        prompt:"我们下午三点去，可以吗？",
+        answer:"行。下午见！",
+        py:"xíng. xià wǔ jiàn!",
+        en:"Okay. See you in the afternoon!",
+        options:["行。下午见！","我打错电话了。","对不起，她正在上课。","您有什么事儿？"],
+        speakerA:"谢文",
+        speakerB:"王琴"
+      }
+    ];
+
+    let currentPart = "fill";
+    let mode = "easy";
+    let order = [];
+    let currentIndex = 0;
+    let score = 0;
+    let completed = [];
+    let selectedTiles = [];
+    let currentPromptMode = "easy";
+
+    const fillTab = document.getElementById("fillTab");
+    const sentenceTab = document.getElementById("sentenceTab");
+    const replyTab = document.getElementById("replyTab");
+
+    const restartBtn = document.getElementById("restartBtn");
+    const scoreNum = document.getElementById("scoreNum");
+    const progressNum = document.getElementById("progressNum");
+
+    const chat = document.getElementById("chat");
+    const phoneTitle = document.getElementById("phoneTitle");
+    const phoneSub = document.getElementById("phoneSub");
+
+    const taskLabel = document.getElementById("taskLabel");
+    const promptMain = document.getElementById("promptMain");
+    const promptSub = document.getElementById("promptSub");
+
+    const answerBox = document.getElementById("answerBox");
+    const answerZh = document.getElementById("answerZh");
+    const answerPy = document.getElementById("answerPy");
+    const answerEn = document.getElementById("answerEn");
+
+    const choices = document.getElementById("choices");
+    const builderArea = document.getElementById("builderArea");
+    const wordBank = document.getElementById("wordBank");
+    const sentenceBox = document.getElementById("sentenceBox");
+
+    const feedback = document.getElementById("feedback");
+    const doneList = document.getElementById("doneList");
+
+    const showPinyinBtn = document.getElementById("showPinyinBtn");
+    const showAnswerBtn = document.getElementById("showAnswerBtn");
+    const readBtn = document.getElementById("readBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const checkBtn = document.getElementById("checkBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const nextTaskBtn = document.getElementById("nextTaskBtn");
+
+    const winOverlay = document.getElementById("winOverlay");
+    const winText = document.getElementById("winText");
+    const keepPlayingBtn = document.getElementById("keepPlayingBtn");
+    const restartWinBtn = document.getElementById("restartWinBtn");
+
+    function shuffle(arr){
+      const a = [...arr];
+      for(let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function tasks(){
+      if(currentPart === "fill") return FILL_TASKS;
+      if(currentPart === "sentence") return SENTENCE_TASKS;
+      return REPLY_TASKS;
+    }
+
+    function currentTask(){
+      return tasks()[order[currentIndex]];
+    }
+
+    function startPart(part){
+      currentPart = part;
+
+      fillTab.classList.toggle("active", part === "fill");
+      sentenceTab.classList.toggle("active", part === "sentence");
+      replyTab.classList.toggle("active", part === "reply");
+
+      restartGame();
+    }
+
+    function restartGame(){
+      order = shuffle(tasks().map((_,i)=>i));
+      currentIndex = 0;
+      score = 0;
+      completed = [];
+      selectedTiles = [];
+      winOverlay.classList.remove("show");
+      renderTask();
+    }
+
+    function getPromptMode(){
+      if(mode === "mixed"){
+        const list = ["easy","medium","hard"];
+        return list[Math.floor(Math.random() * list.length)];
+      }
+      return mode;
+    }
+
+    function renderTask(){
+      const task = currentTask();
+      currentPromptMode = getPromptMode();
+      selectedTiles = [];
+
+      scoreNum.textContent = score;
+      progressNum.textContent = `${currentIndex + 1}/${tasks().length}`;
+
+      answerBox.classList.remove("show");
+      feedback.className = "feedback";
+      feedback.textContent = "Choose the correct answer.";
+
+      choices.innerHTML = "";
+      wordBank.innerHTML = "";
+      sentenceBox.innerHTML = "";
+      builderArea.classList.remove("show");
+
+      if(currentPart === "fill"){
+        renderFillTask(task);
+      }else if(currentPart === "sentence"){
+        renderSentenceTask(task);
+      }else{
+        renderReplyTask(task);
+      }
+
+      renderDoneList();
+    }
+
+    function renderFillTask(task){
+      taskLabel.textContent = "Part 1 · Fill in the Word";
+      phoneTitle.textContent = "Fill in the phone sentence";
+      phoneSub.textContent = "Choose the missing word";
+
+      promptMain.classList.add("english");
+
+      const promptMode = currentPromptMode;
+
+      if(promptMode === "easy"){
+        promptMain.innerHTML = `${task.en}<br><span style="font-size:20px;color:#475569;">${task.py}</span>`;
+        promptSub.textContent = "Easy: English + pinyin. Choose the missing Chinese word.";
+      }else if(promptMode === "medium"){
+        promptMain.textContent = task.en;
+        promptSub.textContent = "Medium: English clue only.";
+      }else{
+        promptMain.textContent = task.sentence;
+        promptSub.textContent = "Hard: Use the sentence context only.";
+      }
+
+      answerZh.textContent = task.answer;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+
+      renderChat([
+        { who:task.speaker || "Speaker", text:task.sentence, py:"", en:"Choose the missing word.", side:"left" }
+      ]);
+
+      renderChoiceButtons(task.options, task.answer, task);
+    }
+
+    function renderSentenceTask(task){
+      taskLabel.textContent = "Part 2 · Build the Sentence";
+      phoneTitle.textContent = "Build the phone line";
+      phoneSub.textContent = "Put the words in order";
+
+      builderArea.classList.add("show");
+      promptMain.classList.add("english");
+
+      if(currentPromptMode === "easy"){
+        promptMain.innerHTML = `${task.en}<br><span style="font-size:20px;color:#475569;">${task.py}</span>`;
+        promptSub.textContent = "Easy: English + pinyin. Build the Chinese sentence.";
+      }else if(currentPromptMode === "medium"){
+        promptMain.textContent = task.en;
+        promptSub.textContent = "Medium: English clue only.";
+      }else{
+        promptMain.textContent = "Build the correct Chinese phone sentence.";
+        promptSub.textContent = "Hard: Use the word tiles only.";
+      }
+
+      answerZh.textContent = task.zh;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+
+      renderChat([
+        { who:task.speaker || "Speaker", text:"请把这句话排好。", py:"qǐng bǎ zhè jù huà pái hǎo.", en:"Put this sentence in order.", side:"left" }
+      ]);
+
+      renderWordTiles(task);
+    }
+
+    function renderReplyTask(task){
+      taskLabel.textContent = "Part 3 · Best Reply";
+      phoneTitle.textContent = "Choose the best reply";
+      phoneSub.textContent = "Phone conversation practice";
+
+      promptMain.classList.add("english");
+
+      if(currentPromptMode === "easy"){
+        promptMain.innerHTML = `${task.en}<br><span style="font-size:20px;color:#475569;">${task.py}</span>`;
+        promptSub.textContent = "Easy: English + pinyin for the best reply.";
+      }else if(currentPromptMode === "medium"){
+        promptMain.textContent = task.en;
+        promptSub.textContent = "Medium: English clue for the reply.";
+      }else{
+        promptMain.textContent = task.prompt;
+        promptSub.textContent = "Hard: Choose the best next line.";
+      }
+
+      answerZh.textContent = task.answer;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+
+      renderChat([
+        { who:task.speakerA || "A", text:task.prompt, py:"", en:"", side:"left" }
+      ]);
+
+      renderChoiceButtons(task.options, task.answer, task);
+    }
+
+    function renderChat(lines){
+      chat.innerHTML = "";
+
+      lines.forEach(line=>{
+        addBubble(line.who, line.text, line.py, line.en, line.side || "left");
+      });
+    }
+
+    function addBubble(who, text, py, en, side){
+      const bubble = document.createElement("div");
+      bubble.className = `bubble ${side}`;
+
+      bubble.innerHTML = `
+        <div class="speaker">${who}</div>
+        <div class="zhLine">${text}</div>
+        ${py ? `<div class="pyLine">${py}</div>` : ""}
+        ${en ? `<div class="enLine">${en}</div>` : ""}
+      `;
+
+      chat.appendChild(bubble);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function renderChoiceButtons(optionList, answer, task){
+      choices.innerHTML = "";
+      builderArea.classList.remove("show");
+      checkBtn.disabled = true;
+      clearBtn.disabled = true;
+
+      shuffle(optionList).forEach(option=>{
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.textContent = option;
+
+        btn.onclick = ()=>{
+          handleChoice(btn, option, answer, task);
+        };
+
+        choices.appendChild(btn);
+      });
+    }
+
+    function handleChoice(btn, option, answer, task){
+      const correct = option === answer;
+
+      document.querySelectorAll(".choice").forEach(el=>{
+        el.disabled = true;
+
+        if(el.textContent === answer){
+          el.classList.add("correct");
+        }
+      });
+
+      if(correct){
+        btn.classList.add("correct");
+        score += 10;
+        scoreNum.textContent = score;
+        completed.push(answer);
+        feedback.className = "feedback good";
+        feedback.textContent = `✅ Correct! ${answer}`;
+        speakChinese(answer);
+
+        if(currentPart === "fill"){
+          addBubble(task.speaker || "Speaker", task.sentence.replace("____", answer), task.py, task.en, "right");
+        }else if(currentPart === "reply"){
+          addBubble(task.speakerB || "B", answer, task.py, task.en, "right");
+        }
+
+        renderDoneList();
+
+        setTimeout(nextTask, 900);
+      }else{
+        btn.classList.add("wrong");
+        feedback.className = "feedback bad";
+        feedback.textContent = `❌ Not yet. Correct answer: ${answer}`;
+        playError();
+      }
+    }
+
+    function renderWordTiles(task){
+      choices.innerHTML = "";
+      builderArea.classList.add("show");
+      checkBtn.disabled = false;
+      clearBtn.disabled = false;
+
+      wordBank.innerHTML = "";
+      sentenceBox.innerHTML = "";
+
+      const shuffled = shuffle(task.tokens.map((token,index)=>({
+        token,
+        index
+      })));
+
+      shuffled.forEach(obj=>{
+        const btn = document.createElement("button");
+        btn.className = "tile";
+        btn.textContent = obj.token;
+
+        btn.onclick = ()=>{
+          if(btn.classList.contains("used")) return;
+
+          selectedTiles.push({
+            token:obj.token,
+            button:btn
+          });
+
+          btn.classList.add("used");
+          renderSentenceBox();
+        };
+
+        wordBank.appendChild(btn);
+      });
+
+      renderSentenceBox();
+    }
+
+    function renderSentenceBox(){
+      sentenceBox.innerHTML = "";
+
+      if(selectedTiles.length === 0){
+        const empty = document.createElement("div");
+        empty.className = "emptyText";
+        empty.textContent = "Tap word tiles to build the sentence.";
+        sentenceBox.appendChild(empty);
+        return;
+      }
+
+      selectedTiles.forEach((item,index)=>{
+        const slot = document.createElement("button");
+        slot.className = "slotTile";
+        slot.textContent = item.token;
+
+        slot.onclick = ()=>{
+          if(item.button){
+            item.button.classList.remove("used");
+          }
+          selectedTiles.splice(index,1);
+          renderSentenceBox();
+        };
+
+        sentenceBox.appendChild(slot);
+      });
+    }
+
+    function checkSentence(){
+      if(currentPart !== "sentence") return;
+
+      const task = currentTask();
+      const answer = selectedTiles.map(x=>x.token).join("");
+      const correct = task.zh.replace(/\s/g,"");
+
+      if(answer === correct){
+        score += 10;
+        scoreNum.textContent = score;
+        completed.push(task.zh);
+        feedback.className = "feedback good";
+        feedback.textContent = `✅ Correct! ${task.zh}`;
+        speakChinese(task.zh);
+
+        addBubble(task.speaker || "Speaker", task.zh, task.py, task.en, "right");
+
+        renderDoneList();
+
+        setTimeout(nextTask, 1000);
+      }else{
+        feedback.className = "feedback bad";
+        feedback.textContent = "❌ Not yet. Check the order and try again.";
+        playError();
+      }
+    }
+
+    function clearBuild(){
+      if(currentPart !== "sentence") return;
+
+      selectedTiles.forEach(item=>{
+        if(item.button){
+          item.button.classList.remove("used");
+        }
+      });
+
+      selectedTiles = [];
+      renderSentenceBox();
+      feedback.className = "feedback";
+      feedback.textContent = "Cleared. Try again.";
+    }
+
+    function showPinyin(){
+      const task = currentTask();
+
+      answerBox.classList.add("show");
+
+      if(currentPart === "fill"){
+        answerZh.textContent = "???";
+        answerPy.textContent = task.py;
+        answerEn.textContent = task.en;
+      }else{
+        answerZh.textContent = "???";
+        answerPy.textContent = task.py;
+        answerEn.textContent = task.en;
+      }
+    }
+
+    function showAnswer(){
+      const task = currentTask();
+
+      answerBox.classList.add("show");
+
+      if(currentPart === "fill"){
+        answerZh.textContent = task.answer;
+        answerPy.textContent = task.py;
+        answerEn.textContent = task.en;
+      }else if(currentPart === "sentence"){
+        answerZh.textContent = task.zh;
+        answerPy.textContent = task.py;
+        answerEn.textContent = task.en;
+      }else{
+        answerZh.textContent = task.answer;
+        answerPy.textContent = task.py;
+        answerEn.textContent = task.en;
+      }
+    }
+
+    function readCurrent(){
+      const task = currentTask();
+
+      if(currentPart === "fill"){
+        speakChinese(task.answer);
+      }else if(currentPart === "sentence"){
+        speakChinese(task.zh);
+      }else{
+        speakChinese(task.answer);
+      }
+    }
+
+    function nextTask(){
+      if(currentIndex < tasks().length - 1){
+        currentIndex++;
+        renderTask();
+      }else{
+        showWin();
+      }
+    }
+
+    function showWin(){
+      const label =
+        currentPart === "fill"
+          ? "Fill in the Word"
+          : currentPart === "sentence"
+            ? "Build the Sentence"
+            : "Best Reply";
+
+      winText.textContent = `You completed ${label}. Score: ${score}`;
+      winOverlay.classList.add("show");
+      triggerConfetti();
+    }
+
+    function renderDoneList(){
+      doneList.innerHTML = "";
+
+      completed.slice().reverse().forEach(text=>{
+        const chip = document.createElement("div");
+        chip.className = "doneChip";
+        chip.textContent = text;
+        doneList.appendChild(chip);
+      });
+    }
+
+    function setMode(newMode){
+      mode = newMode;
+
+      document.querySelectorAll(".modeBtn").forEach(btn=>{
+        btn.classList.toggle("active", btn.dataset.mode === mode);
+      });
+
+      renderTask();
+    }
+
+    function speakChinese(text){
+      if(!("speechSynthesis" in window)) return;
+
+      window.speechSynthesis.cancel();
+
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "zh-CN";
+      utter.rate = 0.82;
+      utter.pitch = 1;
+
+      window.speechSynthesis.speak(utter);
+    }
+
+    function playError(){
+      try{
+        const ac = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+
+        o.connect(g);
+        g.connect(ac.destination);
+
+        o.type = "sawtooth";
+        o.frequency.value = 130;
+
+        g.gain.setValueAtTime(.06, ac.currentTime);
+        g.gain.exponentialRampToValueAtTime(.001, ac.currentTime + .16);
+
+        o.start();
+        o.stop(ac.currentTime + .16);
+      }catch(e){}
+    }
+
+    fillTab.onclick = ()=>startPart("fill");
+    sentenceTab.onclick = ()=>startPart("sentence");
+    replyTab.onclick = ()=>startPart("reply");
+
+    restartBtn.onclick = restartGame;
+
+    showPinyinBtn.onclick = showPinyin;
+    showAnswerBtn.onclick = showAnswer;
+    readBtn.onclick = readCurrent;
+    clearBtn.onclick = clearBuild;
+    checkBtn.onclick = checkSentence;
+    nextBtn.onclick = nextTask;
+    nextTaskBtn.onclick = nextTask;
+
+    keepPlayingBtn.onclick = ()=>{
+      winOverlay.classList.remove("show");
+    };
+
+    restartWinBtn.onclick = ()=>{
+      winOverlay.classList.remove("show");
+      restartGame();
+    };
+
+    document.querySelectorAll(".modeBtn").forEach(btn=>{
+      btn.onclick = ()=>setMode(btn.dataset.mode);
+    });
+
+    const confettiCanvas = document.getElementById("confettiCanvas");
+    const ctx = confettiCanvas.getContext("2d");
+    let particles = [];
+    let confettiRunning = false;
+
+    function sizeCanvas(){
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+
+    function triggerConfetti(){
+      sizeCanvas();
+      particles = [];
+
+      const colors = ["#f59e0b","#22c55e","#3b82f6","#ec4899","#8b5cf6","#06b6d4"];
+
+      for(let i=0;i<120;i++){
+        particles.push({
+          x:Math.random() * confettiCanvas.width,
+          y:-20 - Math.random() * 80,
+          vx:(Math.random() - .5) * 5,
+          vy:Math.random() * 4 + 2,
+          r:Math.random() * 5 + 3,
+          color:colors[Math.floor(Math.random() * colors.length)],
+          rot:Math.random() * 360,
+          spin:(Math.random() - .5) * 12
+        });
+      }
+
+      if(!confettiRunning){
+        confettiRunning = true;
+        requestAnimationFrame(drawConfetti);
+      }
+    }
+
+    function drawConfetti(){
+      ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+
+      let alive = false;
+
+      particles.forEach(p=>{
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += .06;
+        p.rot += p.spin;
+
+        if(p.y < confettiCanvas.height + 40){
+          alive = true;
+        }
+
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.r,-p.r,p.r * 2,p.r * 2);
+        ctx.restore();
+      });
+
+      if(alive){
+        requestAnimationFrame(drawConfetti);
+      }else{
+        confettiRunning = false;
+        ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+      }
+    }
+
+    window.addEventListener("resize", sizeCanvas);
+
+    restartGame();
+  </script>
+</body>
+</html>
