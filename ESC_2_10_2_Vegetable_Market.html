@@ -1,0 +1,2008 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ESC_2_10_2_Vegetable_Market</title>
+
+  <style>
+    :root{
+      --ink:#172033;
+      --muted:#64748b;
+      --green:#16a34a;
+      --darkgreen:#14532d;
+      --lightgreen:#dcfce7;
+      --blue:#2563eb;
+      --purple:#7c3aed;
+      --orange:#f59e0b;
+      --red:#ef4444;
+      --yellow:#facc15;
+      --card:#ffffff;
+      --line:#dbeafe;
+      --shadow:0 18px 42px rgba(15,23,42,.13);
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        "Noto Sans SC",
+        "Microsoft YaHei",
+        sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 8% 0%, #fef9c3 0%, transparent 30%),
+        radial-gradient(circle at 92% 10%, #dcfce7 0%, transparent 34%),
+        linear-gradient(180deg,#effaf2,#f8fbff);
+      padding:18px;
+      overflow-x:hidden;
+    }
+
+    .app{
+      max-width:1320px;
+      margin:0 auto;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .logo{
+      width:64px;
+      height:64px;
+      border-radius:22px;
+      display:grid;
+      place-items:center;
+      font-size:35px;
+      color:white;
+      background:linear-gradient(135deg,#22c55e,#84cc16,#f59e0b);
+      box-shadow:var(--shadow);
+    }
+
+    h1{
+      margin:0;
+      font-size:32px;
+      line-height:1.05;
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+
+    .subtitle{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:15px;
+      font-weight:850;
+    }
+
+    button{
+      border:0;
+      border-radius:16px;
+      padding:12px 16px;
+      font-weight:950;
+      cursor:pointer;
+      font-size:15px;
+      font-family:inherit;
+      background:#fff;
+      color:var(--ink);
+      box-shadow:0 8px 18px rgba(15,23,42,.10);
+      transition:transform .12s ease, filter .12s ease, box-shadow .12s ease;
+    }
+
+    button:hover{
+      filter:brightness(.985);
+      transform:translateY(-1px);
+    }
+
+    button:active{
+      transform:translateY(1px) scale(.99);
+    }
+
+    button:disabled{
+      opacity:.48;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .primary{
+      background:linear-gradient(90deg,#2563eb,#7c3aed);
+      color:white;
+    }
+
+    .green{
+      background:linear-gradient(90deg,#22c55e,#16a34a);
+      color:white;
+    }
+
+    .orange{
+      background:linear-gradient(90deg,#fbbf24,#f59e0b);
+      color:#422006;
+    }
+
+    .tabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .tabBtn{
+      border:2px solid #bbf7d0;
+      background:white;
+      color:#166534;
+      box-shadow:none;
+      min-width:230px;
+    }
+
+    .tabBtn.active{
+      background:#16a34a;
+      color:white;
+      border-color:#16a34a;
+      box-shadow:0 10px 22px rgba(22,163,74,.22);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:minmax(570px,1.15fr) minmax(400px,.85fr);
+      gap:18px;
+      align-items:start;
+    }
+
+    .panel{
+      background:rgba(255,255,255,.88);
+      border:1px solid rgba(255,255,255,.96);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(8px);
+      overflow:hidden;
+    }
+
+    .scenePanel{
+      padding:18px;
+      min-height:700px;
+      position:relative;
+    }
+
+    .taskPanel{
+      padding:18px;
+    }
+
+    .marketScene{
+      min-height:660px;
+      border-radius:28px;
+      background:
+        radial-gradient(circle at 18% 8%, rgba(255,255,255,.65) 0 2px, transparent 3px),
+        radial-gradient(circle at 82% 14%, rgba(255,255,255,.65) 0 2px, transparent 3px),
+        linear-gradient(180deg,#dff7ff 0%,#dcfce7 42%,#86efac 100%);
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.9);
+      box-shadow:inset 0 0 32px rgba(255,255,255,.32);
+    }
+
+    .sceneTitle{
+      position:absolute;
+      left:22px;
+      top:18px;
+      background:rgba(255,255,255,.82);
+      border:1px solid rgba(255,255,255,.95);
+      border-radius:22px;
+      padding:12px 16px;
+      box-shadow:0 10px 24px rgba(15,23,42,.09);
+      z-index:8;
+    }
+
+    .sceneTitle .big{
+      font-size:22px;
+      font-weight:950;
+      color:#14532d;
+    }
+
+    .sceneTitle .small{
+      margin-top:3px;
+      font-size:13px;
+      font-weight:850;
+      color:#64748b;
+    }
+
+    .sun{
+      position:absolute;
+      right:42px;
+      top:34px;
+      width:105px;
+      height:105px;
+      border-radius:50%;
+      background:radial-gradient(circle at 32% 30%,#fffbd1 0%,#fde047 52%,#f59e0b 100%);
+      box-shadow:0 0 36px rgba(250,204,21,.48);
+      z-index:1;
+    }
+
+    .stallWrap{
+      position:absolute;
+      left:50%;
+      top:98px;
+      transform:translateX(-50%);
+      width:min(86%,620px);
+      z-index:3;
+      text-align:center;
+    }
+
+    .stallImg{
+      width:100%;
+      max-height:360px;
+      object-fit:contain;
+      filter:drop-shadow(0 18px 22px rgba(15,23,42,.20));
+    }
+
+    .stallFallback{
+      display:none;
+      height:280px;
+      border-radius:28px;
+      background:
+        linear-gradient(90deg,#ef4444 0 16%,#fef2f2 16% 32%,#ef4444 32% 48%,#fef2f2 48% 64%,#ef4444 64% 80%,#fef2f2 80% 100%);
+      border:8px solid #92400e;
+      box-shadow:0 16px 28px rgba(15,23,42,.18);
+    }
+
+    .captionCard{
+      position:absolute;
+      left:50%;
+      top:375px;
+      transform:translateX(-50%);
+      min-width:360px;
+      max-width:88%;
+      background:rgba(255,255,255,.86);
+      border:1px solid rgba(255,255,255,.96);
+      border-radius:24px;
+      padding:14px 18px;
+      text-align:center;
+      box-shadow:0 12px 28px rgba(15,23,42,.12);
+      z-index:9;
+    }
+
+    .captionCard .line1{
+      font-size:22px;
+      font-weight:950;
+      color:#14532d;
+    }
+
+    .captionCard .line2{
+      margin-top:4px;
+      font-size:14px;
+      font-weight:850;
+      color:#64748b;
+    }
+
+    .basketWrap{
+      position:absolute;
+      left:50%;
+      bottom:32px;
+      transform:translateX(-50%);
+      width:330px;
+      height:230px;
+      z-index:10;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      pointer-events:none;
+    }
+
+    .basketWrap.bump{
+      animation:basketBump .46s ease-out;
+    }
+
+    @keyframes basketBump{
+      0%{ transform:translateX(-50%) scale(1); }
+      32%{ transform:translateX(-50%) scale(1.045) translateY(-5px); }
+      100%{ transform:translateX(-50%) scale(1); }
+    }
+
+    .basketImg{
+      position:absolute;
+      left:50%;
+      bottom:0;
+      transform:translateX(-50%);
+      width:310px;
+      max-height:190px;
+      object-fit:contain;
+      z-index:4;
+      filter:drop-shadow(0 18px 18px rgba(15,23,42,.22));
+    }
+
+    .basketFallback{
+      display:none;
+      position:absolute;
+      left:50%;
+      bottom:16px;
+      transform:translateX(-50%);
+      width:300px;
+      height:120px;
+      border-radius:34px 34px 54px 54px;
+      background:
+        repeating-linear-gradient(35deg,rgba(255,255,255,.14) 0 9px,transparent 9px 18px),
+        repeating-linear-gradient(-35deg,rgba(101,60,24,.20) 0 10px,transparent 10px 20px),
+        linear-gradient(180deg,#c47a2c 0%,#9a5b24 100%);
+      border:7px solid #7a4217;
+      z-index:4;
+    }
+
+    .basketFallback::before{
+      content:"";
+      position:absolute;
+      left:32px;
+      right:32px;
+      top:-92px;
+      height:120px;
+      border:18px solid #9a5b24;
+      border-bottom:0;
+      border-radius:150px 150px 0 0;
+    }
+
+    .veggiePile{
+      position:absolute;
+      left:50%;
+      bottom:72px;
+      transform:translateX(-50%);
+      width:290px;
+      min-height:100px;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      align-items:flex-end;
+      gap:1px;
+      z-index:11;
+      pointer-events:none;
+    }
+
+    .pileVeggie{
+      font-size:34px;
+      line-height:1;
+      animation:pileIn .24s ease-out both;
+      filter:drop-shadow(0 4px 5px rgba(15,23,42,.16));
+    }
+
+    @keyframes pileIn{
+      from{
+        opacity:0;
+        transform:translateY(-10px) scale(.75) rotate(-12deg);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0) scale(1) rotate(0deg);
+      }
+    }
+
+    .pictureCard{
+      display:none;
+      position:absolute;
+      left:50%;
+      top:118px;
+      transform:translateX(-50%);
+      width:min(88%,560px);
+      background:rgba(255,255,255,.90);
+      border:2px solid #bbf7d0;
+      border-radius:30px;
+      padding:18px;
+      z-index:12;
+      box-shadow:0 18px 36px rgba(15,23,42,.14);
+    }
+
+    .pictureCard.show{
+      display:block;
+    }
+
+    .pictureTitle{
+      font-size:22px;
+      font-weight:950;
+      color:#14532d;
+      text-align:center;
+      margin-bottom:12px;
+    }
+
+    .pictureVeggies{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .pictureVeggie{
+      min-width:105px;
+      background:#f0fdf4;
+      border:1px solid #bbf7d0;
+      border-radius:20px;
+      padding:12px;
+      text-align:center;
+    }
+
+    .pictureVeggie .emoji{
+      font-size:42px;
+      line-height:1;
+    }
+
+    .pictureVeggie .zh{
+      margin-top:6px;
+      font-size:20px;
+      font-weight:950;
+    }
+
+    .pictureVeggie .py{
+      margin-top:2px;
+      color:#64748b;
+      font-size:12px;
+      font-weight:850;
+    }
+
+    .useful{
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      color:#9a3412;
+      border-radius:20px;
+      padding:12px;
+      font-size:14px;
+      font-weight:850;
+      line-height:1.55;
+    }
+
+    .modeBar{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .modeTabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .modeBtn{
+      padding:10px 12px;
+      border:1px solid #e2e8f0;
+      background:#fff;
+      color:#334155;
+      box-shadow:none;
+      border-radius:14px;
+      font-size:14px;
+    }
+
+    .modeBtn.active{
+      background:#16a34a;
+      color:white;
+      border-color:#16a34a;
+    }
+
+    .stats{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .stat{
+      background:#fff;
+      border:1px solid #e2e8f0;
+      border-radius:18px;
+      padding:10px 14px;
+      min-width:108px;
+      text-align:center;
+      box-shadow:0 6px 14px rgba(15,23,42,.06);
+    }
+
+    .stat .num{
+      font-size:24px;
+      font-weight:950;
+      line-height:1;
+      color:#0f172a;
+    }
+
+    .stat .lab{
+      margin-top:4px;
+      font-size:11px;
+      color:#64748b;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+    }
+
+    .taskCard{
+      background:linear-gradient(180deg,#ffffff,#f8fafc);
+      border:1px solid #e2e8f0;
+      border-radius:24px;
+      padding:18px;
+      box-shadow:0 10px 22px rgba(15,23,42,.08);
+    }
+
+    .taskLabel{
+      color:#64748b;
+      font-size:13px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-bottom:8px;
+    }
+
+    .promptMain{
+      min-height:105px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      background:#f0fdf4;
+      border:1px solid #bbf7d0;
+      border-radius:20px;
+      padding:14px;
+      font-size:32px;
+      font-weight:950;
+      color:#14532d;
+      line-height:1.18;
+      word-break:break-word;
+    }
+
+    .promptMain.english{
+      font-size:25px;
+    }
+
+    .promptSub{
+      margin-top:10px;
+      min-height:34px;
+      color:#475569;
+      font-weight:850;
+      line-height:1.45;
+      text-align:center;
+    }
+
+    .answerBox{
+      margin-top:12px;
+      display:none;
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      border-radius:18px;
+      padding:12px;
+      text-align:center;
+    }
+
+    .answerBox.show{
+      display:block;
+    }
+
+    .answerZh{
+      font-size:30px;
+      font-weight:950;
+      color:#9a3412;
+      line-height:1.15;
+    }
+
+    .answerPy{
+      margin-top:4px;
+      font-size:15px;
+      font-weight:900;
+      color:#c2410c;
+    }
+
+    .answerEn{
+      margin-top:4px;
+      font-size:14px;
+      font-weight:850;
+      color:#475569;
+      line-height:1.35;
+    }
+
+    .choices{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .choice{
+      min-height:78px;
+      border:2px solid #dcfce7;
+      background:white;
+      color:#172033;
+      border-radius:20px;
+      padding:10px 12px;
+      font-size:20px;
+      font-weight:950;
+      line-height:1.2;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:3px;
+    }
+
+    .choice .emoji{
+      font-size:30px;
+      line-height:1;
+    }
+
+    .choice .zh{
+      font-size:22px;
+      line-height:1.05;
+    }
+
+    .choice .small{
+      font-size:12px;
+      color:#64748b;
+      font-weight:850;
+      line-height:1.15;
+    }
+
+    .choice:hover{
+      border-color:#86efac;
+      background:#f0fdf4;
+    }
+
+    .choice.correct{
+      background:#dcfce7;
+      color:#14532d;
+      border-color:#22c55e;
+    }
+
+    .choice.wrong{
+      background:#fee2e2;
+      color:#991b1b;
+      border-color:#ef4444;
+      animation:shake .36s ease-in-out;
+    }
+
+    @keyframes shake{
+      0%,100%{transform:translateX(0);}
+      25%{transform:translateX(-7px);}
+      50%{transform:translateX(7px);}
+      75%{transform:translateX(-4px);}
+    }
+
+    .builderArea{
+      margin-top:14px;
+      display:none;
+    }
+
+    .builderArea.show{
+      display:block;
+    }
+
+    .wordBank{
+      background:#f8fafc;
+      border:2px dashed #cbd5e1;
+      border-radius:22px;
+      padding:14px;
+      min-height:130px;
+      display:flex;
+      flex-wrap:wrap;
+      align-content:flex-start;
+      gap:9px;
+      margin-bottom:12px;
+    }
+
+    .sentenceBox{
+      background:white;
+      border:2px solid #bbf7d0;
+      border-radius:22px;
+      padding:14px;
+      min-height:94px;
+      display:flex;
+      flex-wrap:wrap;
+      align-content:center;
+      justify-content:center;
+      gap:9px;
+    }
+
+    .tile{
+      background:white;
+      color:#172033;
+      border:2px solid #bbf7d0;
+      border-radius:15px;
+      padding:10px 13px;
+      font-size:19px;
+      font-weight:950;
+      min-height:48px;
+      box-shadow:0 7px 15px rgba(15,23,42,.08);
+    }
+
+    .tile.used{
+      opacity:.32;
+      pointer-events:none;
+    }
+
+    .slotTile{
+      background:linear-gradient(180deg,#dcfce7,#bbf7d0);
+      color:#0f172a;
+      border:2px solid #22c55e;
+      border-radius:15px;
+      padding:10px 13px;
+      font-size:19px;
+      font-weight:950;
+      min-height:48px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .emptyText{
+      color:#94a3b8;
+      font-weight:900;
+      font-size:17px;
+      align-self:center;
+    }
+
+    .sideBtns{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .sideBtns button{
+      padding:11px 10px;
+      font-size:14px;
+      border-radius:15px;
+    }
+
+    .fullBtn{
+      grid-column:1 / -1;
+    }
+
+    .feedback{
+      margin-top:12px;
+      min-height:42px;
+      border-radius:18px;
+      padding:11px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-size:17px;
+      font-weight:950;
+      line-height:1.35;
+      background:#f1f5f9;
+      color:#475569;
+    }
+
+    .feedback.good{
+      background:#dcfce7;
+      color:#14532d;
+      border:1px solid #bbf7d0;
+    }
+
+    .feedback.bad{
+      background:#fee2e2;
+      color:#991b1b;
+      border:1px solid #fecaca;
+      animation:shake .36s ease-in-out;
+    }
+
+    .doneBox{
+      margin-top:16px;
+      background:#fff;
+      border:1px solid #e2e8f0;
+      border-radius:22px;
+      padding:14px;
+    }
+
+    .doneTitle{
+      color:#64748b;
+      font-size:13px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+      margin-bottom:8px;
+    }
+
+    .doneList{
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+      max-height:120px;
+      overflow:auto;
+    }
+
+    .doneChip{
+      background:#fef3c7;
+      color:#92400e;
+      border:1px solid #fde68a;
+      border-radius:999px;
+      padding:6px 9px;
+      font-weight:900;
+      font-size:13px;
+    }
+
+    .instructions{
+      margin-top:16px;
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      color:#9a3412;
+      border-radius:22px;
+      padding:14px;
+      font-size:14px;
+      font-weight:800;
+      line-height:1.55;
+    }
+
+    .flyingVeggie{
+      position:fixed;
+      z-index:100;
+      pointer-events:none;
+      font-size:42px;
+      filter:drop-shadow(0 9px 11px rgba(15,23,42,.24));
+      transform-origin:center;
+    }
+
+    .winOverlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(15,23,42,.46);
+      backdrop-filter:blur(5px);
+      z-index:80;
+      padding:20px;
+      opacity:0;
+      transition:opacity .26s ease;
+    }
+
+    .winOverlay.show{
+      display:flex;
+      opacity:1;
+    }
+
+    .winCard{
+      width:min(560px,92vw);
+      background:white;
+      border-radius:34px;
+      padding:30px;
+      text-align:center;
+      box-shadow:0 26px 70px rgba(15,23,42,.35);
+      border:5px solid #fbbf24;
+      transform:translateY(14px) scale(.94);
+      opacity:0;
+      animation:modalIn .34s cubic-bezier(.22,1,.36,1) forwards;
+    }
+
+    @keyframes modalIn{
+      to{
+        transform:translateY(0) scale(1);
+        opacity:1;
+      }
+    }
+
+    .winEmoji{
+      font-size:68px;
+      animation:bounce 1s ease-in-out infinite;
+    }
+
+    @keyframes bounce{
+      0%,100%{transform:translateY(0);}
+      50%{transform:translateY(-10px);}
+    }
+
+    .winCard h2{
+      margin:10px 0 6px;
+      font-size:40px;
+      color:#111827;
+    }
+
+    .winCard p{
+      margin:8px 0 0;
+      color:#475569;
+      font-size:17px;
+      font-weight:800;
+      line-height:1.5;
+    }
+
+    .winBtns{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:20px;
+    }
+
+    canvas{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      width:100%;
+      height:100%;
+      z-index:90;
+    }
+
+    @media (max-width:1050px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+
+      .taskPanel{
+        order:-1;
+      }
+
+      .scenePanel{
+        min-height:auto;
+      }
+
+      .marketScene{
+        min-height:560px;
+      }
+
+      .captionCard{
+        top:330px;
+      }
+
+      .basketWrap{
+        bottom:20px;
+      }
+    }
+
+    @media (max-width:720px){
+      body{
+        padding:10px;
+      }
+
+      h1{
+        font-size:24px;
+      }
+
+      .logo{
+        width:52px;
+        height:52px;
+        font-size:28px;
+      }
+
+      .tabBtn{
+        min-width:100%;
+      }
+
+      .choices{
+        grid-template-columns:1fr;
+      }
+
+      .promptMain{
+        font-size:25px;
+        min-height:78px;
+      }
+
+      .promptMain.english{
+        font-size:20px;
+      }
+
+      .captionCard{
+        min-width:260px;
+        top:290px;
+      }
+
+      .basketWrap{
+        width:280px;
+        transform:translateX(-50%) scale(.84);
+      }
+
+      .basketWrap.bump{
+        animation:basketBumpSmall .46s ease-out;
+      }
+
+      @keyframes basketBumpSmall{
+        0%{ transform:translateX(-50%) scale(.84); }
+        32%{ transform:translateX(-50%) scale(.90) translateY(-4px); }
+        100%{ transform:translateX(-50%) scale(.84); }
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">🥬</div>
+        <div>
+          <h1>ESC_2_10_2_Vegetable_Market</h1>
+          <div class="subtitle">Fruit and Vegetables 水果、蔬菜｜Word List 2 + Challenge</div>
+        </div>
+      </div>
+
+      <button class="primary" id="restartBtn">Restart</button>
+    </header>
+
+    <div class="tabs">
+      <button class="tabBtn active" id="marketTab">Part 1 · Vegetable Market</button>
+      <button class="tabBtn" id="sentenceTab">Part 2 · Sentence Builder</button>
+      <button class="tabBtn" id="pictureTab">Part 3 · Picture Talk Challenge</button>
+    </div>
+
+    <main class="layout">
+      <section class="panel scenePanel">
+        <div class="marketScene">
+          <div class="sun"></div>
+
+          <div class="sceneTitle">
+            <div class="big">Vegetable Market</div>
+            <div class="small">Pick vegetables and practice sentences.</div>
+          </div>
+
+          <div class="stallWrap" id="stallWrap">
+            <img
+              class="stallImg"
+              id="stallImg"
+              src="assets/vegetables/market_stall.png"
+              alt="market stall"
+              onerror="this.style.display='none'; document.getElementById('stallFallback').style.display='block';"
+            >
+            <div class="stallFallback" id="stallFallback"></div>
+          </div>
+
+          <div class="pictureCard" id="pictureCard">
+            <div class="pictureTitle" id="pictureTitle">Picture Talk</div>
+            <div class="pictureVeggies" id="pictureVeggies"></div>
+            <div class="useful">
+              <strong>Useful Expressions:</strong><br>
+              我最/非常/很喜欢……<br>
+              我不太喜欢……<br>
+              ……、……，我都喜欢吃。<br>
+              我应该吃各种……
+            </div>
+          </div>
+
+          <div class="captionCard">
+            <div class="line1" id="sceneLine1">Choose the correct vegetable!</div>
+            <div class="line2" id="sceneLine2">答对以后，蔬菜会飞进篮子。</div>
+          </div>
+
+          <div class="basketWrap" id="basketWrap">
+            <div class="veggiePile" id="veggiePile"></div>
+            <img
+              class="basketImg"
+              id="basketImg"
+              src="assets/vegetables/vegetable_basket.png"
+              alt="vegetable basket"
+              onerror="this.style.display='none'; document.getElementById('basketFallback').style.display='block';"
+            >
+            <div class="basketFallback" id="basketFallback"></div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel taskPanel">
+        <div class="modeBar">
+          <div class="modeTabs">
+            <button class="modeBtn active" data-mode="easy">Easy</button>
+            <button class="modeBtn" data-mode="medium">Medium</button>
+            <button class="modeBtn" data-mode="hard">Hard</button>
+            <button class="modeBtn" data-mode="mixed">Mixed</button>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="num" id="scoreNum">0</div>
+              <div class="lab">Score</div>
+            </div>
+            <div class="stat">
+              <div class="num" id="progressNum">1/10</div>
+              <div class="lab">Progress</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="taskCard">
+          <div class="taskLabel" id="taskLabel">Prompt</div>
+          <div class="promptMain english" id="promptMain">tomato</div>
+          <div class="promptSub" id="promptSub">Choose the matching Chinese word.</div>
+
+          <div class="answerBox" id="answerBox">
+            <div class="answerZh" id="answerZh">西红柿</div>
+            <div class="answerPy" id="answerPy">xī hóng shì</div>
+            <div class="answerEn" id="answerEn">tomato</div>
+          </div>
+
+          <div class="choices" id="choices"></div>
+
+          <div class="builderArea" id="builderArea">
+            <div class="taskLabel" style="margin-top:14px;">Word Bank</div>
+            <div class="wordBank" id="wordBank"></div>
+
+            <div class="taskLabel">Your Sentence</div>
+            <div class="sentenceBox" id="sentenceBox">
+              <div class="emptyText">Tap word tiles to build the sentence.</div>
+            </div>
+          </div>
+
+          <div class="sideBtns">
+            <button id="showPinyinBtn">Show Pinyin</button>
+            <button id="showAnswerBtn">Show Answer</button>
+            <button class="green" id="readBtn">🔊 Read Chinese</button>
+            <button class="orange" id="clearBtn">Clear</button>
+            <button id="checkBtn">Check</button>
+            <button id="nextBtn">Next</button>
+            <button class="primary fullBtn" id="nextTaskBtn">Next Task</button>
+          </div>
+
+          <div class="feedback" id="feedback">Choose the correct answer.</div>
+        </div>
+
+        <div class="doneBox">
+          <div class="doneTitle">Collected / Completed</div>
+          <div class="doneList" id="doneList"></div>
+        </div>
+
+        <div class="instructions">
+          <strong>How to Play:</strong><br>
+          Part 1: Choose the Chinese word for the vegetable clue.<br>
+          Part 2: Put word tiles in order to build sentences from Word List 2.<br>
+          Part 3: Use the picture information and choose the best sentence.
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <div class="winOverlay" id="winOverlay">
+    <div class="winCard">
+      <div class="winEmoji">🥬</div>
+      <h2>Market Mission Complete!</h2>
+      <p id="winText">Great job! You completed this part.</p>
+      <div class="winBtns">
+        <button class="green" id="keepPlayingBtn">Keep Playing</button>
+        <button class="primary" id="restartWinBtn">Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const VOCAB_TASKS = [
+      { zh:"蔬", py:"shū", en:"vegetables", emoji:"🥬", options:["蔬","菜","土","豆"] },
+      { zh:"菜", py:"cài", en:"vegetables", emoji:"🥬", options:["菜","蔬","柿","花"] },
+      { zh:"蔬菜", py:"shū cài", en:"vegetables", emoji:"🥬", options:["蔬菜","西红柿","黄瓜","土豆"] },
+      { zh:"柿", py:"shì", en:"persimmon", emoji:"🍅", options:["柿","菜","花","豆"] },
+      { zh:"西红柿", py:"xī hóng shì", en:"tomato", emoji:"🍅", options:["西红柿","黄瓜","土豆","生菜"] },
+      { zh:"黄瓜", py:"huáng guā", en:"cucumber", emoji:"🥒", options:["黄瓜","土豆","菜花","西红柿"] },
+      { zh:"土", py:"tǔ", en:"soil", emoji:"🌱", options:["土","豆","生","花"] },
+      { zh:"豆", py:"dòu", en:"bean", emoji:"🫘", options:["豆","土","菜","柿"] },
+      { zh:"土豆", py:"tǔ dòu", en:"potato", emoji:"🥔", options:["土豆","黄瓜","生菜","菜花"] },
+      { zh:"生", py:"shēng", en:"raw", emoji:"🥬", options:["生","花","豆","太"] },
+      { zh:"生菜", py:"shēng cài", en:"lettuce", emoji:"🥬", options:["生菜","菜花","黄瓜","土豆"] },
+      { zh:"花", py:"huā", en:"flower", emoji:"🌸", options:["花","菜","各","太"] },
+      { zh:"菜花", py:"cài huā", en:"cauliflower", emoji:"🥦", options:["菜花","生菜","土豆","西红柿"] },
+      { zh:"可是", py:"kě shì", en:"but", emoji:"↪️", options:["可是","各种","不太","应该"] },
+      { zh:"太", py:"tài", en:"quite; too", emoji:"⭐", options:["太","各","种","可"] },
+      { zh:"各", py:"gè", en:"various", emoji:"🧺", options:["各","太","花","生"] },
+      { zh:"各种", py:"gè zhǒng", en:"various types of", emoji:"🧺", options:["各种","蔬菜","可是","土豆"] }
+    ];
+
+    const SENTENCE_TASKS = [
+      {
+        zh:"你喜欢吃蔬菜吗？",
+        py:"nǐ xǐ huan chī shū cài ma?",
+        en:"Do you like eating vegetables?",
+        emoji:"🥬",
+        tokens:["你","喜欢","吃","蔬菜","吗","？"]
+      },
+      {
+        zh:"我最喜欢吃西红柿。",
+        py:"wǒ zuì xǐ huan chī xī hóng shì.",
+        en:"I like eating tomatoes the most.",
+        emoji:"🍅",
+        tokens:["我","最","喜欢","吃","西红柿","。"]
+      },
+      {
+        zh:"我还喜欢吃黄瓜、土豆、生菜、菜花等。",
+        py:"wǒ hái xǐ huan chī huáng guā, tǔ dòu, shēng cài, cài huā děng.",
+        en:"I also like eating cucumbers, potatoes, lettuce, cauliflower, and so on.",
+        emoji:"🥒",
+        tokens:["我","还","喜欢","吃","黄瓜","、","土豆","、","生菜","、","菜花","等","。"]
+      },
+      {
+        zh:"可是我不太喜欢吃土豆。",
+        py:"kě shì wǒ bú tài xǐ huan chī tǔ dòu.",
+        en:"But I do not really like eating potatoes.",
+        emoji:"🥔",
+        tokens:["可是","我","不太","喜欢","吃","土豆","。"]
+      },
+      {
+        zh:"妈妈说我要多吃蔬菜。",
+        py:"mā ma shuō wǒ yào duō chī shū cài.",
+        en:"Mom says I should eat more vegetables.",
+        emoji:"🥬",
+        tokens:["妈妈","说","我","要","多","吃","蔬菜","。"]
+      },
+      {
+        zh:"妈妈说我还要吃各种蔬菜。",
+        py:"mā ma shuō wǒ hái yào chī gè zhǒng shū cài.",
+        en:"Mom says I also need to eat various types of vegetables.",
+        emoji:"🧺",
+        tokens:["妈妈","说","我","还要","吃","各种","蔬菜","。"]
+      },
+      {
+        zh:"我非常喜欢吃菜花。",
+        py:"wǒ fēi cháng xǐ huan chī cài huā.",
+        en:"I really like eating cauliflower.",
+        emoji:"🥦",
+        tokens:["我","非常","喜欢","吃","菜花","。"]
+      },
+      {
+        zh:"我不太喜欢吃黄瓜。",
+        py:"wǒ bú tài xǐ huan chī huáng guā.",
+        en:"I do not really like eating cucumbers.",
+        emoji:"🥒",
+        tokens:["我","不太","喜欢","吃","黄瓜","。"]
+      }
+    ];
+
+    const PICTURE_TASKS = [
+      {
+        title:"Picture 1",
+        items:[
+          {zh:"南瓜", py:"nán guā", emoji:"🎃"},
+          {zh:"西红柿", py:"xī hóng shì", emoji:"🍅"},
+          {zh:"青菜", py:"qīng cài", emoji:"🥬"}
+        ],
+        prompt:"Choose a good sentence for this picture.",
+        answer:"我喜欢吃南瓜、西红柿和青菜。",
+        py:"wǒ xǐ huan chī nán guā, xī hóng shì hé qīng cài.",
+        en:"I like eating pumpkin, tomatoes, and greens.",
+        options:[
+          "我喜欢吃南瓜、西红柿和青菜。",
+          "我不太喜欢吃水果。",
+          "我每天都打电话。",
+          "我最喜欢上数学课。"
+        ]
+      },
+      {
+        title:"Picture 2",
+        items:[
+          {zh:"黄瓜", py:"huáng guā", emoji:"🥒"},
+          {zh:"土豆", py:"tǔ dòu", emoji:"🥔"},
+          {zh:"四季豆", py:"sì jì dòu", emoji:"🫛"}
+        ],
+        prompt:"Choose a good sentence for this picture.",
+        answer:"黄瓜、土豆和四季豆，我都喜欢吃。",
+        py:"huáng guā, tǔ dòu hé sì jì dòu, wǒ dōu xǐ huan chī.",
+        en:"Cucumbers, potatoes, and green beans—I like eating all of them.",
+        options:[
+          "黄瓜、土豆和四季豆，我都喜欢吃。",
+          "我打错电话了。",
+          "我喜欢吃苹果和香蕉。",
+          "他不能去学校见老师了。"
+        ]
+      },
+      {
+        title:"Challenge Picture",
+        items:[
+          {zh:"冬瓜", py:"dōng guā", emoji:"🍈"},
+          {zh:"菜花", py:"cài huā", emoji:"🥦"},
+          {zh:"大白菜", py:"dà bái cài", emoji:"🥬"}
+        ],
+        prompt:"Choose the strongest picture-talk sentence.",
+        answer:"我非常喜欢吃菜花、冬瓜和大白菜。",
+        py:"wǒ fēi cháng xǐ huan chī cài huā, dōng guā hé dà bái cài.",
+        en:"I really like eating cauliflower, winter melon, and napa cabbage.",
+        options:[
+          "我非常喜欢吃菜花、冬瓜和大白菜。",
+          "我今天没空儿。",
+          "我不喜欢上美术课。",
+          "我每天吃一个苹果。"
+        ]
+      },
+      {
+        title:"Challenge Picture",
+        items:[
+          {zh:"西红柿", py:"xī hóng shì", emoji:"🍅"},
+          {zh:"黄瓜", py:"huáng guā", emoji:"🥒"},
+          {zh:"菜花", py:"cài huā", emoji:"🥦"}
+        ],
+        prompt:"Choose the sentence with 不太喜欢.",
+        answer:"我不太喜欢吃黄瓜，可是我喜欢吃西红柿和菜花。",
+        py:"wǒ bú tài xǐ huan chī huáng guā, kě shì wǒ xǐ huan chī xī hóng shì hé cài huā.",
+        en:"I do not really like cucumbers, but I like tomatoes and cauliflower.",
+        options:[
+          "我不太喜欢吃黄瓜，可是我喜欢吃西红柿和菜花。",
+          "我是学校办公室的秘书。",
+          "我喜欢学中文和英文。",
+          "我每天都吃三四种水果。"
+        ]
+      },
+      {
+        title:"Challenge Picture",
+        items:[
+          {zh:"蔬菜", py:"shū cài", emoji:"🥬"},
+          {zh:"各种", py:"gè zhǒng", emoji:"🧺"},
+          {zh:"西红柿", py:"xī hóng shì", emoji:"🍅"}
+        ],
+        prompt:"Choose the sentence with 应该 / 各种.",
+        answer:"我们应该吃各种蔬菜。",
+        py:"wǒ men yīng gāi chī gè zhǒng shū cài.",
+        en:"We should eat various types of vegetables.",
+        options:[
+          "我们应该吃各种蔬菜。",
+          "我们上午十点去游泳。",
+          "我不是谢文。",
+          "我会告诉周老师。"
+        ]
+      }
+    ];
+
+    let currentPart = "market";
+    let mode = "easy";
+    let order = [];
+    let currentIndex = 0;
+    let score = 0;
+    let completed = [];
+    let selectedTiles = [];
+    let currentPromptMode = "easy";
+    let locked = false;
+
+    const marketTab = document.getElementById("marketTab");
+    const sentenceTab = document.getElementById("sentenceTab");
+    const pictureTab = document.getElementById("pictureTab");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const scoreNum = document.getElementById("scoreNum");
+    const progressNum = document.getElementById("progressNum");
+    const promptMain = document.getElementById("promptMain");
+    const promptSub = document.getElementById("promptSub");
+    const taskLabel = document.getElementById("taskLabel");
+
+    const answerBox = document.getElementById("answerBox");
+    const answerZh = document.getElementById("answerZh");
+    const answerPy = document.getElementById("answerPy");
+    const answerEn = document.getElementById("answerEn");
+
+    const choices = document.getElementById("choices");
+    const builderArea = document.getElementById("builderArea");
+    const wordBank = document.getElementById("wordBank");
+    const sentenceBox = document.getElementById("sentenceBox");
+    const feedback = document.getElementById("feedback");
+    const doneList = document.getElementById("doneList");
+    const veggiePile = document.getElementById("veggiePile");
+    const basketWrap = document.getElementById("basketWrap");
+    const sceneLine1 = document.getElementById("sceneLine1");
+    const sceneLine2 = document.getElementById("sceneLine2");
+    const pictureCard = document.getElementById("pictureCard");
+    const pictureTitle = document.getElementById("pictureTitle");
+    const pictureVeggies = document.getElementById("pictureVeggies");
+
+    const showPinyinBtn = document.getElementById("showPinyinBtn");
+    const showAnswerBtn = document.getElementById("showAnswerBtn");
+    const readBtn = document.getElementById("readBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const checkBtn = document.getElementById("checkBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const nextTaskBtn = document.getElementById("nextTaskBtn");
+
+    const winOverlay = document.getElementById("winOverlay");
+    const winText = document.getElementById("winText");
+    const keepPlayingBtn = document.getElementById("keepPlayingBtn");
+    const restartWinBtn = document.getElementById("restartWinBtn");
+
+    function shuffle(arr){
+      const a = [...arr];
+      for(let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function tasks(){
+      if(currentPart === "market") return VOCAB_TASKS;
+      if(currentPart === "sentence") return SENTENCE_TASKS;
+      return PICTURE_TASKS;
+    }
+
+    function currentTask(){
+      return tasks()[order[currentIndex]];
+    }
+
+    function startPart(part){
+      currentPart = part;
+      marketTab.classList.toggle("active", part === "market");
+      sentenceTab.classList.toggle("active", part === "sentence");
+      pictureTab.classList.toggle("active", part === "picture");
+      restartGame();
+    }
+
+    function restartGame(){
+      order = shuffle(tasks().map((_,i)=>i));
+      currentIndex = 0;
+      score = 0;
+      completed = [];
+      selectedTiles = [];
+      locked = false;
+      veggiePile.innerHTML = "";
+      winOverlay.classList.remove("show");
+      renderTask();
+    }
+
+    function getPromptMode(){
+      if(mode === "mixed"){
+        const list = ["easy","medium","hard"];
+        return list[Math.floor(Math.random() * list.length)];
+      }
+      return mode;
+    }
+
+    function renderTask(){
+      locked = false;
+      const task = currentTask();
+      currentPromptMode = getPromptMode();
+      selectedTiles = [];
+
+      scoreNum.textContent = score;
+      progressNum.textContent = `${currentIndex + 1}/${tasks().length}`;
+
+      answerBox.classList.remove("show");
+      feedback.className = "feedback";
+      feedback.textContent = "Choose the correct answer.";
+
+      choices.innerHTML = "";
+      wordBank.innerHTML = "";
+      sentenceBox.innerHTML = "";
+      builderArea.classList.remove("show");
+      pictureCard.classList.remove("show");
+
+      if(currentPart === "market"){
+        renderMarketTask(task);
+      }else if(currentPart === "sentence"){
+        renderSentenceTask(task);
+      }else{
+        renderPictureTask(task);
+      }
+
+      renderDoneList();
+    }
+
+    function renderMarketTask(task){
+      taskLabel.textContent = "Part 1 · Vegetable Market";
+      sceneLine1.textContent = "Choose the correct vegetable!";
+      sceneLine2.textContent = "答对以后，蔬菜会飞进篮子。";
+      clearBtn.disabled = true;
+      checkBtn.disabled = true;
+
+      answerZh.textContent = task.zh;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+
+      promptMain.classList.remove("english");
+
+      if(currentPromptMode === "easy"){
+        promptMain.innerHTML = `${task.en}<br><span style="font-size:21px;color:#475569;">${task.py}</span>`;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Easy: English + pinyin. Choose the matching Chinese word.";
+      }else if(currentPromptMode === "medium"){
+        promptMain.textContent = task.py;
+        promptSub.textContent = "Medium: Pinyin only.";
+      }else{
+        promptMain.textContent = task.en;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Hard: English only.";
+      }
+
+      renderChoiceButtons(task.options, task.zh, task);
+    }
+
+    function renderChoiceButtons(optionList, answer, task){
+      choices.innerHTML = "";
+      builderArea.classList.remove("show");
+
+      shuffle(optionList).forEach(option=>{
+        const vocab = findVocab(option);
+
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.dataset.answer = option;
+
+        btn.innerHTML = `
+          <div class="emoji">${vocab.emoji || "🥬"}</div>
+          <div class="zh">${option}</div>
+          <div class="small">${vocab.py || ""}</div>
+        `;
+
+        btn.onclick = ()=>{
+          handleChoice(btn, option, answer, task);
+        };
+
+        choices.appendChild(btn);
+      });
+    }
+
+    function findVocab(zh){
+      return VOCAB_TASKS.find(v => v.zh === zh)
+        || PICTURE_TASKS.flatMap(p => p.items).find(v => v.zh === zh)
+        || {zh, py:"", en:"", emoji:"🥬"};
+    }
+
+    function handleChoice(btn, option, answer, task){
+      if(locked) return;
+
+      const correct = option === answer;
+
+      if(correct){
+        locked = true;
+
+        document.querySelectorAll(".choice").forEach(el=>{
+          el.disabled = true;
+          if(el.dataset.answer === answer){
+            el.classList.add("correct");
+          }
+        });
+
+        score += 10;
+        scoreNum.textContent = score;
+        completed.push(answer);
+
+        feedback.className = "feedback good";
+        feedback.textContent = `✅ Correct! ${answer}`;
+
+        speakChinese(answer);
+
+        if(currentPart === "market"){
+          flyVeggieToBasket(btn, task.emoji || "🥬");
+        }else if(currentPart === "picture"){
+          addVeggieToPile(task.items[0]?.emoji || "🥬");
+          bumpBasket();
+        }
+
+        renderDoneList();
+
+        setTimeout(()=>{
+          nextTask();
+        }, currentPart === "market" ? 1150 : 900);
+      }else{
+        btn.classList.add("wrong");
+        feedback.className = "feedback bad";
+        feedback.textContent = "❌ Not yet. Try again.";
+        setTimeout(()=>btn.classList.remove("wrong"), 520);
+      }
+    }
+
+    function flyVeggieToBasket(sourceBtn, emoji){
+      const rect = sourceBtn.getBoundingClientRect();
+      const basketRect = basketWrap.getBoundingClientRect();
+
+      const veggie = document.createElement("div");
+      veggie.className = "flyingVeggie";
+      veggie.textContent = emoji || "🥬";
+
+      const startX = rect.left + rect.width / 2;
+      const startY = rect.top + rect.height / 2;
+      const endX = basketRect.left + basketRect.width / 2 + (Math.random() * 78 - 39);
+      const endY = basketRect.top + basketRect.height * .55 + (Math.random() * 20 - 10);
+      const midX = (startX + endX) / 2 + (Math.random() * 90 - 45);
+      const midY = Math.min(startY, endY) - 130;
+
+      veggie.style.left = startX + "px";
+      veggie.style.top = startY + "px";
+
+      document.body.appendChild(veggie);
+
+      veggie.animate([
+        {
+          transform:"translate(-50%,-50%) scale(.82) rotate(0deg)",
+          left:startX + "px",
+          top:startY + "px",
+          opacity:1
+        },
+        {
+          transform:"translate(-50%,-50%) scale(1.18) rotate(18deg)",
+          left:midX + "px",
+          top:midY + "px",
+          opacity:1,
+          offset:.52
+        },
+        {
+          transform:"translate(-50%,-50%) scale(.96) rotate(-12deg)",
+          left:endX + "px",
+          top:endY + "px",
+          opacity:1
+        }
+      ], {
+        duration:850,
+        easing:"cubic-bezier(.22,1,.36,1)",
+        fill:"forwards"
+      }).onfinish = ()=>{
+        veggie.remove();
+        addVeggieToPile(emoji);
+        bumpBasket();
+      };
+    }
+
+    function addVeggieToPile(emoji){
+      const item = document.createElement("div");
+      item.className = "pileVeggie";
+      item.textContent = emoji || "🥬";
+      item.style.rotate = (Math.random() * 28 - 14) + "deg";
+      veggiePile.appendChild(item);
+    }
+
+    function bumpBasket(){
+      basketWrap.classList.remove("bump");
+      void basketWrap.offsetWidth;
+      basketWrap.classList.add("bump");
+    }
+
+    function renderSentenceTask(task){
+      taskLabel.textContent = "Part 2 · Sentence Builder";
+      sceneLine1.textContent = "Build the vegetable sentence.";
+      sceneLine2.textContent = "把词块按顺序点出来，组成完整句子。";
+      builderArea.classList.add("show");
+      choices.innerHTML = "";
+      clearBtn.disabled = false;
+      checkBtn.disabled = false;
+
+      answerZh.textContent = task.zh;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+
+      promptMain.classList.remove("english");
+
+      if(currentPromptMode === "easy"){
+        promptMain.innerHTML = `${task.en}<br><span style="font-size:21px;color:#475569;">${task.py}</span>`;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Easy: English + pinyin. Build the Chinese sentence.";
+      }else if(currentPromptMode === "medium"){
+        promptMain.textContent = task.en;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Medium: English clue only.";
+      }else{
+        promptMain.textContent = "Build the correct Chinese sentence.";
+        promptSub.textContent = "Hard: Use the word tiles only.";
+      }
+
+      renderWordTiles(task);
+    }
+
+    function renderWordTiles(task){
+      wordBank.innerHTML = "";
+      sentenceBox.innerHTML = "";
+
+      const shuffled = shuffle(task.tokens.map((token,index)=>({token,index})));
+
+      shuffled.forEach(obj=>{
+        const btn = document.createElement("button");
+        btn.className = "tile";
+        btn.textContent = obj.token;
+
+        btn.onclick = ()=>{
+          if(btn.classList.contains("used")) return;
+
+          selectedTiles.push({
+            token:obj.token,
+            button:btn
+          });
+
+          btn.classList.add("used");
+          renderSentenceBox();
+        };
+
+        wordBank.appendChild(btn);
+      });
+
+      renderSentenceBox();
+    }
+
+    function renderSentenceBox(){
+      sentenceBox.innerHTML = "";
+
+      if(selectedTiles.length === 0){
+        const empty = document.createElement("div");
+        empty.className = "emptyText";
+        empty.textContent = "Tap word tiles to build the sentence.";
+        sentenceBox.appendChild(empty);
+        return;
+      }
+
+      selectedTiles.forEach((item,index)=>{
+        const slot = document.createElement("button");
+        slot.className = "slotTile";
+        slot.textContent = item.token;
+
+        slot.onclick = ()=>{
+          if(item.button){
+            item.button.classList.remove("used");
+          }
+          selectedTiles.splice(index,1);
+          renderSentenceBox();
+        };
+
+        sentenceBox.appendChild(slot);
+      });
+    }
+
+    function checkSentence(){
+      if(currentPart !== "sentence") return;
+
+      const task = currentTask();
+      const answer = selectedTiles.map(x=>x.token).join("");
+      const correct = task.zh.replace(/\s/g,"");
+
+      if(answer === correct){
+        score += 10;
+        scoreNum.textContent = score;
+        completed.push(task.zh);
+
+        feedback.className = "feedback good";
+        feedback.textContent = `✅ Correct! ${task.zh}`;
+
+        speakChinese(task.zh);
+        addVeggieToPile(task.emoji || "🥬");
+        bumpBasket();
+        renderDoneList();
+
+        setTimeout(()=>{
+          nextTask();
+        }, 1000);
+      }else{
+        feedback.className = "feedback bad";
+        feedback.textContent = "❌ Not yet. Check the order and try again.";
+      }
+    }
+
+    function clearBuild(){
+      if(currentPart !== "sentence") return;
+
+      selectedTiles.forEach(item=>{
+        if(item.button){
+          item.button.classList.remove("used");
+        }
+      });
+
+      selectedTiles = [];
+      renderSentenceBox();
+      feedback.className = "feedback";
+      feedback.textContent = "Cleared. Try again.";
+    }
+
+    function renderPictureTask(task){
+      taskLabel.textContent = "Part 3 · Picture Talk Challenge";
+      sceneLine1.textContent = "Picture Talk Challenge";
+      sceneLine2.textContent = "看图片信息，选择最合适的句子。";
+      clearBtn.disabled = true;
+      checkBtn.disabled = true;
+
+      pictureCard.classList.add("show");
+      pictureTitle.textContent = task.title;
+      pictureVeggies.innerHTML = "";
+
+      task.items.forEach(item=>{
+        const div = document.createElement("div");
+        div.className = "pictureVeggie";
+        div.innerHTML = `
+          <div class="emoji">${item.emoji}</div>
+          <div class="zh">${item.zh}</div>
+          <div class="py">${item.py}</div>
+        `;
+        pictureVeggies.appendChild(div);
+      });
+
+      answerZh.textContent = task.answer;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+
+      promptMain.classList.remove("english");
+
+      if(currentPromptMode === "easy"){
+        promptMain.innerHTML = `${task.en}<br><span style="font-size:20px;color:#475569;">${task.py}</span>`;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Easy: English + pinyin for the best sentence.";
+      }else if(currentPromptMode === "medium"){
+        promptMain.textContent = task.prompt;
+        promptSub.textContent = "Medium: Use the picture card and prompt.";
+      }else{
+        promptMain.textContent = "Choose the best Chinese sentence.";
+        promptSub.textContent = "Hard: Use only the picture information.";
+      }
+
+      renderChoiceButtons(task.options, task.answer, task);
+    }
+
+    function showPinyin(){
+      const task = currentTask();
+      answerBox.classList.add("show");
+      answerZh.textContent = "???";
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+    }
+
+    function showAnswer(){
+      const task = currentTask();
+      answerBox.classList.add("show");
+
+      if(currentPart === "market"){
+        answerZh.textContent = task.zh;
+      }else if(currentPart === "sentence"){
+        answerZh.textContent = task.zh;
+      }else{
+        answerZh.textContent = task.answer;
+      }
+
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+    }
+
+    function readCurrent(){
+      const task = currentTask();
+
+      if(currentPart === "market"){
+        speakChinese(task.zh);
+      }else if(currentPart === "sentence"){
+        speakChinese(task.zh);
+      }else{
+        speakChinese(task.answer);
+      }
+    }
+
+    function nextTask(){
+      if(currentIndex < tasks().length - 1){
+        currentIndex++;
+        renderTask();
+      }else{
+        showWin();
+      }
+    }
+
+    function showWin(){
+      const label =
+        currentPart === "market"
+          ? "Vegetable Market"
+          : currentPart === "sentence"
+            ? "Sentence Builder"
+            : "Picture Talk Challenge";
+
+      winText.textContent = `Great job! You completed ${label}. Score: ${score}`;
+      winOverlay.classList.add("show");
+      triggerConfetti();
+    }
+
+    function renderDoneList(){
+      doneList.innerHTML = "";
+
+      completed.slice().reverse().forEach(text=>{
+        const chip = document.createElement("div");
+        chip.className = "doneChip";
+        chip.textContent = text;
+        doneList.appendChild(chip);
+      });
+    }
+
+    function setMode(newMode){
+      mode = newMode;
+
+      document.querySelectorAll(".modeBtn").forEach(btn=>{
+        btn.classList.toggle("active", btn.dataset.mode === mode);
+      });
+
+      renderTask();
+    }
+
+    function speakChinese(text){
+      if(!("speechSynthesis" in window)) return;
+
+      window.speechSynthesis.cancel();
+
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "zh-CN";
+      utter.rate = 0.82;
+      utter.pitch = 1;
+
+      window.speechSynthesis.speak(utter);
+    }
+
+    marketTab.onclick = ()=>startPart("market");
+    sentenceTab.onclick = ()=>startPart("sentence");
+    pictureTab.onclick = ()=>startPart("picture");
+    restartBtn.onclick = restartGame;
+
+    showPinyinBtn.onclick = showPinyin;
+    showAnswerBtn.onclick = showAnswer;
+    readBtn.onclick = readCurrent;
+    clearBtn.onclick = clearBuild;
+    checkBtn.onclick = checkSentence;
+    nextBtn.onclick = nextTask;
+    nextTaskBtn.onclick = nextTask;
+
+    keepPlayingBtn.onclick = ()=>{
+      winOverlay.classList.remove("show");
+    };
+
+    restartWinBtn.onclick = ()=>{
+      winOverlay.classList.remove("show");
+      restartGame();
+    };
+
+    document.querySelectorAll(".modeBtn").forEach(btn=>{
+      btn.onclick = ()=>setMode(btn.dataset.mode);
+    });
+
+    const confettiCanvas = document.getElementById("confettiCanvas");
+    const ctx = confettiCanvas.getContext("2d");
+    let particles = [];
+    let confettiRunning = false;
+
+    function sizeCanvas(){
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+
+    function triggerConfetti(){
+      sizeCanvas();
+      particles = [];
+
+      const colors = ["#f59e0b","#22c55e","#3b82f6","#ec4899","#8b5cf6","#06b6d4"];
+
+      for(let i=0;i<130;i++){
+        particles.push({
+          x:Math.random() * confettiCanvas.width,
+          y:-20 - Math.random() * 80,
+          vx:(Math.random() - .5) * 5,
+          vy:Math.random() * 4 + 2,
+          r:Math.random() * 5 + 3,
+          color:colors[Math.floor(Math.random() * colors.length)],
+          rot:Math.random() * 360,
+          spin:(Math.random() - .5) * 12
+        });
+      }
+
+      if(!confettiRunning){
+        confettiRunning = true;
+        requestAnimationFrame(drawConfetti);
+      }
+    }
+
+    function drawConfetti(){
+      ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+
+      let alive = false;
+
+      particles.forEach(p=>{
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += .06;
+        p.rot += p.spin;
+
+        if(p.y < confettiCanvas.height + 40){
+          alive = true;
+        }
+
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.r,-p.r,p.r * 2,p.r * 2);
+        ctx.restore();
+      });
+
+      if(alive){
+        requestAnimationFrame(drawConfetti);
+      }else{
+        confettiRunning = false;
+        ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+      }
+    }
+
+    window.addEventListener("resize", sizeCanvas);
+
+    restartGame();
+  </script>
+</body>
+</html>
