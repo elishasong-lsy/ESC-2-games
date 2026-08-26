@@ -1,0 +1,2101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ESC_2_11_2_Lunch_Choice</title>
+
+  <style>
+    :root{
+      --ink:#172033;
+      --muted:#64748b;
+      --blue:#2563eb;
+      --purple:#7c3aed;
+      --green:#16a34a;
+      --orange:#f59e0b;
+      --red:#ef4444;
+      --yellow:#facc15;
+      --cream:#fff7ed;
+      --card:#ffffff;
+      --shadow:0 18px 42px rgba(15,23,42,.13);
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        "Noto Sans SC",
+        "Microsoft YaHei",
+        sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 8% 0%, #fef3c7 0%, transparent 31%),
+        radial-gradient(circle at 92% 9%, #dbeafe 0%, transparent 31%),
+        linear-gradient(180deg,#fff7ed,#f8fbff);
+      padding:18px;
+      overflow-x:hidden;
+    }
+
+    .app{
+      max-width:1320px;
+      margin:0 auto;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .logo{
+      width:64px;
+      height:64px;
+      border-radius:22px;
+      display:grid;
+      place-items:center;
+      font-size:35px;
+      color:white;
+      background:linear-gradient(135deg,#f97316,#ef4444,#7c3aed);
+      box-shadow:var(--shadow);
+    }
+
+    h1{
+      margin:0;
+      font-size:32px;
+      line-height:1.05;
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+
+    .subtitle{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:15px;
+      font-weight:850;
+    }
+
+    button{
+      border:0;
+      border-radius:16px;
+      padding:12px 16px;
+      font-weight:950;
+      cursor:pointer;
+      font-size:15px;
+      font-family:inherit;
+      background:#fff;
+      color:var(--ink);
+      box-shadow:0 8px 18px rgba(15,23,42,.10);
+      transition:transform .12s ease, filter .12s ease, box-shadow .12s ease;
+    }
+
+    button:hover{
+      filter:brightness(.985);
+      transform:translateY(-1px);
+    }
+
+    button:active{
+      transform:translateY(1px) scale(.99);
+    }
+
+    button:disabled{
+      opacity:.48;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .primary{
+      background:linear-gradient(90deg,#2563eb,#7c3aed);
+      color:white;
+    }
+
+    .green{
+      background:linear-gradient(90deg,#22c55e,#16a34a);
+      color:white;
+    }
+
+    .orange{
+      background:linear-gradient(90deg,#fbbf24,#f59e0b);
+      color:#422006;
+    }
+
+    .tabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .tabBtn{
+      border:2px solid #fed7aa;
+      background:white;
+      color:#9a3412;
+      box-shadow:none;
+      min-width:220px;
+    }
+
+    .tabBtn.active{
+      background:#f59e0b;
+      color:#422006;
+      border-color:#f59e0b;
+      box-shadow:0 10px 22px rgba(245,158,11,.24);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:minmax(570px,1.15fr) minmax(400px,.85fr);
+      gap:18px;
+      align-items:start;
+    }
+
+    .panel{
+      background:rgba(255,255,255,.88);
+      border:1px solid rgba(255,255,255,.96);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(8px);
+      overflow:hidden;
+    }
+
+    .scenePanel{
+      padding:18px;
+      min-height:700px;
+      position:relative;
+    }
+
+    .taskPanel{
+      padding:18px;
+    }
+
+    .lunchScene{
+      min-height:660px;
+      border-radius:28px;
+      background:
+        radial-gradient(circle at 18% 8%, rgba(255,255,255,.65) 0 2px, transparent 3px),
+        radial-gradient(circle at 82% 14%, rgba(255,255,255,.65) 0 2px, transparent 3px),
+        linear-gradient(180deg,#bfdbfe 0%,#fde68a 42%,#fb923c 100%);
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.9);
+      box-shadow:inset 0 0 32px rgba(255,255,255,.32);
+    }
+
+    .sceneTitle{
+      position:absolute;
+      left:22px;
+      top:18px;
+      background:rgba(255,255,255,.86);
+      border:1px solid rgba(255,255,255,.95);
+      border-radius:22px;
+      padding:12px 16px;
+      box-shadow:0 10px 24px rgba(15,23,42,.09);
+      z-index:8;
+    }
+
+    .sceneTitle .big{
+      font-size:22px;
+      font-weight:950;
+      color:#9a3412;
+    }
+
+    .sceneTitle .small{
+      margin-top:3px;
+      font-size:13px;
+      font-weight:850;
+      color:#64748b;
+    }
+
+    .window{
+      position:absolute;
+      right:34px;
+      top:30px;
+      width:160px;
+      height:120px;
+      border-radius:24px;
+      background:linear-gradient(180deg,#bfdbfe,#eff6ff);
+      border:8px solid rgba(255,255,255,.82);
+      box-shadow:0 12px 22px rgba(15,23,42,.12);
+      z-index:1;
+      overflow:hidden;
+    }
+
+    .window::before{
+      content:"☀️";
+      position:absolute;
+      right:14px;
+      top:10px;
+      font-size:44px;
+    }
+
+    .window::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:0;
+      width:8px;
+      height:100%;
+      background:rgba(255,255,255,.88);
+      transform:translateX(-50%);
+    }
+
+    .table{
+      position:absolute;
+      left:50%;
+      bottom:0;
+      transform:translateX(-50%);
+      width:92%;
+      height:390px;
+      border-radius:48px 48px 0 0;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.18) 0 2px,transparent 2px 100%),
+        linear-gradient(180deg,#92400e,#78350f);
+      background-size:46px 100%;
+      box-shadow:0 -18px 36px rgba(120,53,15,.22);
+      z-index:2;
+    }
+
+    .placemat{
+      position:absolute;
+      left:50%;
+      bottom:58px;
+      transform:translateX(-50%);
+      width:82%;
+      height:285px;
+      border-radius:42px;
+      background:
+        linear-gradient(45deg,rgba(255,255,255,.35) 25%,transparent 25% 50%,rgba(255,255,255,.35) 50% 75%,transparent 75%),
+        linear-gradient(135deg,#fed7aa,#bfdbfe);
+      background-size:54px 54px;
+      box-shadow:0 18px 28px rgba(15,23,42,.18);
+      border:5px solid rgba(255,255,255,.72);
+      rotate:-1deg;
+      z-index:3;
+    }
+
+    .captionCard{
+      position:absolute;
+      left:50%;
+      top:150px;
+      transform:translateX(-50%);
+      min-width:360px;
+      max-width:88%;
+      background:rgba(255,255,255,.88);
+      border:1px solid rgba(255,255,255,.96);
+      border-radius:24px;
+      padding:14px 18px;
+      text-align:center;
+      box-shadow:0 12px 28px rgba(15,23,42,.12);
+      z-index:9;
+    }
+
+    .captionCard .line1{
+      font-size:22px;
+      font-weight:950;
+      color:#9a3412;
+    }
+
+    .captionCard .line2{
+      margin-top:4px;
+      font-size:14px;
+      font-weight:850;
+      color:#64748b;
+    }
+
+    .trayWrap{
+      position:absolute;
+      left:50%;
+      bottom:60px;
+      transform:translateX(-50%);
+      width:410px;
+      height:230px;
+      z-index:10;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      pointer-events:none;
+    }
+
+    .trayWrap.bump{
+      animation:trayBump .46s ease-out;
+    }
+
+    @keyframes trayBump{
+      0%{ transform:translateX(-50%) scale(1); }
+      32%{ transform:translateX(-50%) scale(1.045) translateY(-5px); }
+      100%{ transform:translateX(-50%) scale(1); }
+    }
+
+    .tray{
+      position:absolute;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      width:375px;
+      height:150px;
+      border-radius:48px;
+      background:
+        radial-gradient(circle at 30% 28%, rgba(255,255,255,.40) 0 14%, transparent 15%),
+        linear-gradient(180deg,#fee2e2,#f97316);
+      border:10px solid #b45309;
+      box-shadow:inset 0 10px 18px rgba(255,255,255,.25),0 20px 25px rgba(15,23,42,.22);
+      z-index:3;
+    }
+
+    .foodPile{
+      position:absolute;
+      left:50%;
+      bottom:82px;
+      transform:translateX(-50%);
+      width:340px;
+      min-height:115px;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      align-items:flex-end;
+      gap:1px;
+      z-index:11;
+      pointer-events:none;
+    }
+
+    .pileFood{
+      font-size:36px;
+      line-height:1;
+      animation:pileIn .24s ease-out both;
+      filter:drop-shadow(0 4px 5px rgba(15,23,42,.16));
+    }
+
+    @keyframes pileIn{
+      from{
+        opacity:0;
+        transform:translateY(-10px) scale(.75) rotate(-12deg);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0) scale(1) rotate(0deg);
+      }
+    }
+
+    .sortPlates{
+      display:none;
+      position:absolute;
+      left:50%;
+      bottom:116px;
+      transform:translateX(-50%);
+      width:92%;
+      z-index:12;
+      justify-content:space-between;
+      gap:12px;
+      pointer-events:none;
+    }
+
+    .sortPlates.show{
+      display:flex;
+    }
+
+    .plate{
+      width:31%;
+      min-height:165px;
+      border-radius:28px;
+      background:radial-gradient(circle,#ffffff 0 45%,#e2e8f0 46% 60%,#ffffff 61%);
+      box-shadow:0 12px 20px rgba(15,23,42,.18);
+      border:6px solid rgba(255,255,255,.88);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      font-size:46px;
+      position:relative;
+    }
+
+    .plateLabel{
+      position:absolute;
+      bottom:-34px;
+      left:50%;
+      transform:translateX(-50%);
+      background:white;
+      border:1px solid #fed7aa;
+      color:#9a3412;
+      border-radius:999px;
+      padding:7px 11px;
+      font-size:14px;
+      font-weight:950;
+      white-space:nowrap;
+      box-shadow:0 8px 14px rgba(15,23,42,.12);
+    }
+
+    .healthCard{
+      display:none;
+      position:absolute;
+      left:50%;
+      top:260px;
+      transform:translateX(-50%);
+      width:min(88%,560px);
+      background:rgba(255,255,255,.93);
+      border:2px solid #fed7aa;
+      border-radius:30px;
+      padding:18px;
+      z-index:12;
+      box-shadow:0 18px 36px rgba(15,23,42,.14);
+      text-align:center;
+    }
+
+    .healthCard.show{
+      display:block;
+    }
+
+    .healthEmoji{
+      font-size:56px;
+      line-height:1;
+      margin-bottom:8px;
+    }
+
+    .healthLine{
+      font-size:22px;
+      font-weight:950;
+      color:#9a3412;
+      line-height:1.35;
+    }
+
+    .menuCard{
+      display:none;
+      position:absolute;
+      left:50%;
+      top:270px;
+      transform:translateX(-50%);
+      width:min(88%,560px);
+      background:rgba(255,255,255,.92);
+      border:2px solid #fed7aa;
+      border-radius:28px;
+      padding:16px;
+      z-index:12;
+      box-shadow:0 18px 36px rgba(15,23,42,.14);
+      text-align:center;
+    }
+
+    .menuCard.show{
+      display:block;
+    }
+
+    .menuTitle{
+      font-size:20px;
+      font-weight:950;
+      color:#9a3412;
+      margin-bottom:8px;
+    }
+
+    .menuLine{
+      font-size:20px;
+      font-weight:950;
+      color:#172033;
+      line-height:1.45;
+    }
+
+    .modeBar{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .modeTabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .modeBtn{
+      padding:10px 12px;
+      border:1px solid #e2e8f0;
+      background:#fff;
+      color:#334155;
+      box-shadow:none;
+      border-radius:14px;
+      font-size:14px;
+    }
+
+    .modeBtn.active{
+      background:#f59e0b;
+      color:#422006;
+      border-color:#f59e0b;
+    }
+
+    .stats{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .stat{
+      background:#fff;
+      border:1px solid #e2e8f0;
+      border-radius:18px;
+      padding:10px 14px;
+      min-width:108px;
+      text-align:center;
+      box-shadow:0 6px 14px rgba(15,23,42,.06);
+    }
+
+    .stat .num{
+      font-size:24px;
+      font-weight:950;
+      line-height:1;
+      color:#0f172a;
+    }
+
+    .stat .lab{
+      margin-top:4px;
+      font-size:11px;
+      color:#64748b;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+    }
+
+    .taskCard{
+      background:linear-gradient(180deg,#ffffff,#f8fafc);
+      border:1px solid #e2e8f0;
+      border-radius:24px;
+      padding:18px;
+      box-shadow:0 10px 22px rgba(15,23,42,.08);
+    }
+
+    .taskLabel{
+      color:#64748b;
+      font-size:13px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-bottom:8px;
+    }
+
+    .promptMain{
+      min-height:105px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      border-radius:20px;
+      padding:14px;
+      font-size:32px;
+      font-weight:950;
+      color:#9a3412;
+      line-height:1.18;
+      word-break:break-word;
+    }
+
+    .promptMain.english{
+      font-size:25px;
+    }
+
+    .promptSub{
+      margin-top:10px;
+      min-height:34px;
+      color:#475569;
+      font-weight:850;
+      line-height:1.45;
+      text-align:center;
+    }
+
+    .answerBox{
+      margin-top:12px;
+      display:none;
+      background:#eff6ff;
+      border:1px solid #bfdbfe;
+      border-radius:18px;
+      padding:12px;
+      text-align:center;
+    }
+
+    .answerBox.show{
+      display:block;
+    }
+
+    .answerZh{
+      font-size:30px;
+      font-weight:950;
+      color:#1e3a8a;
+      line-height:1.15;
+    }
+
+    .answerPy{
+      margin-top:4px;
+      font-size:15px;
+      font-weight:900;
+      color:#1d4ed8;
+    }
+
+    .answerEn{
+      margin-top:4px;
+      font-size:14px;
+      font-weight:850;
+      color:#475569;
+      line-height:1.35;
+    }
+
+    .choices{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .choice{
+      min-height:78px;
+      border:2px solid #fed7aa;
+      background:white;
+      color:#172033;
+      border-radius:20px;
+      padding:10px 12px;
+      font-size:20px;
+      font-weight:950;
+      line-height:1.2;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:3px;
+    }
+
+    .choice .emoji{
+      font-size:30px;
+      line-height:1;
+    }
+
+    .choice .zh{
+      font-size:22px;
+      line-height:1.05;
+    }
+
+    .choice .small{
+      font-size:12px;
+      color:#64748b;
+      font-weight:850;
+      line-height:1.15;
+    }
+
+    .choice:hover{
+      border-color:#fbbf24;
+      background:#fffbeb;
+    }
+
+    .choice.correct{
+      background:#dcfce7;
+      color:#14532d;
+      border-color:#22c55e;
+    }
+
+    .choice.wrong{
+      background:#fee2e2;
+      color:#991b1b;
+      border-color:#ef4444;
+      animation:shake .36s ease-in-out;
+    }
+
+    @keyframes shake{
+      0%,100%{transform:translateX(0);}
+      25%{transform:translateX(-7px);}
+      50%{transform:translateX(7px);}
+      75%{transform:translateX(-4px);}
+    }
+
+    .builderArea{
+      margin-top:14px;
+      display:none;
+    }
+
+    .builderArea.show{
+      display:block;
+    }
+
+    .wordBank{
+      background:#f8fafc;
+      border:2px dashed #cbd5e1;
+      border-radius:22px;
+      padding:14px;
+      min-height:130px;
+      display:flex;
+      flex-wrap:wrap;
+      align-content:flex-start;
+      gap:9px;
+      margin-bottom:12px;
+    }
+
+    .sentenceBox{
+      background:white;
+      border:2px solid #fed7aa;
+      border-radius:22px;
+      padding:14px;
+      min-height:94px;
+      display:flex;
+      flex-wrap:wrap;
+      align-content:center;
+      justify-content:center;
+      gap:9px;
+    }
+
+    .tile{
+      background:white;
+      color:#172033;
+      border:2px solid #fed7aa;
+      border-radius:15px;
+      padding:10px 13px;
+      font-size:19px;
+      font-weight:950;
+      min-height:48px;
+      box-shadow:0 7px 15px rgba(15,23,42,.08);
+    }
+
+    .tile.used{
+      opacity:.32;
+      pointer-events:none;
+    }
+
+    .slotTile{
+      background:linear-gradient(180deg,#fff7ed,#fed7aa);
+      color:#0f172a;
+      border:2px solid #f59e0b;
+      border-radius:15px;
+      padding:10px 13px;
+      font-size:19px;
+      font-weight:950;
+      min-height:48px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .emptyText{
+      color:#94a3b8;
+      font-weight:900;
+      font-size:17px;
+      align-self:center;
+    }
+
+    .sideBtns{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .sideBtns button{
+      padding:11px 10px;
+      font-size:14px;
+      border-radius:15px;
+    }
+
+    .fullBtn{
+      grid-column:1 / -1;
+    }
+
+    .feedback{
+      margin-top:12px;
+      min-height:42px;
+      border-radius:18px;
+      padding:11px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-size:17px;
+      font-weight:950;
+      line-height:1.35;
+      background:#f1f5f9;
+      color:#475569;
+    }
+
+    .feedback.good{
+      background:#dcfce7;
+      color:#14532d;
+      border:1px solid #bbf7d0;
+    }
+
+    .feedback.bad{
+      background:#fee2e2;
+      color:#991b1b;
+      border:1px solid #fecaca;
+      animation:shake .36s ease-in-out;
+    }
+
+    .doneBox{
+      margin-top:16px;
+      background:#fff;
+      border:1px solid #e2e8f0;
+      border-radius:22px;
+      padding:14px;
+    }
+
+    .doneTitle{
+      color:#64748b;
+      font-size:13px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+      margin-bottom:8px;
+    }
+
+    .doneList{
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+      max-height:120px;
+      overflow:auto;
+    }
+
+    .doneChip{
+      background:#fef3c7;
+      color:#92400e;
+      border:1px solid #fde68a;
+      border-radius:999px;
+      padding:6px 9px;
+      font-weight:900;
+      font-size:13px;
+    }
+
+    .instructions{
+      margin-top:16px;
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      color:#9a3412;
+      border-radius:22px;
+      padding:14px;
+      font-size:14px;
+      font-weight:800;
+      line-height:1.55;
+    }
+
+    .flyingFood{
+      position:fixed;
+      z-index:100;
+      pointer-events:none;
+      font-size:42px;
+      filter:drop-shadow(0 9px 11px rgba(15,23,42,.24));
+      transform-origin:center;
+    }
+
+    .winOverlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(15,23,42,.46);
+      backdrop-filter:blur(5px);
+      z-index:80;
+      padding:20px;
+      opacity:0;
+      transition:opacity .26s ease;
+    }
+
+    .winOverlay.show{
+      display:flex;
+      opacity:1;
+    }
+
+    .winCard{
+      width:min(560px,92vw);
+      background:white;
+      border-radius:34px;
+      padding:30px;
+      text-align:center;
+      box-shadow:0 26px 70px rgba(15,23,42,.35);
+      border:5px solid #fbbf24;
+      transform:translateY(14px) scale(.94);
+      opacity:0;
+      animation:modalIn .34s cubic-bezier(.22,1,.36,1) forwards;
+    }
+
+    @keyframes modalIn{
+      to{
+        transform:translateY(0) scale(1);
+        opacity:1;
+      }
+    }
+
+    .winEmoji{
+      font-size:68px;
+      animation:bounce 1s ease-in-out infinite;
+    }
+
+    @keyframes bounce{
+      0%,100%{transform:translateY(0);}
+      50%{transform:translateY(-10px);}
+    }
+
+    .winCard h2{
+      margin:10px 0 6px;
+      font-size:40px;
+      color:#111827;
+    }
+
+    .winCard p{
+      margin:8px 0 0;
+      color:#475569;
+      font-size:17px;
+      font-weight:800;
+      line-height:1.5;
+    }
+
+    .winBtns{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:20px;
+    }
+
+    canvas{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      width:100%;
+      height:100%;
+      z-index:90;
+    }
+
+    @media (max-width:1050px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+
+      .taskPanel{
+        order:-1;
+      }
+
+      .scenePanel{
+        min-height:auto;
+      }
+
+      .lunchScene{
+        min-height:560px;
+      }
+
+      .captionCard{
+        top:128px;
+      }
+
+      .menuCard,.healthCard{
+        top:245px;
+      }
+    }
+
+    @media (max-width:720px){
+      body{padding:10px}
+      h1{font-size:24px}
+      .logo{width:52px;height:52px;font-size:28px}
+      .tabBtn{min-width:100%}
+      .choices{grid-template-columns:1fr}
+      .promptMain{font-size:25px;min-height:78px}
+      .promptMain.english{font-size:20px}
+      .captionCard{min-width:260px}
+      .trayWrap{
+        width:300px;
+        transform:translateX(-50%) scale(.84);
+      }
+      .trayWrap.bump{
+        animation:trayBumpSmall .46s ease-out;
+      }
+      @keyframes trayBumpSmall{
+        0%{ transform:translateX(-50%) scale(.84); }
+        32%{ transform:translateX(-50%) scale(.90) translateY(-4px); }
+        100%{ transform:translateX(-50%) scale(.84); }
+      }
+      .sortPlates{
+        width:98%;
+        gap:6px;
+      }
+      .plate{
+        width:32%;
+        min-height:135px;
+        font-size:36px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">🍱</div>
+        <div>
+          <h1>ESC_2_11_2_Lunch_Choice</h1>
+          <div class="subtitle">Three meals a day 一日三餐｜Word List 2</div>
+        </div>
+      </div>
+
+      <button class="primary" id="restartBtn">Restart</button>
+    </header>
+
+    <div class="tabs">
+      <button class="tabBtn active" id="trayTab">Part 1 · Lunch Tray</button>
+      <button class="tabBtn" id="sortTab">Part 2 · Sort the Lunch</button>
+      <button class="tabBtn" id="healthTab">Part 3 · Healthy or Not?</button>
+      <button class="tabBtn" id="sentenceTab">Part 4 · Sentence Builder</button>
+    </div>
+
+    <main class="layout">
+      <section class="panel scenePanel">
+        <div class="lunchScene">
+          <div class="window"></div>
+
+          <div class="sceneTitle">
+            <div class="big">Lunch Choice</div>
+            <div class="small">Pick lunch, sort food, and build sentences.</div>
+          </div>
+
+          <div class="captionCard">
+            <div class="line1" id="sceneLine1">Choose the lunch word!</div>
+            <div class="line2" id="sceneLine2">答对以后，食物会飞到午餐托盘。</div>
+          </div>
+
+          <div class="healthCard" id="healthCard">
+            <div class="healthEmoji" id="healthEmoji">🥤</div>
+            <div class="healthLine" id="healthLine">每天喝汽水。</div>
+          </div>
+
+          <div class="menuCard" id="menuCard">
+            <div class="menuTitle">Lunch Sentence</div>
+            <div class="menuLine" id="menuLine">我午饭一般吃中餐。</div>
+          </div>
+
+          <div class="table"></div>
+          <div class="placemat"></div>
+
+          <div class="sortPlates" id="sortPlates">
+            <div class="plate" id="chinesePlate">
+              🍚
+              <div class="plateLabel">中餐</div>
+            </div>
+            <div class="plate" id="westernPlate">
+              🍔
+              <div class="plateLabel">西餐</div>
+            </div>
+            <div class="plate" id="drinkPlate">
+              🥤
+              <div class="plateLabel">饮料</div>
+            </div>
+          </div>
+
+          <div class="trayWrap" id="trayWrap">
+            <div class="foodPile" id="foodPile"></div>
+            <div class="tray"></div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel taskPanel">
+        <div class="modeBar">
+          <div class="modeTabs">
+            <button class="modeBtn active" data-mode="easy">Easy</button>
+            <button class="modeBtn" data-mode="medium">Medium</button>
+            <button class="modeBtn" data-mode="hard">Hard</button>
+            <button class="modeBtn" data-mode="mixed">Mixed</button>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="num" id="scoreNum">0</div>
+              <div class="lab">Score</div>
+            </div>
+            <div class="stat">
+              <div class="num" id="progressNum">1/10</div>
+              <div class="lab">Progress</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="taskCard">
+          <div class="taskLabel" id="taskLabel">Prompt</div>
+          <div class="promptMain english" id="promptMain">lunch</div>
+          <div class="promptSub" id="promptSub">Choose the matching Chinese word.</div>
+
+          <div class="answerBox" id="answerBox">
+            <div class="answerZh" id="answerZh">中餐</div>
+            <div class="answerPy" id="answerPy">zhōng cān</div>
+            <div class="answerEn" id="answerEn">Chinese food</div>
+          </div>
+
+          <div class="choices" id="choices"></div>
+
+          <div class="builderArea" id="builderArea">
+            <div class="taskLabel" style="margin-top:14px;">Word Bank</div>
+            <div class="wordBank" id="wordBank"></div>
+
+            <div class="taskLabel">Your Sentence</div>
+            <div class="sentenceBox" id="sentenceBox">
+              <div class="emptyText">Tap word tiles to build the sentence.</div>
+            </div>
+          </div>
+
+          <div class="sideBtns">
+            <button id="showPinyinBtn">Show Pinyin</button>
+            <button id="showAnswerBtn">Show Answer</button>
+            <button class="green" id="readBtn">🔊 Read Chinese</button>
+            <button class="orange" id="clearBtn">Clear</button>
+            <button id="checkBtn">Check</button>
+            <button id="nextBtn">Next</button>
+            <button class="primary fullBtn" id="nextTaskBtn">Next Task</button>
+          </div>
+
+          <div class="feedback" id="feedback">Choose the correct answer.</div>
+        </div>
+
+        <div class="doneBox">
+          <div class="doneTitle">Collected / Completed</div>
+          <div class="doneList" id="doneList"></div>
+        </div>
+
+        <div class="instructions">
+          <strong>How to Play:</strong><br>
+          Part 1: Choose the Chinese word for the lunch clue.<br>
+          Part 2: Sort the item into 中餐 / 西餐 / 饮料.<br>
+          Part 3: Decide whether the habit is 好 or 不好.<br>
+          Part 4: Put word tiles in order to build Text 2 sentences.
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <div class="winOverlay" id="winOverlay">
+    <div class="winCard">
+      <div class="winEmoji">🍱</div>
+      <h2>Lunch Mission Complete!</h2>
+      <p id="winText">Great job! You completed this part.</p>
+      <div class="winBtns">
+        <button class="green" id="keepPlayingBtn">Keep Playing</button>
+        <button class="primary" id="restartWinBtn">Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const VOCAB_TASKS = [
+      { zh:"中餐", py:"zhōng cān", en:"Chinese food; Chinese lunch", emoji:"🍚", options:["中餐","西餐","快餐","果汁"] },
+      { zh:"西餐", py:"xī cān", en:"Western food", emoji:"🍔", options:["西餐","中餐","午饭","汽水"] },
+      { zh:"炒", py:"chǎo", en:"stir-fry", emoji:"🍳", options:["炒","饭","面","汁"] },
+      { zh:"炒饭", py:"chǎo fàn", en:"stir-fried rice", emoji:"🍚", options:["炒饭","炒面","沙拉","三明治"] },
+      { zh:"炒面", py:"chǎo miàn", en:"stir-fried noodles", emoji:"🍜", options:["炒面","炒饭","比萨饼","汉堡包"] },
+      { zh:"或者", py:"huò zhě", en:"or", emoji:"🔀", options:["或者","可是","比如","还是"] },
+      { zh:"沙拉", py:"shā lā", en:"salad", emoji:"🥗", options:["沙拉","三明治","热狗","薯条"] },
+      { zh:"三明治", py:"sān míng zhì", en:"sandwich", emoji:"🥪", options:["三明治","汉堡包","比萨饼","炒饭"] },
+      { zh:"饼", py:"bǐng", en:"pancake; flat cake", emoji:"🥞", options:["饼","薯","汁","快"] },
+      { zh:"比萨饼", py:"bǐ sà bǐng", en:"pizza", emoji:"🍕", options:["比萨饼","三明治","沙拉","热狗"] },
+      { zh:"汉堡包", py:"hàn bǎo bāo", en:"hamburger", emoji:"🍔", options:["汉堡包","热狗","薯条","炒面"] },
+      { zh:"热狗", py:"rè gǒu", en:"hotdog", emoji:"🌭", options:["热狗","汉堡包","三明治","沙拉"] },
+      { zh:"薯", py:"shǔ", en:"potato; yam", emoji:"🥔", options:["薯","汁","快","炒"] },
+      { zh:"薯条", py:"shǔ tiáo", en:"French fries", emoji:"🍟", options:["薯条","热狗","比萨饼","果汁"] },
+      { zh:"可乐", py:"kě lè", en:"Coke", emoji:"🥤", options:["可乐","果汁","汽水","快餐"] },
+      { zh:"汁", py:"zhī", en:"juice", emoji:"🧃", options:["汁","薯","饼","快"] },
+      { zh:"果汁", py:"guǒ zhī", en:"fruit juice", emoji:"🧃", options:["果汁","可乐","汽水","沙拉"] },
+      { zh:"汽水", py:"qì shuǐ", en:"fizzy drinks; soda", emoji:"🥤", options:["汽水","果汁","可乐","中餐"] },
+      { zh:"快", py:"kuài", en:"fast", emoji:"⚡", options:["快","汁","薯","饼"] },
+      { zh:"快餐", py:"kuài cān", en:"fast food", emoji:"🍔", options:["快餐","中餐","西餐","果汁"] }
+    ];
+
+    const SORT_TASKS = [
+      { zh:"炒饭", py:"chǎo fàn", en:"stir-fried rice", emoji:"🍚", category:"chinese" },
+      { zh:"炒面", py:"chǎo miàn", en:"stir-fried noodles", emoji:"🍜", category:"chinese" },
+      { zh:"中餐", py:"zhōng cān", en:"Chinese food", emoji:"🍚", category:"chinese" },
+      { zh:"沙拉", py:"shā lā", en:"salad", emoji:"🥗", category:"western" },
+      { zh:"三明治", py:"sān míng zhì", en:"sandwich", emoji:"🥪", category:"western" },
+      { zh:"比萨饼", py:"bǐ sà bǐng", en:"pizza", emoji:"🍕", category:"western" },
+      { zh:"汉堡包", py:"hàn bǎo bāo", en:"hamburger", emoji:"🍔", category:"western" },
+      { zh:"热狗", py:"rè gǒu", en:"hotdog", emoji:"🌭", category:"western" },
+      { zh:"薯条", py:"shǔ tiáo", en:"French fries", emoji:"🍟", category:"western" },
+      { zh:"西餐", py:"xī cān", en:"Western food", emoji:"🍔", category:"western" },
+      { zh:"可乐", py:"kě lè", en:"Coke", emoji:"🥤", category:"drink" },
+      { zh:"果汁", py:"guǒ zhī", en:"fruit juice", emoji:"🧃", category:"drink" },
+      { zh:"汽水", py:"qì shuǐ", en:"fizzy drinks; soda", emoji:"🥤", category:"drink" }
+    ];
+
+    const HEALTH_TASKS = [
+      { zh:"每天喝汽水。", py:"měi tiān hē qì shuǐ.", en:"Drink soda every day.", emoji:"🥤", answer:"不好", options:["好","不好"] },
+      { zh:"经常吃快餐。", py:"jīng cháng chī kuài cān.", en:"Often eat fast food.", emoji:"🍔", answer:"不好", options:["好","不好"] },
+      { zh:"经常吃薯条。", py:"jīng cháng chī shǔ tiáo.", en:"Often eat French fries.", emoji:"🍟", answer:"不好", options:["好","不好"] },
+      { zh:"午饭吃沙拉。", py:"wǔ fàn chī shā lā.", en:"Eat salad for lunch.", emoji:"🥗", answer:"好", options:["好","不好"] },
+      { zh:"喝果汁。", py:"hē guǒ zhī.", en:"Drink fruit juice.", emoji:"🧃", answer:"好", options:["好","不好"] },
+      { zh:"吃炒饭或者炒面。", py:"chī chǎo fàn huò zhě chǎo miàn.", en:"Eat stir-fried rice or stir-fried noodles.", emoji:"🍚", answer:"好", options:["好","不好"] },
+      { zh:"每天只喝汽水。", py:"měi tiān zhǐ hē qì shuǐ.", en:"Only drink soda every day.", emoji:"🥤", answer:"不好", options:["好","不好"] },
+      { zh:"午饭有中餐和水果。", py:"wǔ fàn yǒu zhōng cān hé shuǐ guǒ.", en:"Lunch has Chinese food and fruit.", emoji:"🍱", answer:"好", options:["好","不好"] }
+    ];
+
+    const SENTENCE_TASKS = [
+      {
+        zh:"我午饭一般吃中餐。",
+        py:"wǒ wǔ fàn yì bān chī zhōng cān.",
+        en:"For lunch, I usually eat Chinese food.",
+        emoji:"🍚",
+        tokens:["我","午饭","一般","吃","中餐","。"]
+      },
+      {
+        zh:"我吃炒饭或者炒面。",
+        py:"wǒ chī chǎo fàn huò zhě chǎo miàn.",
+        en:"I eat stir-fried rice or stir-fried noodles.",
+        emoji:"🍜",
+        tokens:["我","吃","炒饭","或者","炒面","。"]
+      },
+      {
+        zh:"我有时候也吃西餐。",
+        py:"wǒ yǒu shí hou yě chī xī cān.",
+        en:"Sometimes I also eat Western food.",
+        emoji:"🍔",
+        tokens:["我","有时候","也","吃","西餐","。"]
+      },
+      {
+        zh:"比如沙拉、三明治、比萨饼等。",
+        py:"bǐ rú shā lā, sān míng zhì, bǐ sà bǐng děng.",
+        en:"For example, salad, sandwiches, pizza, and so on.",
+        emoji:"🥗",
+        tokens:["比如","沙拉","、","三明治","、","比萨饼","等","。"]
+      },
+      {
+        zh:"我还喜欢吃汉堡包、热狗和薯条。",
+        py:"wǒ hái xǐ huan chī hàn bǎo bāo, rè gǒu hé shǔ tiáo.",
+        en:"I also like eating hamburgers, hotdogs, and French fries.",
+        emoji:"🍔",
+        tokens:["我","还","喜欢","吃","汉堡包","、","热狗","和","薯条","。"]
+      },
+      {
+        zh:"我每天都喝可乐和果汁。",
+        py:"wǒ měi tiān dōu hē kě lè hé guǒ zhī.",
+        en:"I drink Coke and fruit juice every day.",
+        emoji:"🥤",
+        tokens:["我","每天","都","喝","可乐","和","果汁","。"]
+      },
+      {
+        zh:"可是妈妈说每天喝汽水不好。",
+        py:"kě shì mā ma shuō měi tiān hē qì shuǐ bù hǎo.",
+        en:"But Mom says drinking soda every day is not good.",
+        emoji:"🥤",
+        tokens:["可是","妈妈","说","每天","喝","汽水","不好","。"]
+      },
+      {
+        zh:"经常吃快餐也不好。",
+        py:"jīng cháng chī kuài cān yě bù hǎo.",
+        en:"Often eating fast food is also not good.",
+        emoji:"🍔",
+        tokens:["经常","吃","快餐","也","不好","。"]
+      },
+      {
+        zh:"我午饭有时候吃快餐。",
+        py:"wǒ wǔ fàn yǒu shí hou chī kuài cān.",
+        en:"Sometimes I eat fast food for lunch.",
+        emoji:"🍟",
+        tokens:["我","午饭","有时候","吃","快餐","。"]
+      },
+      {
+        zh:"我每天十二点吃午饭。",
+        py:"wǒ měi tiān shí èr diǎn chī wǔ fàn.",
+        en:"I eat lunch at twelve o'clock every day.",
+        emoji:"🕛",
+        tokens:["我","每天","十二点","吃","午饭","。"]
+      }
+    ];
+
+    let currentPart = "tray";
+    let mode = "easy";
+    let order = [];
+    let currentIndex = 0;
+    let score = 0;
+    let completed = [];
+    let selectedTiles = [];
+    let currentPromptMode = "easy";
+    let locked = false;
+
+    const trayTab = document.getElementById("trayTab");
+    const sortTab = document.getElementById("sortTab");
+    const healthTab = document.getElementById("healthTab");
+    const sentenceTab = document.getElementById("sentenceTab");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const scoreNum = document.getElementById("scoreNum");
+    const progressNum = document.getElementById("progressNum");
+    const promptMain = document.getElementById("promptMain");
+    const promptSub = document.getElementById("promptSub");
+    const taskLabel = document.getElementById("taskLabel");
+
+    const answerBox = document.getElementById("answerBox");
+    const answerZh = document.getElementById("answerZh");
+    const answerPy = document.getElementById("answerPy");
+    const answerEn = document.getElementById("answerEn");
+
+    const choices = document.getElementById("choices");
+    const builderArea = document.getElementById("builderArea");
+    const wordBank = document.getElementById("wordBank");
+    const sentenceBox = document.getElementById("sentenceBox");
+    const feedback = document.getElementById("feedback");
+    const doneList = document.getElementById("doneList");
+    const foodPile = document.getElementById("foodPile");
+    const trayWrap = document.getElementById("trayWrap");
+    const sceneLine1 = document.getElementById("sceneLine1");
+    const sceneLine2 = document.getElementById("sceneLine2");
+    const sortPlates = document.getElementById("sortPlates");
+    const chinesePlate = document.getElementById("chinesePlate");
+    const westernPlate = document.getElementById("westernPlate");
+    const drinkPlate = document.getElementById("drinkPlate");
+    const menuCard = document.getElementById("menuCard");
+    const menuLine = document.getElementById("menuLine");
+    const healthCard = document.getElementById("healthCard");
+    const healthEmoji = document.getElementById("healthEmoji");
+    const healthLine = document.getElementById("healthLine");
+
+    const showPinyinBtn = document.getElementById("showPinyinBtn");
+    const showAnswerBtn = document.getElementById("showAnswerBtn");
+    const readBtn = document.getElementById("readBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const checkBtn = document.getElementById("checkBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const nextTaskBtn = document.getElementById("nextTaskBtn");
+
+    const winOverlay = document.getElementById("winOverlay");
+    const winText = document.getElementById("winText");
+    const keepPlayingBtn = document.getElementById("keepPlayingBtn");
+    const restartWinBtn = document.getElementById("restartWinBtn");
+
+    function shuffle(arr){
+      const a = [...arr];
+      for(let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function tasks(){
+      if(currentPart === "tray") return VOCAB_TASKS;
+      if(currentPart === "sort") return SORT_TASKS;
+      if(currentPart === "health") return HEALTH_TASKS;
+      return SENTENCE_TASKS;
+    }
+
+    function currentTask(){
+      return tasks()[order[currentIndex]];
+    }
+
+    function startPart(part){
+      currentPart = part;
+      trayTab.classList.toggle("active", part === "tray");
+      sortTab.classList.toggle("active", part === "sort");
+      healthTab.classList.toggle("active", part === "health");
+      sentenceTab.classList.toggle("active", part === "sentence");
+      restartGame();
+    }
+
+    function restartGame(){
+      order = shuffle(tasks().map((_,i)=>i));
+      currentIndex = 0;
+      score = 0;
+      completed = [];
+      selectedTiles = [];
+      locked = false;
+      foodPile.innerHTML = "";
+      winOverlay.classList.remove("show");
+      renderTask();
+    }
+
+    function getPromptMode(){
+      if(mode === "mixed"){
+        const list = ["easy","medium","hard"];
+        return list[Math.floor(Math.random() * list.length)];
+      }
+      return mode;
+    }
+
+    function renderTask(){
+      locked = false;
+      const task = currentTask();
+      currentPromptMode = getPromptMode();
+      selectedTiles = [];
+
+      scoreNum.textContent = score;
+      progressNum.textContent = `${currentIndex + 1}/${tasks().length}`;
+
+      answerBox.classList.remove("show");
+      feedback.className = "feedback";
+      feedback.textContent = "Choose the correct answer.";
+
+      choices.innerHTML = "";
+      wordBank.innerHTML = "";
+      sentenceBox.innerHTML = "";
+      builderArea.classList.remove("show");
+      menuCard.classList.remove("show");
+      healthCard.classList.remove("show");
+      sortPlates.classList.remove("show");
+
+      if(currentPart === "tray"){
+        renderTrayTask(task);
+      }else if(currentPart === "sort"){
+        renderSortTask(task);
+      }else if(currentPart === "health"){
+        renderHealthTask(task);
+      }else{
+        renderSentenceTask(task);
+      }
+
+      renderDoneList();
+    }
+
+    function renderTrayTask(task){
+      taskLabel.textContent = "Part 1 · Lunch Tray";
+      sceneLine1.textContent = "Choose the lunch word!";
+      sceneLine2.textContent = "答对以后，食物会飞到午餐托盘。";
+      clearBtn.disabled = true;
+      checkBtn.disabled = true;
+
+      answerZh.textContent = task.zh;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+
+      promptMain.classList.remove("english");
+
+      if(currentPromptMode === "easy"){
+        promptMain.innerHTML = `${task.en}<br><span style="font-size:21px;color:#475569;">${task.py}</span>`;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Easy: English + pinyin. Choose the matching Chinese word.";
+      }else if(currentPromptMode === "medium"){
+        promptMain.textContent = task.py;
+        promptSub.textContent = "Medium: Pinyin only.";
+      }else{
+        promptMain.textContent = task.en;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Hard: English only.";
+      }
+
+      renderChoiceButtons(task.options, task.zh, task);
+    }
+
+    function renderChoiceButtons(optionList, answer, task){
+      choices.innerHTML = "";
+
+      shuffle(optionList).forEach(option=>{
+        const vocab = findFood(option);
+
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.dataset.answer = option;
+
+        btn.innerHTML = `
+          <div class="emoji">${vocab.emoji || "🍽️"}</div>
+          <div class="zh">${option}</div>
+          <div class="small">${vocab.py || ""}</div>
+        `;
+
+        btn.onclick = ()=>{
+          handleChoice(btn, option, answer, task);
+        };
+
+        choices.appendChild(btn);
+      });
+    }
+
+    function findFood(zh){
+      return VOCAB_TASKS.find(v => v.zh === zh)
+        || SORT_TASKS.find(v => v.zh === zh)
+        || {zh, py:"", en:"", emoji:"🍽️"};
+    }
+
+    function handleChoice(btn, option, answer, task){
+      if(locked) return;
+
+      const correct = option === answer;
+
+      if(correct){
+        locked = true;
+
+        document.querySelectorAll(".choice").forEach(el=>{
+          el.disabled = true;
+          if(el.dataset.answer === answer){
+            el.classList.add("correct");
+          }
+        });
+
+        score += 10;
+        scoreNum.textContent = score;
+        completed.push(answer);
+
+        feedback.className = "feedback good";
+        feedback.textContent = `✅ Correct! ${answer}`;
+
+        speakChinese(answer);
+
+        if(currentPart === "tray"){
+          flyFoodToTray(btn, task.emoji || "🍽️");
+        }else if(currentPart === "health"){
+          addFoodToPile(task.emoji || "🍽️");
+          bumpTray();
+        }
+
+        renderDoneList();
+
+        setTimeout(()=>{
+          nextTask();
+        }, currentPart === "tray" ? 1150 : 900);
+      }else{
+        btn.classList.add("wrong");
+        feedback.className = "feedback bad";
+        feedback.textContent = "❌ Not yet. Try again.";
+        setTimeout(()=>btn.classList.remove("wrong"), 520);
+      }
+    }
+
+    function renderSortTask(task){
+      taskLabel.textContent = "Part 2 · Sort the Lunch";
+      sceneLine1.textContent = "Sort: 中餐 / 西餐 / 饮料";
+      sceneLine2.textContent = "把食物或饮料放到合适的一类。";
+      clearBtn.disabled = true;
+      checkBtn.disabled = true;
+      sortPlates.classList.add("show");
+
+      answerZh.textContent = task.zh;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+
+      promptMain.classList.remove("english");
+
+      if(currentPromptMode === "easy"){
+        promptMain.innerHTML = `${task.zh}<br><span style="font-size:21px;color:#475569;">${task.py} · ${task.en}</span>`;
+        promptSub.textContent = "Easy: Look at the Chinese word, pinyin, and English.";
+      }else if(currentPromptMode === "medium"){
+        promptMain.textContent = task.py;
+        promptSub.textContent = "Medium: Pinyin only. Choose the correct category.";
+      }else{
+        promptMain.textContent = task.en;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Hard: English only. Choose the correct category.";
+      }
+
+      choices.innerHTML = "";
+      builderArea.classList.remove("show");
+
+      const cats = [
+        { key:"chinese", zh:"中餐", en:"Chinese food", emoji:"🍚" },
+        { key:"western", zh:"西餐", en:"Western food", emoji:"🍔" },
+        { key:"drink", zh:"饮料", en:"drink", emoji:"🥤" }
+      ];
+
+      cats.forEach(cat=>{
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.dataset.answer = cat.key;
+        btn.innerHTML = `
+          <div class="emoji">${cat.emoji}</div>
+          <div class="zh">${cat.zh}</div>
+          <div class="small">${cat.en}</div>
+        `;
+        btn.onclick = ()=>handleSortChoice(btn,cat.key,task);
+        choices.appendChild(btn);
+      });
+    }
+
+    function handleSortChoice(btn, category, task){
+      if(locked) return;
+
+      const correct = category === task.category;
+
+      if(correct){
+        locked = true;
+        document.querySelectorAll(".choice").forEach(el=>{
+          el.disabled = true;
+          if(el.dataset.answer === task.category){
+            el.classList.add("correct");
+          }
+        });
+
+        score += 10;
+        scoreNum.textContent = score;
+        completed.push(task.zh);
+
+        const label = task.category === "chinese" ? "中餐" : task.category === "western" ? "西餐" : "饮料";
+        feedback.className = "feedback good";
+        feedback.textContent = `✅ Correct! ${task.zh} → ${label}`;
+
+        speakChinese(task.zh);
+        flyFoodToPlate(btn, task.emoji || "🍽️", task.category);
+        renderDoneList();
+
+        setTimeout(nextTask, 1150);
+      }else{
+        btn.classList.add("wrong");
+        feedback.className = "feedback bad";
+        feedback.textContent = "❌ Not yet. Try another category.";
+        setTimeout(()=>btn.classList.remove("wrong"), 520);
+      }
+    }
+
+    function renderHealthTask(task){
+      taskLabel.textContent = "Part 3 · Healthy or Not?";
+      sceneLine1.textContent = "Healthy or Not?";
+      sceneLine2.textContent = "判断这个习惯是好还是不好。";
+      clearBtn.disabled = true;
+      checkBtn.disabled = true;
+      healthCard.classList.add("show");
+      healthEmoji.textContent = task.emoji || "🍱";
+      healthLine.textContent = task.zh;
+
+      answerZh.textContent = task.answer;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+
+      promptMain.classList.remove("english");
+
+      if(currentPromptMode === "easy"){
+        promptMain.innerHTML = `${task.zh}<br><span style="font-size:20px;color:#475569;">${task.py}<br>${task.en}</span>`;
+        promptSub.textContent = "Easy: Read the sentence and choose 好 or 不好.";
+      }else if(currentPromptMode === "medium"){
+        promptMain.textContent = task.py;
+        promptSub.textContent = "Medium: Pinyin only. Choose 好 or 不好.";
+      }else{
+        promptMain.textContent = task.en;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Hard: English only. Choose 好 or 不好.";
+      }
+
+      choices.innerHTML = "";
+      builderArea.classList.remove("show");
+
+      task.options.forEach(option=>{
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.dataset.answer = option;
+        btn.innerHTML = `
+          <div class="emoji">${option === "好" ? "✅" : "⚠️"}</div>
+          <div class="zh">${option}</div>
+          <div class="small">${option === "好" ? "good / OK" : "not good"}</div>
+        `;
+        btn.onclick = ()=>handleChoice(btn, option, task.answer, task);
+        choices.appendChild(btn);
+      });
+    }
+
+    function flyFoodToTray(sourceBtn, emoji){
+      const rect = sourceBtn.getBoundingClientRect();
+      const trayRect = trayWrap.getBoundingClientRect();
+
+      const food = document.createElement("div");
+      food.className = "flyingFood";
+      food.textContent = emoji || "🍽️";
+
+      const startX = rect.left + rect.width / 2;
+      const startY = rect.top + rect.height / 2;
+      const endX = trayRect.left + trayRect.width / 2 + (Math.random() * 86 - 43);
+      const endY = trayRect.top + trayRect.height * .56 + (Math.random() * 28 - 14);
+
+      animateFood(food,startX,startY,endX,endY,emoji);
+    }
+
+    function flyFoodToPlate(sourceBtn, emoji, category){
+      const rect = sourceBtn.getBoundingClientRect();
+      const plate = category === "chinese" ? chinesePlate : category === "western" ? westernPlate : drinkPlate;
+      const plateRect = plate.getBoundingClientRect();
+
+      const food = document.createElement("div");
+      food.className = "flyingFood";
+      food.textContent = emoji || "🍽️";
+
+      const startX = rect.left + rect.width / 2;
+      const startY = rect.top + rect.height / 2;
+      const endX = plateRect.left + plateRect.width / 2;
+      const endY = plateRect.top + plateRect.height / 2;
+
+      animateFood(food,startX,startY,endX,endY,emoji);
+    }
+
+    function animateFood(food,startX,startY,endX,endY,emoji){
+      const midX = (startX + endX) / 2 + (Math.random() * 90 - 45);
+      const midY = Math.min(startY, endY) - 130;
+
+      food.style.left = startX + "px";
+      food.style.top = startY + "px";
+      document.body.appendChild(food);
+
+      food.animate([
+        {
+          transform:"translate(-50%,-50%) scale(.82) rotate(0deg)",
+          left:startX + "px",
+          top:startY + "px",
+          opacity:1
+        },
+        {
+          transform:"translate(-50%,-50%) scale(1.18) rotate(18deg)",
+          left:midX + "px",
+          top:midY + "px",
+          opacity:1,
+          offset:.52
+        },
+        {
+          transform:"translate(-50%,-50%) scale(.96) rotate(-12deg)",
+          left:endX + "px",
+          top:endY + "px",
+          opacity:1
+        }
+      ],{
+        duration:850,
+        easing:"cubic-bezier(.22,1,.36,1)",
+        fill:"forwards"
+      }).onfinish = ()=>{
+        food.remove();
+        addFoodToPile(emoji || "🍽️");
+        bumpTray();
+      };
+    }
+
+    function addFoodToPile(emoji){
+      const item = document.createElement("div");
+      item.className = "pileFood";
+      item.textContent = emoji || "🍽️";
+      item.style.rotate = (Math.random() * 28 - 14) + "deg";
+      foodPile.appendChild(item);
+    }
+
+    function bumpTray(){
+      trayWrap.classList.remove("bump");
+      void trayWrap.offsetWidth;
+      trayWrap.classList.add("bump");
+    }
+
+    function renderSentenceTask(task){
+      taskLabel.textContent = "Part 4 · Sentence Builder";
+      sceneLine1.textContent = "Build the lunch sentence.";
+      sceneLine2.textContent = "把词块按顺序点出来，组成完整句子。";
+      builderArea.classList.add("show");
+      choices.innerHTML = "";
+      clearBtn.disabled = false;
+      checkBtn.disabled = false;
+      menuCard.classList.add("show");
+      menuLine.textContent = task.zh;
+
+      answerZh.textContent = task.zh;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+
+      promptMain.classList.remove("english");
+
+      if(currentPromptMode === "easy"){
+        promptMain.innerHTML = `${task.en}<br><span style="font-size:21px;color:#475569;">${task.py}</span>`;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Easy: English + pinyin. Build the Chinese sentence.";
+      }else if(currentPromptMode === "medium"){
+        promptMain.textContent = task.en;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Medium: English clue only.";
+      }else{
+        promptMain.textContent = "Build the correct Chinese lunch sentence.";
+        promptSub.textContent = "Hard: Use the word tiles only.";
+      }
+
+      renderWordTiles(task);
+    }
+
+    function renderWordTiles(task){
+      wordBank.innerHTML = "";
+      sentenceBox.innerHTML = "";
+
+      const shuffled = shuffle(task.tokens.map((token,index)=>({token,index})));
+
+      shuffled.forEach(obj=>{
+        const btn = document.createElement("button");
+        btn.className = "tile";
+        btn.textContent = obj.token;
+
+        btn.onclick = ()=>{
+          if(btn.classList.contains("used")) return;
+
+          selectedTiles.push({
+            token:obj.token,
+            button:btn
+          });
+
+          btn.classList.add("used");
+          renderSentenceBox();
+        };
+
+        wordBank.appendChild(btn);
+      });
+
+      renderSentenceBox();
+    }
+
+    function renderSentenceBox(){
+      sentenceBox.innerHTML = "";
+
+      if(selectedTiles.length === 0){
+        const empty = document.createElement("div");
+        empty.className = "emptyText";
+        empty.textContent = "Tap word tiles to build the sentence.";
+        sentenceBox.appendChild(empty);
+        return;
+      }
+
+      selectedTiles.forEach((item,index)=>{
+        const slot = document.createElement("button");
+        slot.className = "slotTile";
+        slot.textContent = item.token;
+
+        slot.onclick = ()=>{
+          if(item.button){
+            item.button.classList.remove("used");
+          }
+          selectedTiles.splice(index,1);
+          renderSentenceBox();
+        };
+
+        sentenceBox.appendChild(slot);
+      });
+    }
+
+    function checkSentence(){
+      if(currentPart !== "sentence") return;
+
+      const task = currentTask();
+      const answer = selectedTiles.map(x=>x.token).join("");
+      const correct = task.zh.replace(/\s/g,"");
+
+      if(answer === correct){
+        score += 10;
+        scoreNum.textContent = score;
+        completed.push(task.zh);
+
+        feedback.className = "feedback good";
+        feedback.textContent = `✅ Correct! ${task.zh}`;
+
+        speakChinese(task.zh);
+        addFoodToPile(task.emoji || "🍽️");
+        bumpTray();
+        renderDoneList();
+
+        setTimeout(nextTask,1000);
+      }else{
+        feedback.className = "feedback bad";
+        feedback.textContent = "❌ Not yet. Check the order and try again.";
+      }
+    }
+
+    function clearBuild(){
+      if(currentPart !== "sentence") return;
+
+      selectedTiles.forEach(item=>{
+        if(item.button){
+          item.button.classList.remove("used");
+        }
+      });
+
+      selectedTiles = [];
+      renderSentenceBox();
+      feedback.className = "feedback";
+      feedback.textContent = "Cleared. Try again.";
+    }
+
+    function showPinyin(){
+      const task = currentTask();
+      answerBox.classList.add("show");
+      answerZh.textContent = "???";
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+    }
+
+    function showAnswer(){
+      const task = currentTask();
+      answerBox.classList.add("show");
+
+      if(currentPart === "sort"){
+        const label = task.category === "chinese" ? "中餐" : task.category === "western" ? "西餐" : "饮料";
+        answerZh.textContent = `${task.zh} → ${label}`;
+      }else if(currentPart === "health"){
+        answerZh.textContent = `${task.zh} → ${task.answer}`;
+      }else{
+        answerZh.textContent = task.zh;
+      }
+
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+    }
+
+    function readCurrent(){
+      const task = currentTask();
+      if(currentPart === "health"){
+        speakChinese(task.zh);
+      }else{
+        speakChinese(task.zh);
+      }
+    }
+
+    function nextTask(){
+      if(currentIndex < tasks().length - 1){
+        currentIndex++;
+        renderTask();
+      }else{
+        showWin();
+      }
+    }
+
+    function showWin(){
+      const label =
+        currentPart === "tray"
+          ? "Lunch Tray"
+          : currentPart === "sort"
+            ? "Sort the Lunch"
+            : currentPart === "health"
+              ? "Healthy or Not"
+              : "Sentence Builder";
+
+      winText.textContent = `Great job! You completed ${label}. Score: ${score}`;
+      winOverlay.classList.add("show");
+      triggerConfetti();
+    }
+
+    function renderDoneList(){
+      doneList.innerHTML = "";
+
+      completed.slice().reverse().forEach(text=>{
+        const chip = document.createElement("div");
+        chip.className = "doneChip";
+        chip.textContent = text;
+        doneList.appendChild(chip);
+      });
+    }
+
+    function setMode(newMode){
+      mode = newMode;
+
+      document.querySelectorAll(".modeBtn").forEach(btn=>{
+        btn.classList.toggle("active", btn.dataset.mode === mode);
+      });
+
+      renderTask();
+    }
+
+    function speakChinese(text){
+      if(!("speechSynthesis" in window)) return;
+
+      window.speechSynthesis.cancel();
+
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "zh-CN";
+      utter.rate = 0.82;
+      utter.pitch = 1;
+
+      window.speechSynthesis.speak(utter);
+    }
+
+    trayTab.onclick = ()=>startPart("tray");
+    sortTab.onclick = ()=>startPart("sort");
+    healthTab.onclick = ()=>startPart("health");
+    sentenceTab.onclick = ()=>startPart("sentence");
+    restartBtn.onclick = restartGame;
+
+    showPinyinBtn.onclick = showPinyin;
+    showAnswerBtn.onclick = showAnswer;
+    readBtn.onclick = readCurrent;
+    clearBtn.onclick = clearBuild;
+    checkBtn.onclick = checkSentence;
+    nextBtn.onclick = nextTask;
+    nextTaskBtn.onclick = nextTask;
+
+    keepPlayingBtn.onclick = ()=>{
+      winOverlay.classList.remove("show");
+    };
+
+    restartWinBtn.onclick = ()=>{
+      winOverlay.classList.remove("show");
+      restartGame();
+    };
+
+    document.querySelectorAll(".modeBtn").forEach(btn=>{
+      btn.onclick = ()=>setMode(btn.dataset.mode);
+    });
+
+    const confettiCanvas = document.getElementById("confettiCanvas");
+    const ctx = confettiCanvas.getContext("2d");
+    let particles = [];
+    let confettiRunning = false;
+
+    function sizeCanvas(){
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+
+    function triggerConfetti(){
+      sizeCanvas();
+      particles = [];
+
+      const colors = ["#f59e0b","#22c55e","#3b82f6","#ec4899","#8b5cf6","#06b6d4"];
+
+      for(let i=0;i<130;i++){
+        particles.push({
+          x:Math.random() * confettiCanvas.width,
+          y:-20 - Math.random() * 80,
+          vx:(Math.random() - .5) * 5,
+          vy:Math.random() * 4 + 2,
+          r:Math.random() * 5 + 3,
+          color:colors[Math.floor(Math.random() * colors.length)],
+          rot:Math.random() * 360,
+          spin:(Math.random() - .5) * 12
+        });
+      }
+
+      if(!confettiRunning){
+        confettiRunning = true;
+        requestAnimationFrame(drawConfetti);
+      }
+    }
+
+    function drawConfetti(){
+      ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+
+      let alive = false;
+
+      particles.forEach(p=>{
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += .06;
+        p.rot += p.spin;
+
+        if(p.y < confettiCanvas.height + 40){
+          alive = true;
+        }
+
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.r,-p.r,p.r * 2,p.r * 2);
+        ctx.restore();
+      });
+
+      if(alive){
+        requestAnimationFrame(drawConfetti);
+      }else{
+        confettiRunning = false;
+        ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+      }
+    }
+
+    window.addEventListener("resize", sizeCanvas);
+
+    restartGame();
+  </script>
+</body>
+</html>
