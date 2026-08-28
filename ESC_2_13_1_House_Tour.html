@@ -10,12 +10,9 @@
       --ink:#172033;
       --muted:#64748b;
       --blue:#2563eb;
-      --purple:#7c3aed;
       --green:#16a34a;
       --orange:#f59e0b;
       --red:#ef4444;
-      --yellow:#facc15;
-      --card:#ffffff;
       --shadow:0 18px 42px rgba(15,23,42,.13);
     }
 
@@ -24,16 +21,7 @@
     body{
       margin:0;
       min-height:100vh;
-      font-family:
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        "Noto Sans SC",
-        "Microsoft YaHei",
-        sans-serif;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,"Noto Sans SC","Microsoft YaHei",sans-serif;
       color:var(--ink);
       background:
         radial-gradient(circle at 8% 0%, #dbeafe 0%, transparent 31%),
@@ -101,7 +89,7 @@
       background:#fff;
       color:var(--ink);
       box-shadow:0 8px 18px rgba(15,23,42,.10);
-      transition:transform .12s ease, filter .12s ease, box-shadow .12s ease;
+      transition:transform .12s ease, filter .12s ease;
     }
 
     button:hover{
@@ -195,37 +183,12 @@
       box-shadow:inset 0 0 32px rgba(255,255,255,.32);
     }
 
-    .sceneTitle{
-      position:absolute;
-      left:22px;
-      top:18px;
-      background:rgba(255,255,255,.88);
-      border:1px solid rgba(255,255,255,.95);
-      border-radius:22px;
-      padding:12px 16px;
-      box-shadow:0 10px 24px rgba(15,23,42,.09);
-      z-index:8;
-    }
-
-    .sceneTitle .big{
-      font-size:22px;
-      font-weight:950;
-      color:#1e3a8a;
-    }
-
-    .sceneTitle .small{
-      margin-top:3px;
-      font-size:13px;
-      font-weight:850;
-      color:#64748b;
-    }
-
     .captionCard{
       position:absolute;
       left:50%;
-      top:92px;
+      top:34px;
       transform:translateX(-50%);
-      min-width:380px;
+      min-width:390px;
       max-width:88%;
       background:rgba(255,255,255,.92);
       border:1px solid rgba(255,255,255,.96);
@@ -237,7 +200,7 @@
     }
 
     .captionCard .line1{
-      font-size:22px;
+      font-size:24px;
       font-weight:950;
       color:#1e3a8a;
     }
@@ -252,7 +215,7 @@
     .roof{
       position:absolute;
       left:50%;
-      top:154px;
+      top:132px;
       transform:translateX(-50%);
       width:min(90%,700px);
       height:72px;
@@ -265,7 +228,7 @@
     .floorPlanWrap{
       position:absolute;
       left:50%;
-      top:195px;
+      top:173px;
       transform:translateX(-50%);
       width:min(88%,700px);
       height:410px;
@@ -402,7 +365,7 @@
       display:none;
       position:absolute;
       left:50%;
-      bottom:20px;
+      bottom:18px;
       transform:translateX(-50%);
       width:min(88%,700px);
       background:rgba(255,255,255,.95);
@@ -413,9 +376,7 @@
       box-shadow:0 14px 28px rgba(15,23,42,.14);
     }
 
-    .wordWall.show{
-      display:block;
-    }
+    .wordWall.show{display:block}
 
     .wordWallTitle{
       color:#1e3a8a;
@@ -455,26 +416,24 @@
       display:none;
       position:absolute;
       left:50%;
-      top:185px;
+      top:128px;
       transform:translateX(-50%);
       width:min(88%,700px);
-      min-height:390px;
+      min-height:430px;
       z-index:10;
     }
 
-    .factsScene.show{
-      display:block;
-    }
+    .factsScene.show{display:block}
 
-    .factsHouse{
-      background:rgba(255,255,255,.92);
+    .detectiveCard{
+      background:rgba(255,255,255,.94);
       border:3px solid #bfdbfe;
-      border-radius:32px;
+      border-radius:34px;
       padding:18px;
       box-shadow:0 20px 38px rgba(15,23,42,.15);
     }
 
-    .factsHeader{
+    .detectiveHeader{
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -483,32 +442,32 @@
       flex-wrap:wrap;
     }
 
-    .factsTitle{
-      font-size:26px;
+    .detectiveTitle{
+      font-size:28px;
       font-weight:950;
       color:#1e3a8a;
     }
 
-    .factsBadge{
-      background:#dcfce7;
-      color:#166534;
-      border:1px solid #bbf7d0;
+    .detectiveBadge{
+      background:#fff7ed;
+      color:#9a3412;
+      border:1px solid #fed7aa;
       border-radius:999px;
       padding:8px 12px;
       font-size:14px;
       font-weight:950;
     }
 
-    .factsGrid{
+    .numberGrid{
       display:grid;
       grid-template-columns:repeat(3,1fr);
       gap:12px;
     }
 
-    .factRoom{
+    .numberRoom{
       background:linear-gradient(180deg,#ffffff,#eff6ff);
       border:2px solid #bfdbfe;
-      border-radius:22px;
+      border-radius:24px;
       padding:14px 10px;
       text-align:center;
       min-height:118px;
@@ -518,95 +477,146 @@
       justify-content:center;
     }
 
-    .factEmoji{
+    .numberEmoji{
       font-size:34px;
       line-height:1;
     }
 
-    .factZh{
+    .numberZh{
       margin-top:6px;
       font-size:22px;
       font-weight:950;
       color:#0f172a;
     }
 
-    .factCount{
+    .numberBig{
       margin-top:4px;
-      font-size:15px;
+      font-size:34px;
       font-weight:950;
       color:#2563eb;
+      line-height:1;
     }
 
-    .factSentence{
+    .detectiveHint{
       margin-top:14px;
-      background:#fff7ed;
-      border:1px solid #fed7aa;
-      color:#9a3412;
+      background:#f8fafc;
+      border:2px dashed #cbd5e1;
+      color:#475569;
       border-radius:20px;
       padding:12px;
-      font-size:18px;
+      font-size:16px;
       line-height:1.45;
-      font-weight:950;
+      font-weight:900;
       text-align:center;
     }
 
-    .sentenceScene{
+    .rewardScene{
       display:none;
       position:absolute;
-      left:50%;
-      top:165px;
-      transform:translateX(-50%);
-      width:min(88%,720px);
-      min-height:430px;
+      inset:0;
       z-index:11;
-      background:rgba(255,255,255,.94);
+      padding:34px;
+    }
+
+    .rewardScene.show{display:block}
+
+    .rewardBoard{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:min(88%,720px);
+      min-height:500px;
+      background:rgba(255,255,255,.95);
       border:3px solid #bfdbfe;
       border-radius:34px;
-      padding:24px;
+      padding:26px;
       box-shadow:0 20px 42px rgba(15,23,42,.16);
       text-align:center;
+      overflow:hidden;
     }
 
-    .sentenceScene.show{
-      display:block;
-    }
-
-    .sentenceBigIcon{
-      font-size:70px;
-      line-height:1;
-      margin-top:16px;
-    }
-
-    .sentenceScene h2{
-      margin:10px 0 8px;
-      font-size:38px;
-      color:#1e3a8a;
-      font-weight:950;
-    }
-
-    .sentenceScene p{
-      margin:0 auto;
-      max-width:560px;
-      color:#475569;
-      font-size:18px;
-      font-weight:850;
-      line-height:1.55;
-    }
-
-    .sentencePreview{
-      margin:24px auto 0;
-      background:#eff6ff;
+    .rewardBoard::before{
+      content:"";
+      position:absolute;
+      inset:14px;
       border:2px dashed #bfdbfe;
-      border-radius:24px;
-      padding:18px;
-      font-size:22px;
+      border-radius:26px;
+      pointer-events:none;
+    }
+
+    .rewardTitle{
+      font-size:40px;
       font-weight:950;
       color:#1e3a8a;
-      min-height:92px;
+      margin-top:12px;
+    }
+
+    .rewardSubtitle{
+      margin:8px auto 20px;
+      max-width:560px;
+      font-size:18px;
+      color:#475569;
+      font-weight:850;
+      line-height:1.45;
+    }
+
+    .rewardShelf{
+      position:relative;
+      z-index:2;
+      margin:0 auto;
+      width:min(96%,610px);
+      min-height:230px;
+      background:
+        linear-gradient(180deg,#eff6ff,#ffffff);
+      border:2px solid #bfdbfe;
+      border-radius:28px;
+      padding:18px;
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:12px;
+      align-items:center;
+    }
+
+    .rewardSlot{
+      height:82px;
+      border-radius:22px;
+      background:#f8fafc;
+      border:2px dashed #cbd5e1;
       display:flex;
       align-items:center;
       justify-content:center;
-      line-height:1.4;
+      font-size:34px;
+      opacity:.55;
+      transition:.25s ease;
+    }
+
+    .rewardSlot.filled{
+      background:#fff7ed;
+      border:2px solid #fbbf24;
+      opacity:1;
+      animation:rewardPop .4s ease-out;
+      box-shadow:0 0 18px rgba(251,191,36,.45);
+    }
+
+    @keyframes rewardPop{
+      0%{transform:scale(.78) rotate(-8deg)}
+      60%{transform:scale(1.14) rotate(4deg)}
+      100%{transform:scale(1) rotate(0)}
+    }
+
+    .rewardMessage{
+      position:relative;
+      z-index:2;
+      margin-top:18px;
+      background:#dcfce7;
+      border:1px solid #bbf7d0;
+      color:#166534;
+      border-radius:999px;
+      display:inline-flex;
+      padding:10px 16px;
+      font-size:16px;
+      font-weight:950;
     }
 
     .modeBar{
@@ -729,9 +739,7 @@
       text-align:center;
     }
 
-    .answerBox.show{
-      display:block;
-    }
+    .answerBox.show{display:block}
 
     .answerZh{
       font-size:30px;
@@ -826,9 +834,7 @@
       display:none;
     }
 
-    .builderArea.show{
-      display:block;
-    }
+    .builderArea.show{display:block}
 
     .wordBank{
       background:#f8fafc;
@@ -907,9 +913,7 @@
       border-radius:15px;
     }
 
-    .fullBtn{
-      grid-column:1 / -1;
-    }
+    .fullBtn{grid-column:1 / -1}
 
     .feedback{
       margin-top:12px;
@@ -1029,10 +1033,7 @@
     }
 
     @keyframes modalIn{
-      to{
-        transform:translateY(0) scale(1);
-        opacity:1;
-      }
+      to{transform:translateY(0) scale(1); opacity:1;}
     }
 
     .winEmoji{
@@ -1077,38 +1078,13 @@
     }
 
     @media (max-width:1050px){
-      .layout{
-        grid-template-columns:1fr;
-      }
-
-      .taskPanel{
-        order:-1;
-      }
-
-      .scenePanel{
-        min-height:auto;
-      }
-
-      .houseScene{
-        min-height:620px;
-      }
-
-      .floorPlanWrap{
-        top:188px;
-        height:385px;
-      }
-
-      .roof{
-        top:148px;
-      }
-
-      .factsScene{
-        top:176px;
-      }
-
-      .sentenceScene{
-        top:165px;
-      }
+      .layout{grid-template-columns:1fr}
+      .taskPanel{order:-1}
+      .scenePanel{min-height:auto}
+      .houseScene{min-height:620px}
+      .floorPlanWrap{top:165px;height:385px}
+      .roof{top:126px}
+      .factsScene{top:120px}
     }
 
     @media (max-width:720px){
@@ -1119,40 +1095,20 @@
       .choices{grid-template-columns:1fr}
       .promptMain{font-size:25px;min-height:78px}
       .promptMain.english{font-size:20px}
-      .captionCard{min-width:260px;top:106px}
-      .floorPlanWrap{
-        width:95%;
-        top:205px;
-        height:345px;
-        border-width:8px;
-      }
-      .roof{
-        width:98%;
-        top:182px;
-      }
+      .captionCard{min-width:260px;top:26px}
+      .floorPlanWrap{width:95%;top:170px;height:345px;border-width:8px}
+      .roof{width:98%;top:148px}
       .roomZh{font-size:20px}
       .roomEn{font-size:11px}
       .roomIcon{font-size:32px}
       .room{padding:6px;border-width:3px}
       .wordWall{width:95%}
-      .factsScene{
-        width:95%;
-        top:190px;
-      }
-      .factsGrid{
-        grid-template-columns:repeat(2,1fr);
-      }
-      .factRoom{
-        min-height:96px;
-      }
-      .sentenceScene{
-        width:95%;
-        top:170px;
-        padding:18px;
-      }
-      .sentenceScene h2{
-        font-size:30px;
-      }
+      .factsScene{width:95%;top:115px}
+      .numberGrid{grid-template-columns:repeat(2,1fr)}
+      .numberRoom{min-height:96px}
+      .rewardBoard{width:95%;padding:18px}
+      .rewardTitle{font-size:30px}
+      .rewardShelf{grid-template-columns:repeat(4,1fr)}
     }
   </style>
 </head>
@@ -1175,19 +1131,14 @@
 
     <div class="tabs">
       <button class="tabBtn active" id="huntTab">Part 1 · Room Hunt</button>
-      <button class="tabBtn" id="factsTab">Part 2 · House Facts</button>
+      <button class="tabBtn" id="factsTab">Part 2 · House Detective</button>
       <button class="tabBtn" id="sentenceTab">Part 3 · Sentence Builder</button>
     </div>
 
     <main class="layout">
       <section class="panel scenePanel">
         <div class="houseScene">
-          <div class="sceneTitle">
-            <div class="big">House Tour</div>
-            <div class="small">Unlock rooms, read facts, and build sentences.</div>
-          </div>
-
-          <div class="captionCard">
+          <div class="captionCard" id="captionCard">
             <div class="line1" id="sceneLine1">Find the house word!</div>
             <div class="line2" id="sceneLine2">房间词会点亮房间，单字会进入 Word Wall。</div>
           </div>
@@ -1196,7 +1147,7 @@
 
           <div class="floorPlanWrap" id="floorPlanWrap">
             <div class="roomGrid">
-              <div class="room living locked" id="room-living" data-room="living">
+              <div class="room living locked" id="room-living">
                 <div class="unlockBadge">unlocked</div>
                 <div class="windowMini"></div>
                 <div class="roomIcon">🛋️</div>
@@ -1204,7 +1155,7 @@
                 <div class="roomEn">living room</div>
               </div>
 
-              <div class="room dining locked" id="room-dining" data-room="dining">
+              <div class="room dining locked" id="room-dining">
                 <div class="unlockBadge">unlocked</div>
                 <div class="windowMini"></div>
                 <div class="roomIcon">🍽️</div>
@@ -1212,7 +1163,7 @@
                 <div class="roomEn">dining room</div>
               </div>
 
-              <div class="room kitchen locked" id="room-kitchen" data-room="kitchen">
+              <div class="room kitchen locked" id="room-kitchen">
                 <div class="unlockBadge">unlocked</div>
                 <div class="windowMini"></div>
                 <div class="roomIcon">🍳</div>
@@ -1220,7 +1171,7 @@
                 <div class="roomEn">kitchen</div>
               </div>
 
-              <div class="room bedroom locked" id="room-bedroom" data-room="bedroom">
+              <div class="room bedroom locked" id="room-bedroom">
                 <div class="unlockBadge">unlocked</div>
                 <div class="windowMini"></div>
                 <div class="roomIcon">🛏️</div>
@@ -1228,7 +1179,7 @@
                 <div class="roomEn">bedroom</div>
               </div>
 
-              <div class="room study locked" id="room-study" data-room="study">
+              <div class="room study locked" id="room-study">
                 <div class="unlockBadge">unlocked</div>
                 <div class="windowMini"></div>
                 <div class="roomIcon">📚</div>
@@ -1236,7 +1187,7 @@
                 <div class="roomEn">study</div>
               </div>
 
-              <div class="room bathroom locked" id="room-bathroom" data-room="bathroom">
+              <div class="room bathroom locked" id="room-bathroom">
                 <div class="unlockBadge">unlocked</div>
                 <div class="windowMini"></div>
                 <div class="roomIcon">🚿</div>
@@ -1247,61 +1198,66 @@
           </div>
 
           <div class="factsScene" id="factsScene">
-            <div class="factsHouse">
-              <div class="factsHeader">
-                <div class="factsTitle">My House Facts</div>
-                <div class="factsBadge">挺大的 · not too big, not too small</div>
+            <div class="detectiveCard">
+              <div class="detectiveHeader">
+                <div class="detectiveTitle">House Detective</div>
+                <div class="detectiveBadge">Use the clues. Don’t just match words.</div>
               </div>
 
-              <div class="factsGrid">
-                <div class="factRoom">
-                  <div class="factEmoji">🛋️</div>
-                  <div class="factZh">客厅</div>
-                  <div class="factCount">一个大客厅</div>
+              <div class="numberGrid">
+                <div class="numberRoom">
+                  <div class="numberEmoji">🛋️</div>
+                  <div class="numberZh">客厅</div>
+                  <div class="numberBig">1</div>
                 </div>
 
-                <div class="factRoom">
-                  <div class="factEmoji">🍽️</div>
-                  <div class="factZh">餐厅</div>
-                  <div class="factCount">一个餐厅</div>
+                <div class="numberRoom">
+                  <div class="numberEmoji">🍽️</div>
+                  <div class="numberZh">餐厅</div>
+                  <div class="numberBig">1</div>
                 </div>
 
-                <div class="factRoom">
-                  <div class="factEmoji">🍳</div>
-                  <div class="factZh">厨房</div>
-                  <div class="factCount">一个厨房</div>
+                <div class="numberRoom">
+                  <div class="numberEmoji">🍳</div>
+                  <div class="numberZh">厨房</div>
+                  <div class="numberBig">1</div>
                 </div>
 
-                <div class="factRoom">
-                  <div class="factEmoji">🛏️</div>
-                  <div class="factZh">卧室</div>
-                  <div class="factCount">三间卧室</div>
+                <div class="numberRoom">
+                  <div class="numberEmoji">🛏️</div>
+                  <div class="numberZh">卧室</div>
+                  <div class="numberBig">3</div>
                 </div>
 
-                <div class="factRoom">
-                  <div class="factEmoji">📚</div>
-                  <div class="factZh">书房</div>
-                  <div class="factCount">一个书房</div>
+                <div class="numberRoom">
+                  <div class="numberEmoji">📚</div>
+                  <div class="numberZh">书房</div>
+                  <div class="numberBig">1</div>
                 </div>
 
-                <div class="factRoom">
-                  <div class="factEmoji">🚿</div>
-                  <div class="factZh">卫生间</div>
-                  <div class="factCount">两个卫生间</div>
+                <div class="numberRoom">
+                  <div class="numberEmoji">🚿</div>
+                  <div class="numberZh">卫生间</div>
+                  <div class="numberBig">2</div>
                 </div>
               </div>
 
-              <div class="factSentence">
-                我家的房子有一个大客厅、一个餐厅、一个厨房、三间卧室、一个书房和两个卫生间。
+              <div class="detectiveHint">
+                侦探提示：看数字，再换成中文量词。<br>
+                1 = 一个 / 一间，2 = 两个，3 = 三间。
               </div>
             </div>
           </div>
 
-          <div class="sentenceScene" id="sentenceScene">
-            <div class="sentenceBigIcon">📝</div>
-            <h2>Sentence Builder</h2>
-            <p>Look at the clue on the right. Tap the Chinese word tiles in order to build the sentence.</p>
-            <div class="sentencePreview" id="sentencePreview">Build the house sentence.</div>
+          <div class="rewardScene" id="rewardScene">
+            <div class="rewardBoard">
+              <div class="rewardTitle">Sentence Rewards</div>
+              <div class="rewardSubtitle">每组对一个句子，就得到一个 house sticker。</div>
+
+              <div class="rewardShelf" id="rewardShelf"></div>
+
+              <div class="rewardMessage" id="rewardMessage">Build a sentence to earn a sticker!</div>
+            </div>
           </div>
 
           <div class="wordWall" id="wordWall">
@@ -1376,8 +1332,8 @@
         <div class="instructions">
           <strong>How to Play:</strong><br>
           Part 1: Choose the correct word and unlock rooms.<br>
-          Part 2: Read the house facts and answer questions.<br>
-          Part 3: Build the house sentences with word tiles.
+          Part 2: Use the number clues to solve house detective questions.<br>
+          Part 3: Build sentences and collect stickers.
         </div>
       </aside>
     </main>
@@ -1419,68 +1375,92 @@
 
     const FACT_TASKS = [
       {
-        zh:"三间卧室",
-        py:"sān jiān wò shì",
-        en:"How many bedrooms does the house have?",
+        type:"how",
         promptZh:"这家有几间卧室？",
+        en:"How many bedrooms does the house have?",
+        py:"sān jiān wò shì",
         answer:"三间卧室",
         options:["一间卧室","两间卧室","三间卧室","四间卧室"]
       },
       {
-        zh:"两个卫生间",
-        py:"liǎng ge wèi shēng jiān",
-        en:"How many bathrooms does the house have?",
+        type:"how",
         promptZh:"这家有几个卫生间？",
+        en:"How many bathrooms does the house have?",
+        py:"liǎng ge wèi shēng jiān",
         answer:"两个卫生间",
         options:["一个卫生间","两个卫生间","三个卫生间","四个卫生间"]
       },
       {
-        zh:"一个书房",
-        py:"yí ge shū fáng",
-        en:"How many study rooms does the house have?",
+        type:"how",
         promptZh:"这家有几个书房？",
+        en:"How many study rooms does the house have?",
+        py:"yí ge shū fáng",
         answer:"一个书房",
-        options:["一个书房","两个书房","三个书房","没有书房"]
+        options:["没有书房","一个书房","两个书房","三个书房"]
       },
       {
-        zh:"一个大客厅",
-        py:"yí ge dà kè tīng",
-        en:"Choose the correct sentence about the living room.",
-        promptZh:"关于客厅，哪一句是对的？",
-        answer:"有一个大客厅。",
-        options:["有一个大客厅。","有两个大客厅。","没有客厅。","有三间客厅。"]
-      },
-      {
-        zh:"一个餐厅",
-        py:"yí ge cān tīng",
-        en:"Choose the correct sentence about the dining room.",
-        promptZh:"关于餐厅，哪一句是对的？",
-        answer:"有一个餐厅。",
-        options:["有一个餐厅。","有两个餐厅。","有三间餐厅。","没有餐厅。"]
-      },
-      {
-        zh:"一个厨房",
-        py:"yí ge chú fáng",
-        en:"Choose the correct sentence about the kitchen.",
-        promptZh:"关于厨房，哪一句是对的？",
+        type:"correct",
+        promptZh:"哪一句是对的？",
+        en:"Which sentence is correct?",
+        py:"yǒu yí ge chú fáng.",
         answer:"有一个厨房。",
-        options:["有一个厨房。","有两个厨房。","有三间厨房。","没有厨房。"]
+        options:["有两个厨房。","有一个厨房。","有三个厨房。","没有厨房。"]
       },
       {
-        zh:"房子挺大的",
-        py:"fáng zi tǐng dà de",
-        en:"Which sentence means 'The house is quite big'?",
-        promptZh:"哪一句表示房子 quite big？",
-        answer:"房子挺大的。",
-        options:["房子挺大的。","房间不大也不小。","房子很小。","房子不漂亮。"]
+        type:"correct",
+        promptZh:"哪一句是对的？",
+        en:"Which sentence is correct?",
+        py:"yǒu yí ge shū fáng hé liǎng ge wèi shēng jiān.",
+        answer:"有一个书房和两个卫生间。",
+        options:["有两个书房和一个卫生间。","有一个书房和两个卫生间。","有三个书房和两个卫生间。","没有书房和卫生间。"]
       },
       {
-        zh:"不大也不小",
-        py:"bú dà yě bù xiǎo",
-        en:"Which sentence means 'not big and not small'?",
-        promptZh:"哪一句表示 not big and not small？",
-        answer:"房间不大也不小。",
-        options:["房间不大也不小。","房子挺大的。","房间很大。","房间很小。"]
+        type:"not",
+        promptZh:"哪一句不对？",
+        en:"Which sentence is NOT true?",
+        py:"bú duì",
+        answer:"我家有三个书房。",
+        options:["我家有一个厨房。","我家有三间卧室。","我家有两个卫生间。","我家有三个书房。"]
+      },
+      {
+        type:"not",
+        promptZh:"哪一句不对？",
+        en:"Which sentence is NOT true?",
+        py:"bú duì",
+        answer:"我家有一个卫生间。",
+        options:["我家有一个餐厅。","我家有一个卫生间。","我家有一个书房。","我家有一个厨房。"]
+      },
+      {
+        type:"tf",
+        promptZh:"判断：我家有两间卧室。",
+        en:"True or False: The house has two bedrooms.",
+        py:"bù duì",
+        answer:"不对",
+        options:["对","不对"]
+      },
+      {
+        type:"tf",
+        promptZh:"判断：我家有三间卧室。",
+        en:"True or False: The house has three bedrooms.",
+        py:"duì",
+        answer:"对",
+        options:["对","不对"]
+      },
+      {
+        type:"tf",
+        promptZh:"判断：我家有两个卫生间。",
+        en:"True or False: The house has two bathrooms.",
+        py:"duì",
+        answer:"对",
+        options:["对","不对"]
+      },
+      {
+        type:"tf",
+        promptZh:"判断：我家有两个书房。",
+        en:"True or False: The house has two study rooms.",
+        py:"bù duì",
+        answer:"不对",
+        options:["对","不对"]
       }
     ];
 
@@ -1588,6 +1568,7 @@
     let currentPromptMode = "easy";
     let locked = false;
     let unlockedRooms = new Set();
+    let rewardCount = 0;
 
     const huntTab = document.getElementById("huntTab");
     const factsTab = document.getElementById("factsTab");
@@ -1612,6 +1593,7 @@
     const feedback = document.getElementById("feedback");
     const doneList = document.getElementById("doneList");
 
+    const captionCard = document.getElementById("captionCard");
     const sceneLine1 = document.getElementById("sceneLine1");
     const sceneLine2 = document.getElementById("sceneLine2");
     const roof = document.getElementById("roof");
@@ -1619,8 +1601,9 @@
     const wordWall = document.getElementById("wordWall");
     const wordChips = document.getElementById("wordChips");
     const factsScene = document.getElementById("factsScene");
-    const sentenceScene = document.getElementById("sentenceScene");
-    const sentencePreview = document.getElementById("sentencePreview");
+    const rewardScene = document.getElementById("rewardScene");
+    const rewardShelf = document.getElementById("rewardShelf");
+    const rewardMessage = document.getElementById("rewardMessage");
 
     const showPinyinBtn = document.getElementById("showPinyinBtn");
     const showAnswerBtn = document.getElementById("showAnswerBtn");
@@ -1634,6 +1617,8 @@
     const winText = document.getElementById("winText");
     const keepPlayingBtn = document.getElementById("keepPlayingBtn");
     const restartWinBtn = document.getElementById("restartWinBtn");
+
+    const REWARDS = ["🏠","🛋️","🍽️","🍳","🛏️","📚","🚿","🎧","🎹","🎮","⭐","🏡","🎉"];
 
     function shuffle(arr){
       const a = [...arr];
@@ -1670,9 +1655,11 @@
       selectedTiles = [];
       locked = false;
       unlockedRooms = new Set();
+      rewardCount = 0;
       winOverlay.classList.remove("show");
       clearRooms();
       wordChips.innerHTML = "";
+      buildRewardSlots();
       renderTask();
     }
 
@@ -1681,6 +1668,30 @@
         room.classList.remove("unlocked");
         room.classList.add("locked");
       });
+    }
+
+    function buildRewardSlots(){
+      rewardShelf.innerHTML = "";
+      REWARDS.forEach((emoji,i)=>{
+        const slot = document.createElement("div");
+        slot.className = "rewardSlot";
+        slot.dataset.index = i;
+        slot.textContent = "＋";
+        rewardShelf.appendChild(slot);
+      });
+      rewardMessage.textContent = "Build a sentence to earn a sticker!";
+    }
+
+    function addReward(){
+      const slots = document.querySelectorAll(".rewardSlot");
+      if(rewardCount >= slots.length) return;
+
+      const slot = slots[rewardCount];
+      slot.textContent = REWARDS[rewardCount];
+      slot.classList.add("filled");
+      rewardCount++;
+
+      rewardMessage.textContent = `Nice! You earned ${rewardCount} sticker${rewardCount > 1 ? "s" : ""}!`;
     }
 
     function getPromptMode(){
@@ -1692,11 +1703,12 @@
     }
 
     function resetScene(){
+      captionCard.style.display = "";
       roof.style.display = "";
       floorPlanWrap.style.display = "";
       wordWall.classList.remove("show");
       factsScene.classList.remove("show");
-      sentenceScene.classList.remove("show");
+      rewardScene.classList.remove("show");
     }
 
     function renderTask(){
@@ -1761,9 +1773,9 @@
     }
 
     function renderFactTask(task){
-      taskLabel.textContent = "Part 2 · House Facts";
-      sceneLine1.textContent = "Read the house facts!";
-      sceneLine2.textContent = "根据左边的房子信息卡，选择正确答案。";
+      taskLabel.textContent = "Part 2 · House Detective";
+      sceneLine1.textContent = "Solve the house mystery!";
+      sceneLine2.textContent = "看左边数字线索，判断哪一句正确。";
       clearBtn.disabled = true;
       checkBtn.disabled = true;
       roof.style.display = "none";
@@ -1798,16 +1810,12 @@
         const btn = document.createElement("button");
         btn.className = "choice";
         btn.dataset.answer = option;
-
         btn.innerHTML = `
-          <div class="emoji">🏡</div>
+          <div class="emoji">${task.type === "tf" ? "🕵️" : "🏡"}</div>
           <div class="zh">${option}</div>
         `;
 
-        btn.onclick = ()=>{
-          handleFactChoice(btn, option, task);
-        };
-
+        btn.onclick = ()=>handleFactChoice(btn, option, task);
         choices.appendChild(btn);
       });
     }
@@ -1832,16 +1840,16 @@
         completed.push(task.answer);
 
         feedback.className = "feedback good";
-        feedback.textContent = `✅ Correct! ${task.answer}`;
+        feedback.textContent = `✅ Detective solved! ${task.answer}`;
 
         speakChinese(task.answer);
         renderDoneList();
 
-        setTimeout(nextTask, 900);
+        setTimeout(nextTask, 950);
       }else{
         btn.classList.add("wrong");
         feedback.className = "feedback bad";
-        feedback.textContent = "❌ Not yet. Look at the house facts.";
+        feedback.textContent = "❌ Look carefully at the number clues.";
         setTimeout(()=>btn.classList.remove("wrong"), 520);
       }
     }
@@ -1855,24 +1863,19 @@
         const btn = document.createElement("button");
         btn.className = "choice";
         btn.dataset.answer = option;
-
         btn.innerHTML = `
           <div class="emoji">${vocab.emoji || "🏠"}</div>
           <div class="zh">${option}</div>
           <div class="small">${vocab.py || ""}</div>
         `;
 
-        btn.onclick = ()=>{
-          handleChoice(btn, option, answer, task);
-        };
-
+        btn.onclick = ()=>handleChoice(btn, option, answer, task);
         choices.appendChild(btn);
       });
     }
 
     function findWord(zh){
-      return VOCAB_TASKS.find(v => v.zh === zh)
-        || {zh, py:"", en:"", emoji:"🏠"};
+      return VOCAB_TASKS.find(v => v.zh === zh) || {zh, py:"", en:"", emoji:"🏠"};
     }
 
     function handleChoice(btn, option, answer, task){
@@ -1973,25 +1976,9 @@
       const midY = Math.min(startY,endY) - 110;
 
       icon.animate([
-        {
-          transform:"translate(-50%,-50%) scale(.82) rotate(0deg)",
-          left:startX + "px",
-          top:startY + "px",
-          opacity:1
-        },
-        {
-          transform:"translate(-50%,-50%) scale(1.15) rotate(14deg)",
-          left:midX + "px",
-          top:midY + "px",
-          opacity:1,
-          offset:.52
-        },
-        {
-          transform:"translate(-50%,-50%) scale(.95) rotate(-8deg)",
-          left:endX + "px",
-          top:endY + "px",
-          opacity:1
-        }
+        {transform:"translate(-50%,-50%) scale(.82) rotate(0deg)",left:startX+"px",top:startY+"px",opacity:1},
+        {transform:"translate(-50%,-50%) scale(1.15) rotate(14deg)",left:midX+"px",top:midY+"px",opacity:1,offset:.52},
+        {transform:"translate(-50%,-50%) scale(.95) rotate(-8deg)",left:endX+"px",top:endY+"px",opacity:1}
       ],{
         duration:820,
         easing:"cubic-bezier(.22,1,.36,1)",
@@ -2012,12 +1999,10 @@
 
     function renderSentenceTask(task){
       taskLabel.textContent = "Part 3 · Sentence Builder";
-      sceneLine1.textContent = "Build the house sentence.";
-      sceneLine2.textContent = "左边不看房间图，只专心组句子。";
+      captionCard.style.display = "none";
       roof.style.display = "none";
       floorPlanWrap.style.display = "none";
-      sentenceScene.classList.add("show");
-      sentencePreview.textContent = task.en;
+      rewardScene.classList.add("show");
 
       builderArea.classList.add("show");
       choices.innerHTML = "";
@@ -2119,6 +2104,7 @@
         feedback.textContent = `✅ Correct! ${task.zh}`;
 
         speakChinese(task.zh);
+        addReward();
         renderDoneList();
 
         setTimeout(nextTask,1000);
@@ -2178,7 +2164,7 @@
         currentPart === "hunt"
           ? "Room Hunt"
           : currentPart === "facts"
-            ? "House Facts"
+            ? "House Detective"
             : "Sentence Builder";
 
       winText.textContent = `Great job! You completed ${label}. Score: ${score}`;
