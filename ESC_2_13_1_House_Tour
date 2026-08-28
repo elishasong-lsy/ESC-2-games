@@ -1,0 +1,2008 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ESC_2_13_1_House_Tour</title>
+
+  <style>
+    :root{
+      --ink:#172033;
+      --muted:#64748b;
+      --blue:#2563eb;
+      --purple:#7c3aed;
+      --green:#16a34a;
+      --orange:#f59e0b;
+      --red:#ef4444;
+      --yellow:#facc15;
+      --card:#ffffff;
+      --shadow:0 18px 42px rgba(15,23,42,.13);
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        "Noto Sans SC",
+        "Microsoft YaHei",
+        sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 8% 0%, #dbeafe 0%, transparent 31%),
+        radial-gradient(circle at 92% 9%, #dcfce7 0%, transparent 31%),
+        linear-gradient(180deg,#eef6ff,#f8fbff);
+      padding:18px;
+      overflow-x:hidden;
+    }
+
+    .app{
+      max-width:1320px;
+      margin:0 auto;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .logo{
+      width:64px;
+      height:64px;
+      border-radius:22px;
+      display:grid;
+      place-items:center;
+      font-size:35px;
+      color:white;
+      background:linear-gradient(135deg,#38bdf8,#2563eb,#7c3aed);
+      box-shadow:var(--shadow);
+    }
+
+    h1{
+      margin:0;
+      font-size:32px;
+      line-height:1.05;
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+
+    .subtitle{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:15px;
+      font-weight:850;
+    }
+
+    button{
+      border:0;
+      border-radius:16px;
+      padding:12px 16px;
+      font-weight:950;
+      cursor:pointer;
+      font-size:15px;
+      font-family:inherit;
+      background:#fff;
+      color:var(--ink);
+      box-shadow:0 8px 18px rgba(15,23,42,.10);
+      transition:transform .12s ease, filter .12s ease, box-shadow .12s ease;
+    }
+
+    button:hover{
+      filter:brightness(.985);
+      transform:translateY(-1px);
+    }
+
+    button:active{
+      transform:translateY(1px) scale(.99);
+    }
+
+    button:disabled{
+      opacity:.48;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .primary{
+      background:linear-gradient(90deg,#2563eb,#7c3aed);
+      color:white;
+    }
+
+    .green{
+      background:linear-gradient(90deg,#22c55e,#16a34a);
+      color:white;
+    }
+
+    .orange{
+      background:linear-gradient(90deg,#fbbf24,#f59e0b);
+      color:#422006;
+    }
+
+    .tabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .tabBtn{
+      border:2px solid #bfdbfe;
+      background:white;
+      color:#1e3a8a;
+      box-shadow:none;
+      min-width:220px;
+    }
+
+    .tabBtn.active{
+      background:#2563eb;
+      color:white;
+      border-color:#2563eb;
+      box-shadow:0 10px 22px rgba(37,99,235,.24);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:minmax(570px,1.15fr) minmax(400px,.85fr);
+      gap:18px;
+      align-items:start;
+    }
+
+    .panel{
+      background:rgba(255,255,255,.88);
+      border:1px solid rgba(255,255,255,.96);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(8px);
+      overflow:hidden;
+    }
+
+    .scenePanel{
+      padding:18px;
+      min-height:700px;
+      position:relative;
+    }
+
+    .taskPanel{
+      padding:18px;
+    }
+
+    .houseScene{
+      min-height:660px;
+      border-radius:28px;
+      background:
+        radial-gradient(circle at 16% 9%, rgba(255,255,255,.72) 0 2px, transparent 3px),
+        radial-gradient(circle at 76% 12%, rgba(255,255,255,.72) 0 2px, transparent 3px),
+        linear-gradient(180deg,#dbeafe 0%,#eff6ff 45%,#dcfce7 100%);
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.9);
+      box-shadow:inset 0 0 32px rgba(255,255,255,.32);
+    }
+
+    .sceneTitle{
+      position:absolute;
+      left:22px;
+      top:18px;
+      background:rgba(255,255,255,.88);
+      border:1px solid rgba(255,255,255,.95);
+      border-radius:22px;
+      padding:12px 16px;
+      box-shadow:0 10px 24px rgba(15,23,42,.09);
+      z-index:8;
+    }
+
+    .sceneTitle .big{
+      font-size:22px;
+      font-weight:950;
+      color:#1e3a8a;
+    }
+
+    .sceneTitle .small{
+      margin-top:3px;
+      font-size:13px;
+      font-weight:850;
+      color:#64748b;
+    }
+
+    .captionCard{
+      position:absolute;
+      left:50%;
+      top:96px;
+      transform:translateX(-50%);
+      min-width:380px;
+      max-width:88%;
+      background:rgba(255,255,255,.90);
+      border:1px solid rgba(255,255,255,.96);
+      border-radius:24px;
+      padding:14px 18px;
+      text-align:center;
+      box-shadow:0 12px 28px rgba(15,23,42,.12);
+      z-index:9;
+    }
+
+    .captionCard .line1{
+      font-size:22px;
+      font-weight:950;
+      color:#1e3a8a;
+    }
+
+    .captionCard .line2{
+      margin-top:4px;
+      font-size:14px;
+      font-weight:850;
+      color:#64748b;
+    }
+
+    .floorPlanWrap{
+      position:absolute;
+      left:50%;
+      top:185px;
+      transform:translateX(-50%);
+      width:min(88%,660px);
+      height:415px;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.20) 0 2px,transparent 2px 100%),
+        linear-gradient(180deg,#d6a76a,#b77935);
+      background-size:32px 32px;
+      border:12px solid #7c4a20;
+      border-radius:28px;
+      box-shadow:0 24px 45px rgba(15,23,42,.24);
+      z-index:5;
+      overflow:hidden;
+    }
+
+    .roof{
+      position:absolute;
+      left:50%;
+      top:155px;
+      transform:translateX(-50%);
+      width:min(92%,700px);
+      height:70px;
+      background:linear-gradient(135deg,#ef4444,#b91c1c);
+      clip-path:polygon(50% 0%,100% 100%,0% 100%);
+      z-index:4;
+      filter:drop-shadow(0 12px 14px rgba(15,23,42,.16));
+    }
+
+    .roomGrid{
+      position:absolute;
+      inset:0;
+      display:grid;
+      grid-template-columns:1.2fr 1fr 1fr;
+      grid-template-rows:1fr 1fr;
+      gap:0;
+      z-index:6;
+    }
+
+    .room{
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:12px;
+      border:5px solid rgba(255,255,255,.92);
+      overflow:hidden;
+      transition:transform .22s ease, filter .22s ease, box-shadow .22s ease;
+    }
+
+    .room::before{
+      content:"";
+      position:absolute;
+      inset:10px;
+      border:2px dashed rgba(255,255,255,.62);
+      border-radius:16px;
+      pointer-events:none;
+    }
+
+    .room.living{
+      grid-row:1 / 3;
+      background:linear-gradient(135deg,#bfdbfe,#60a5fa);
+    }
+
+    .room.dining{
+      background:linear-gradient(135deg,#fde68a,#fbbf24);
+    }
+
+    .room.kitchen{
+      background:linear-gradient(135deg,#fecaca,#fb7185);
+    }
+
+    .room.bedroom{
+      background:linear-gradient(135deg,#ddd6fe,#a78bfa);
+    }
+
+    .room.study{
+      background:linear-gradient(135deg,#bbf7d0,#4ade80);
+    }
+
+    .room.bathroom{
+      background:linear-gradient(135deg,#cffafe,#22d3ee);
+    }
+
+    .roomIcon{
+      font-size:44px;
+      line-height:1;
+      filter:drop-shadow(0 4px 4px rgba(15,23,42,.10));
+      transform:scale(.92);
+      opacity:.55;
+      transition:transform .22s ease, opacity .22s ease;
+    }
+
+    .roomZh{
+      margin-top:8px;
+      font-size:26px;
+      font-weight:950;
+      color:#0f172a;
+      text-shadow:0 1px 0 rgba(255,255,255,.42);
+    }
+
+    .roomEn{
+      margin-top:3px;
+      font-size:13px;
+      font-weight:900;
+      color:rgba(15,23,42,.64);
+    }
+
+    .room.locked{
+      filter:saturate(.55) brightness(.88);
+    }
+
+    .room.unlocked{
+      animation:roomPop .55s ease-out;
+      box-shadow:inset 0 0 0 6px rgba(255,255,255,.55), 0 0 28px rgba(250,204,21,.85);
+      filter:saturate(1.14) brightness(1.08);
+    }
+
+    .room.unlocked .roomIcon{
+      opacity:1;
+      transform:scale(1.12);
+    }
+
+    @keyframes roomPop{
+      0%{transform:scale(.96)}
+      42%{transform:scale(1.035)}
+      100%{transform:scale(1)}
+    }
+
+    .unlockBadge{
+      position:absolute;
+      right:10px;
+      top:10px;
+      background:#fff7ed;
+      color:#9a3412;
+      border:1px solid #fed7aa;
+      border-radius:999px;
+      padding:5px 9px;
+      font-size:12px;
+      font-weight:950;
+      opacity:0;
+      transform:translateY(-4px);
+      transition:.2s ease;
+      z-index:7;
+    }
+
+    .room.unlocked .unlockBadge{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .door{
+      position:absolute;
+      width:32px;
+      height:48px;
+      left:50%;
+      bottom:-4px;
+      transform:translateX(-50%);
+      border-radius:18px 18px 0 0;
+      background:#7c4a20;
+      border:3px solid rgba(255,255,255,.65);
+      z-index:10;
+    }
+
+    .windowMini{
+      position:absolute;
+      width:42px;
+      height:32px;
+      top:14px;
+      left:14px;
+      border-radius:8px;
+      background:#eff6ff;
+      border:3px solid rgba(255,255,255,.82);
+      box-shadow:inset 0 0 0 2px #bfdbfe;
+      opacity:.8;
+    }
+
+    .wordWall{
+      display:none;
+      position:absolute;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      width:min(88%,660px);
+      background:rgba(255,255,255,.92);
+      border:2px solid #bfdbfe;
+      border-radius:24px;
+      padding:12px;
+      z-index:12;
+      box-shadow:0 14px 28px rgba(15,23,42,.14);
+    }
+
+    .wordWall.show{
+      display:block;
+    }
+
+    .wordWallTitle{
+      color:#1e3a8a;
+      font-size:14px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+      margin-bottom:8px;
+      text-align:center;
+    }
+
+    .wordChips{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:7px;
+      min-height:36px;
+    }
+
+    .wordChip{
+      background:#eff6ff;
+      border:1px solid #bfdbfe;
+      color:#1e3a8a;
+      border-radius:999px;
+      padding:7px 10px;
+      font-weight:950;
+      font-size:14px;
+      animation:chipIn .25s ease-out both;
+    }
+
+    @keyframes chipIn{
+      from{opacity:0;transform:translateY(8px) scale(.9)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+
+    .houseComplete{
+      display:none;
+      position:absolute;
+      left:50%;
+      top:290px;
+      transform:translateX(-50%);
+      width:min(88%,560px);
+      background:rgba(255,255,255,.94);
+      border:2px solid #bbf7d0;
+      border-radius:30px;
+      padding:18px;
+      z-index:14;
+      box-shadow:0 18px 36px rgba(15,23,42,.14);
+      text-align:center;
+    }
+
+    .houseComplete.show{
+      display:block;
+      animation:completeIn .35s ease-out both;
+    }
+
+    @keyframes completeIn{
+      from{opacity:0;transform:translateX(-50%) translateY(12px) scale(.95)}
+      to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
+    }
+
+    .completeEmoji{
+      font-size:58px;
+      line-height:1;
+    }
+
+    .completeLine{
+      margin-top:8px;
+      font-size:24px;
+      font-weight:950;
+      color:#166534;
+    }
+
+    .modeBar{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .modeTabs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .modeBtn{
+      padding:10px 12px;
+      border:1px solid #e2e8f0;
+      background:#fff;
+      color:#334155;
+      box-shadow:none;
+      border-radius:14px;
+      font-size:14px;
+    }
+
+    .modeBtn.active{
+      background:#2563eb;
+      color:white;
+      border-color:#2563eb;
+    }
+
+    .stats{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .stat{
+      background:#fff;
+      border:1px solid #e2e8f0;
+      border-radius:18px;
+      padding:10px 14px;
+      min-width:108px;
+      text-align:center;
+      box-shadow:0 6px 14px rgba(15,23,42,.06);
+    }
+
+    .stat .num{
+      font-size:24px;
+      font-weight:950;
+      line-height:1;
+      color:#0f172a;
+    }
+
+    .stat .lab{
+      margin-top:4px;
+      font-size:11px;
+      color:#64748b;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+    }
+
+    .taskCard{
+      background:linear-gradient(180deg,#ffffff,#f8fafc);
+      border:1px solid #e2e8f0;
+      border-radius:24px;
+      padding:18px;
+      box-shadow:0 10px 22px rgba(15,23,42,.08);
+    }
+
+    .taskLabel{
+      color:#64748b;
+      font-size:13px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-bottom:8px;
+    }
+
+    .promptMain{
+      min-height:105px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      background:#eff6ff;
+      border:1px solid #bfdbfe;
+      border-radius:20px;
+      padding:14px;
+      font-size:32px;
+      font-weight:950;
+      color:#1e3a8a;
+      line-height:1.18;
+      word-break:break-word;
+    }
+
+    .promptMain.english{
+      font-size:25px;
+    }
+
+    .promptSub{
+      margin-top:10px;
+      min-height:34px;
+      color:#475569;
+      font-weight:850;
+      line-height:1.45;
+      text-align:center;
+    }
+
+    .answerBox{
+      margin-top:12px;
+      display:none;
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      border-radius:18px;
+      padding:12px;
+      text-align:center;
+    }
+
+    .answerBox.show{
+      display:block;
+    }
+
+    .answerZh{
+      font-size:30px;
+      font-weight:950;
+      color:#9a3412;
+      line-height:1.15;
+    }
+
+    .answerPy{
+      margin-top:4px;
+      font-size:15px;
+      font-weight:900;
+      color:#c2410c;
+    }
+
+    .answerEn{
+      margin-top:4px;
+      font-size:14px;
+      font-weight:850;
+      color:#475569;
+      line-height:1.35;
+    }
+
+    .choices{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .choice{
+      min-height:78px;
+      border:2px solid #bfdbfe;
+      background:white;
+      color:#172033;
+      border-radius:20px;
+      padding:10px 12px;
+      font-size:20px;
+      font-weight:950;
+      line-height:1.2;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:3px;
+    }
+
+    .choice .emoji{
+      font-size:30px;
+      line-height:1;
+    }
+
+    .choice .zh{
+      font-size:22px;
+      line-height:1.05;
+    }
+
+    .choice .small{
+      font-size:12px;
+      color:#64748b;
+      font-weight:850;
+      line-height:1.15;
+    }
+
+    .choice:hover{
+      border-color:#60a5fa;
+      background:#eff6ff;
+    }
+
+    .choice.correct{
+      background:#dcfce7;
+      color:#14532d;
+      border-color:#22c55e;
+    }
+
+    .choice.wrong{
+      background:#fee2e2;
+      color:#991b1b;
+      border-color:#ef4444;
+      animation:shake .36s ease-in-out;
+    }
+
+    @keyframes shake{
+      0%,100%{transform:translateX(0)}
+      25%{transform:translateX(-7px)}
+      50%{transform:translateX(7px)}
+      75%{transform:translateX(-4px)}
+    }
+
+    .builderArea{
+      margin-top:14px;
+      display:none;
+    }
+
+    .builderArea.show{
+      display:block;
+    }
+
+    .wordBank{
+      background:#f8fafc;
+      border:2px dashed #cbd5e1;
+      border-radius:22px;
+      padding:14px;
+      min-height:130px;
+      display:flex;
+      flex-wrap:wrap;
+      align-content:flex-start;
+      gap:9px;
+      margin-bottom:12px;
+    }
+
+    .sentenceBox{
+      background:white;
+      border:2px solid #bfdbfe;
+      border-radius:22px;
+      padding:14px;
+      min-height:94px;
+      display:flex;
+      flex-wrap:wrap;
+      align-content:center;
+      justify-content:center;
+      gap:9px;
+    }
+
+    .tile{
+      background:white;
+      color:#172033;
+      border:2px solid #bfdbfe;
+      border-radius:15px;
+      padding:10px 13px;
+      font-size:19px;
+      font-weight:950;
+      min-height:48px;
+      box-shadow:0 7px 15px rgba(15,23,42,.08);
+    }
+
+    .tile.used{
+      opacity:.32;
+      pointer-events:none;
+    }
+
+    .slotTile{
+      background:linear-gradient(180deg,#eff6ff,#bfdbfe);
+      color:#0f172a;
+      border:2px solid #2563eb;
+      border-radius:15px;
+      padding:10px 13px;
+      font-size:19px;
+      font-weight:950;
+      min-height:48px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .emptyText{
+      color:#94a3b8;
+      font-weight:900;
+      font-size:17px;
+      align-self:center;
+    }
+
+    .sideBtns{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .sideBtns button{
+      padding:11px 10px;
+      font-size:14px;
+      border-radius:15px;
+    }
+
+    .fullBtn{
+      grid-column:1 / -1;
+    }
+
+    .feedback{
+      margin-top:12px;
+      min-height:42px;
+      border-radius:18px;
+      padding:11px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-size:17px;
+      font-weight:950;
+      line-height:1.35;
+      background:#f1f5f9;
+      color:#475569;
+    }
+
+    .feedback.good{
+      background:#dcfce7;
+      color:#14532d;
+      border:1px solid #bbf7d0;
+    }
+
+    .feedback.bad{
+      background:#fee2e2;
+      color:#991b1b;
+      border:1px solid #fecaca;
+      animation:shake .36s ease-in-out;
+    }
+
+    .doneBox{
+      margin-top:16px;
+      background:#fff;
+      border:1px solid #e2e8f0;
+      border-radius:22px;
+      padding:14px;
+    }
+
+    .doneTitle{
+      color:#64748b;
+      font-size:13px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.8px;
+      margin-bottom:8px;
+    }
+
+    .doneList{
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+      max-height:120px;
+      overflow:auto;
+    }
+
+    .doneChip{
+      background:#eff6ff;
+      color:#1e3a8a;
+      border:1px solid #bfdbfe;
+      border-radius:999px;
+      padding:6px 9px;
+      font-weight:900;
+      font-size:13px;
+    }
+
+    .instructions{
+      margin-top:16px;
+      background:#eff6ff;
+      border:1px solid #bfdbfe;
+      color:#1e3a8a;
+      border-radius:22px;
+      padding:14px;
+      font-size:14px;
+      font-weight:800;
+      line-height:1.55;
+    }
+
+    .flyingIcon{
+      position:fixed;
+      z-index:100;
+      pointer-events:none;
+      font-size:42px;
+      filter:drop-shadow(0 9px 11px rgba(15,23,42,.24));
+      transform-origin:center;
+    }
+
+    .winOverlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(15,23,42,.46);
+      backdrop-filter:blur(5px);
+      z-index:80;
+      padding:20px;
+      opacity:0;
+      transition:opacity .26s ease;
+    }
+
+    .winOverlay.show{
+      display:flex;
+      opacity:1;
+    }
+
+    .winCard{
+      width:min(560px,92vw);
+      background:white;
+      border-radius:34px;
+      padding:30px;
+      text-align:center;
+      box-shadow:0 26px 70px rgba(15,23,42,.35);
+      border:5px solid #60a5fa;
+      transform:translateY(14px) scale(.94);
+      opacity:0;
+      animation:modalIn .34s cubic-bezier(.22,1,.36,1) forwards;
+    }
+
+    @keyframes modalIn{
+      to{
+        transform:translateY(0) scale(1);
+        opacity:1;
+      }
+    }
+
+    .winEmoji{
+      font-size:68px;
+      animation:bounce 1s ease-in-out infinite;
+    }
+
+    @keyframes bounce{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-10px)}
+    }
+
+    .winCard h2{
+      margin:10px 0 6px;
+      font-size:40px;
+      color:#111827;
+    }
+
+    .winCard p{
+      margin:8px 0 0;
+      color:#475569;
+      font-size:17px;
+      font-weight:800;
+      line-height:1.5;
+    }
+
+    .winBtns{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:20px;
+    }
+
+    canvas{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      width:100%;
+      height:100%;
+      z-index:90;
+    }
+
+    @media (max-width:1050px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+
+      .taskPanel{
+        order:-1;
+      }
+
+      .scenePanel{
+        min-height:auto;
+      }
+
+      .houseScene{
+        min-height:620px;
+      }
+
+      .floorPlanWrap{
+        top:180px;
+        height:395px;
+      }
+
+      .roof{
+        top:150px;
+      }
+    }
+
+    @media (max-width:720px){
+      body{padding:10px}
+      h1{font-size:24px}
+      .logo{width:52px;height:52px;font-size:28px}
+      .tabBtn{min-width:100%}
+      .choices{grid-template-columns:1fr}
+      .promptMain{font-size:25px;min-height:78px}
+      .promptMain.english{font-size:20px}
+      .captionCard{min-width:260px;top:108px}
+      .floorPlanWrap{
+        width:95%;
+        top:200px;
+        height:360px;
+        border-width:8px;
+      }
+      .roof{
+        width:98%;
+        top:178px;
+      }
+      .roomZh{font-size:20px}
+      .roomEn{font-size:11px}
+      .roomIcon{font-size:34px}
+      .room{padding:6px;border-width:3px}
+      .wordWall{
+        width:95%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">🏠</div>
+        <div>
+          <h1>ESC_2_13_1_House_Tour</h1>
+          <div class="subtitle">My house 我的家｜Word List 1</div>
+        </div>
+      </div>
+
+      <button class="primary" id="restartBtn">Restart</button>
+    </header>
+
+    <div class="tabs">
+      <button class="tabBtn active" id="huntTab">Part 1 · Room Hunt</button>
+      <button class="tabBtn" id="buildTab">Part 2 · Build My House</button>
+      <button class="tabBtn" id="sentenceTab">Part 3 · Sentence Builder</button>
+    </div>
+
+    <main class="layout">
+      <section class="panel scenePanel">
+        <div class="houseScene">
+          <div class="sceneTitle">
+            <div class="big">House Tour</div>
+            <div class="small">Unlock rooms and build sentences.</div>
+          </div>
+
+          <div class="captionCard">
+            <div class="line1" id="sceneLine1">Find the room!</div>
+            <div class="line2" id="sceneLine2">答对以后，对应房间会亮起来。</div>
+          </div>
+
+          <div class="roof"></div>
+
+          <div class="floorPlanWrap" id="floorPlanWrap">
+            <div class="roomGrid">
+              <div class="room living locked" id="room-living" data-room="living">
+                <div class="unlockBadge">unlocked</div>
+                <div class="windowMini"></div>
+                <div class="roomIcon">🛋️</div>
+                <div class="roomZh">客厅</div>
+                <div class="roomEn">living room</div>
+                <div class="door"></div>
+              </div>
+
+              <div class="room dining locked" id="room-dining" data-room="dining">
+                <div class="unlockBadge">unlocked</div>
+                <div class="windowMini"></div>
+                <div class="roomIcon">🍽️</div>
+                <div class="roomZh">餐厅</div>
+                <div class="roomEn">dining room</div>
+              </div>
+
+              <div class="room kitchen locked" id="room-kitchen" data-room="kitchen">
+                <div class="unlockBadge">unlocked</div>
+                <div class="windowMini"></div>
+                <div class="roomIcon">🍳</div>
+                <div class="roomZh">厨房</div>
+                <div class="roomEn">kitchen</div>
+              </div>
+
+              <div class="room bedroom locked" id="room-bedroom" data-room="bedroom">
+                <div class="unlockBadge">unlocked</div>
+                <div class="windowMini"></div>
+                <div class="roomIcon">🛏️</div>
+                <div class="roomZh">卧室</div>
+                <div class="roomEn">bedroom</div>
+              </div>
+
+              <div class="room study locked" id="room-study" data-room="study">
+                <div class="unlockBadge">unlocked</div>
+                <div class="windowMini"></div>
+                <div class="roomIcon">📚</div>
+                <div class="roomZh">书房</div>
+                <div class="roomEn">study</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="room bathroom locked" id="room-bathroom" data-room="bathroom" style="position:absolute;right:7%;bottom:80px;width:150px;height:105px;border-radius:20px;z-index:13;">
+            <div class="unlockBadge">unlocked</div>
+            <div class="roomIcon">🚿</div>
+            <div class="roomZh" style="font-size:22px;">卫生间</div>
+            <div class="roomEn">bathroom</div>
+          </div>
+
+          <div class="houseComplete" id="houseComplete">
+            <div class="completeEmoji">🏡</div>
+            <div class="completeLine">这是我的家！</div>
+          </div>
+
+          <div class="wordWall" id="wordWall">
+            <div class="wordWallTitle">Word Wall / 单字墙</div>
+            <div class="wordChips" id="wordChips"></div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel taskPanel">
+        <div class="modeBar">
+          <div class="modeTabs">
+            <button class="modeBtn active" data-mode="easy">Easy</button>
+            <button class="modeBtn" data-mode="medium">Medium</button>
+            <button class="modeBtn" data-mode="hard">Hard</button>
+            <button class="modeBtn" data-mode="mixed">Mixed</button>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="num" id="scoreNum">0</div>
+              <div class="lab">Score</div>
+            </div>
+            <div class="stat">
+              <div class="num" id="progressNum">1/10</div>
+              <div class="lab">Progress</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="taskCard">
+          <div class="taskLabel" id="taskLabel">Prompt</div>
+          <div class="promptMain english" id="promptMain">living room</div>
+          <div class="promptSub" id="promptSub">Choose the matching Chinese word.</div>
+
+          <div class="answerBox" id="answerBox">
+            <div class="answerZh" id="answerZh">客厅</div>
+            <div class="answerPy" id="answerPy">kè tīng</div>
+            <div class="answerEn" id="answerEn">living room</div>
+          </div>
+
+          <div class="choices" id="choices"></div>
+
+          <div class="builderArea" id="builderArea">
+            <div class="taskLabel" style="margin-top:14px;">Word Bank</div>
+            <div class="wordBank" id="wordBank"></div>
+
+            <div class="taskLabel">Your Sentence</div>
+            <div class="sentenceBox" id="sentenceBox">
+              <div class="emptyText">Tap word tiles to build the sentence.</div>
+            </div>
+          </div>
+
+          <div class="sideBtns">
+            <button id="showPinyinBtn">Show Pinyin</button>
+            <button id="showAnswerBtn">Show Answer</button>
+            <button class="green" id="readBtn">🔊 Read Chinese</button>
+            <button class="orange" id="clearBtn">Clear</button>
+            <button id="checkBtn">Check</button>
+            <button id="nextBtn">Next</button>
+            <button class="primary fullBtn" id="nextTaskBtn">Next Task</button>
+          </div>
+
+          <div class="feedback" id="feedback">Choose the correct answer.</div>
+        </div>
+
+        <div class="doneBox">
+          <div class="doneTitle">Unlocked / Completed</div>
+          <div class="doneList" id="doneList"></div>
+        </div>
+
+        <div class="instructions">
+          <strong>How to Play:</strong><br>
+          Part 1: Choose the correct word and unlock rooms.<br>
+          Part 2: Build the house by unlocking room words.<br>
+          Part 3: Put word tiles in order to build house sentences.
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <div class="winOverlay" id="winOverlay">
+    <div class="winCard">
+      <div class="winEmoji">🏡</div>
+      <h2>House Tour Complete!</h2>
+      <p id="winText">Great job! You completed this part.</p>
+      <div class="winBtns">
+        <button class="green" id="keepPlayingBtn">Keep Playing</button>
+        <button class="primary" id="restartWinBtn">Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const VOCAB_TASKS = [
+      { zh:"新", py:"xīn", en:"new", emoji:"✨", room:null, options:["新","房","厅","间"] },
+      { zh:"房", py:"fáng", en:"room; house", emoji:"🏠", room:null, options:["房","新","客","厨"] },
+      { zh:"房子", py:"fáng zi", en:"house", emoji:"🏠", room:null, options:["房子","书房","客厅","餐厅"] },
+      { zh:"书房", py:"shū fáng", en:"study room", emoji:"📚", room:"study", options:["书房","卧室","厨房","卫生间"] },
+      { zh:"挺", py:"tǐng", en:"quite", emoji:"⭐", room:null, options:["挺","新","间","卫"] },
+      { zh:"客", py:"kè", en:"guest", emoji:"👥", room:null, options:["客","厅","餐","房"] },
+      { zh:"厅", py:"tīng", en:"hall", emoji:"🏛️", room:null, options:["厅","客","厨","卧"] },
+      { zh:"客厅", py:"kè tīng", en:"living room", emoji:"🛋️", room:"living", options:["客厅","餐厅","厨房","卧室"] },
+      { zh:"餐厅", py:"cān tīng", en:"dining room", emoji:"🍽️", room:"dining", options:["餐厅","客厅","书房","卫生间"] },
+      { zh:"厨", py:"chú", en:"kitchen", emoji:"🍳", room:null, options:["厨","卫","卧","间"] },
+      { zh:"厨房", py:"chú fáng", en:"kitchen", emoji:"🍳", room:"kitchen", options:["厨房","书房","卧室","餐厅"] },
+      { zh:"间", py:"jiān", en:"room; a measure word", emoji:"🚪", room:null, options:["间","房","卫","厅"] },
+      { zh:"房间", py:"fáng jiān", en:"room", emoji:"🚪", room:null, options:["房间","房子","书房","厨房"] },
+      { zh:"卧", py:"wò", en:"lie", emoji:"🛏️", room:null, options:["卧","卫","厨","客"] },
+      { zh:"卧室", py:"wò shì", en:"bedroom", emoji:"🛏️", room:"bedroom", options:["卧室","客厅","餐厅","书房"] },
+      { zh:"卫", py:"wèi", en:"guard; defend", emoji:"🛡️", room:null, options:["卫","卧","厅","房"] },
+      { zh:"卫生", py:"wèi shēng", en:"hygiene", emoji:"🧼", room:null, options:["卫生","房间","书房","餐厅"] },
+      { zh:"卫生间", py:"wèi shēng jiān", en:"toilet; restroom", emoji:"🚿", room:"bathroom", options:["卫生间","厨房","卧室","客厅"] }
+    ];
+
+    const BUILD_TASKS = [
+      { zh:"客厅", py:"kè tīng", en:"living room", emoji:"🛋️", room:"living", options:["客厅","餐厅","厨房","卧室"] },
+      { zh:"餐厅", py:"cān tīng", en:"dining room", emoji:"🍽️", room:"dining", options:["餐厅","客厅","书房","卫生间"] },
+      { zh:"厨房", py:"chú fáng", en:"kitchen", emoji:"🍳", room:"kitchen", options:["厨房","卧室","书房","客厅"] },
+      { zh:"卧室", py:"wò shì", en:"bedroom", emoji:"🛏️", room:"bedroom", options:["卧室","厨房","餐厅","书房"] },
+      { zh:"书房", py:"shū fáng", en:"study room", emoji:"📚", room:"study", options:["书房","客厅","卫生间","厨房"] },
+      { zh:"卫生间", py:"wèi shēng jiān", en:"toilet; restroom", emoji:"🚿", room:"bathroom", options:["卫生间","餐厅","卧室","书房"] }
+    ];
+
+    const SENTENCE_TASKS = [
+      {
+        zh:"这是我家的新房子，漂亮吧？",
+        py:"zhè shì wǒ jiā de xīn fáng zi, piào liang ba?",
+        en:"This is my family's new house. Pretty, right?",
+        emoji:"🏠",
+        tokens:["这","是","我家","的","新房子","，","漂亮","吧","？"]
+      },
+      {
+        zh:"我家的房子挺大的。",
+        py:"wǒ jiā de fáng zi tǐng dà de.",
+        en:"My family's house is quite big.",
+        emoji:"🏡",
+        tokens:["我家","的","房子","挺","大","的","。"]
+      },
+      {
+        zh:"有一个大客厅。",
+        py:"yǒu yí ge dà kè tīng.",
+        en:"There is one big living room.",
+        emoji:"🛋️",
+        tokens:["有","一个","大","客厅","。"]
+      },
+      {
+        zh:"有一个餐厅、一个厨房。",
+        py:"yǒu yí ge cān tīng, yí ge chú fáng.",
+        en:"There is one dining room and one kitchen.",
+        emoji:"🍽️",
+        tokens:["有","一个","餐厅","、","一个","厨房","。"]
+      },
+      {
+        zh:"有三间卧室。",
+        py:"yǒu sān jiān wò shì.",
+        en:"There are three bedrooms.",
+        emoji:"🛏️",
+        tokens:["有","三间","卧室","。"]
+      },
+      {
+        zh:"有一个书房和两个卫生间。",
+        py:"yǒu yí ge shū fáng hé liǎng ge wèi shēng jiān.",
+        en:"There is one study and two bathrooms.",
+        emoji:"📚",
+        tokens:["有","一个","书房","和","两个","卫生间","。"]
+      },
+      {
+        zh:"我的房间不大也不小。",
+        py:"wǒ de fáng jiān bú dà yě bù xiǎo.",
+        en:"My room is not big and not small.",
+        emoji:"🚪",
+        tokens:["我的","房间","不大","也","不小","。"]
+      },
+      {
+        zh:"我经常在房间里看书。",
+        py:"wǒ jīng cháng zài fáng jiān lǐ kàn shū.",
+        en:"I often read books in my room.",
+        emoji:"📖",
+        tokens:["我","经常","在","房间","里","看书","。"]
+      },
+      {
+        zh:"我经常在房间里打电话。",
+        py:"wǒ jīng cháng zài fáng jiān lǐ dǎ diàn huà.",
+        en:"I often make phone calls in my room.",
+        emoji:"☎️",
+        tokens:["我","经常","在","房间","里","打电话","。"]
+      },
+      {
+        zh:"我经常在房间里做作业。",
+        py:"wǒ jīng cháng zài fáng jiān lǐ zuò zuò yè.",
+        en:"I often do homework in my room.",
+        emoji:"✏️",
+        tokens:["我","经常","在","房间","里","做作业","。"]
+      },
+      {
+        zh:"我经常在房间里听音乐。",
+        py:"wǒ jīng cháng zài fáng jiān lǐ tīng yīn yuè.",
+        en:"I often listen to music in my room.",
+        emoji:"🎧",
+        tokens:["我","经常","在","房间","里","听音乐","。"]
+      },
+      {
+        zh:"我经常在房间里弹钢琴。",
+        py:"wǒ jīng cháng zài fáng jiān lǐ tán gāng qín.",
+        en:"I often play piano in my room.",
+        emoji:"🎹",
+        tokens:["我","经常","在","房间","里","弹钢琴","。"]
+      },
+      {
+        zh:"我经常在房间里玩儿游戏。",
+        py:"wǒ jīng cháng zài fáng jiān lǐ wánr yóu xì.",
+        en:"I often play games in my room.",
+        emoji:"🎮",
+        tokens:["我","经常","在","房间","里","玩儿","游戏","。"]
+      }
+    ];
+
+    let currentPart = "hunt";
+    let mode = "easy";
+    let order = [];
+    let currentIndex = 0;
+    let score = 0;
+    let completed = [];
+    let selectedTiles = [];
+    let currentPromptMode = "easy";
+    let locked = false;
+    let unlockedRooms = new Set();
+
+    const huntTab = document.getElementById("huntTab");
+    const buildTab = document.getElementById("buildTab");
+    const sentenceTab = document.getElementById("sentenceTab");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const scoreNum = document.getElementById("scoreNum");
+    const progressNum = document.getElementById("progressNum");
+    const promptMain = document.getElementById("promptMain");
+    const promptSub = document.getElementById("promptSub");
+    const taskLabel = document.getElementById("taskLabel");
+
+    const answerBox = document.getElementById("answerBox");
+    const answerZh = document.getElementById("answerZh");
+    const answerPy = document.getElementById("answerPy");
+    const answerEn = document.getElementById("answerEn");
+
+    const choices = document.getElementById("choices");
+    const builderArea = document.getElementById("builderArea");
+    const wordBank = document.getElementById("wordBank");
+    const sentenceBox = document.getElementById("sentenceBox");
+    const feedback = document.getElementById("feedback");
+    const doneList = document.getElementById("doneList");
+
+    const sceneLine1 = document.getElementById("sceneLine1");
+    const sceneLine2 = document.getElementById("sceneLine2");
+    const floorPlanWrap = document.getElementById("floorPlanWrap");
+    const wordWall = document.getElementById("wordWall");
+    const wordChips = document.getElementById("wordChips");
+    const houseComplete = document.getElementById("houseComplete");
+
+    const showPinyinBtn = document.getElementById("showPinyinBtn");
+    const showAnswerBtn = document.getElementById("showAnswerBtn");
+    const readBtn = document.getElementById("readBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const checkBtn = document.getElementById("checkBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const nextTaskBtn = document.getElementById("nextTaskBtn");
+
+    const winOverlay = document.getElementById("winOverlay");
+    const winText = document.getElementById("winText");
+    const keepPlayingBtn = document.getElementById("keepPlayingBtn");
+    const restartWinBtn = document.getElementById("restartWinBtn");
+
+    function shuffle(arr){
+      const a = [...arr];
+      for(let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function tasks(){
+      if(currentPart === "hunt") return VOCAB_TASKS;
+      if(currentPart === "build") return BUILD_TASKS;
+      return SENTENCE_TASKS;
+    }
+
+    function currentTask(){
+      return tasks()[order[currentIndex]];
+    }
+
+    function startPart(part){
+      currentPart = part;
+      huntTab.classList.toggle("active", part === "hunt");
+      buildTab.classList.toggle("active", part === "build");
+      sentenceTab.classList.toggle("active", part === "sentence");
+      restartGame();
+    }
+
+    function restartGame(){
+      order = shuffle(tasks().map((_,i)=>i));
+      currentIndex = 0;
+      score = 0;
+      completed = [];
+      selectedTiles = [];
+      locked = false;
+      unlockedRooms = new Set();
+      winOverlay.classList.remove("show");
+      clearRooms();
+      wordChips.innerHTML = "";
+      houseComplete.classList.remove("show");
+      renderTask();
+    }
+
+    function clearRooms(){
+      document.querySelectorAll(".room").forEach(room=>{
+        room.classList.remove("unlocked");
+        room.classList.add("locked");
+      });
+    }
+
+    function getPromptMode(){
+      if(mode === "mixed"){
+        const list = ["easy","medium","hard"];
+        return list[Math.floor(Math.random() * list.length)];
+      }
+      return mode;
+    }
+
+    function renderTask(){
+      locked = false;
+      const task = currentTask();
+      currentPromptMode = getPromptMode();
+      selectedTiles = [];
+
+      scoreNum.textContent = score;
+      progressNum.textContent = `${currentIndex + 1}/${tasks().length}`;
+
+      answerBox.classList.remove("show");
+      feedback.className = "feedback";
+      feedback.textContent = "Choose the correct answer.";
+
+      choices.innerHTML = "";
+      wordBank.innerHTML = "";
+      sentenceBox.innerHTML = "";
+      builderArea.classList.remove("show");
+
+      if(currentPart === "hunt"){
+        renderChoiceTask(task,"Part 1 · Room Hunt");
+      }else if(currentPart === "build"){
+        renderChoiceTask(task,"Part 2 · Build My House");
+      }else{
+        renderSentenceTask(task);
+      }
+
+      renderDoneList();
+    }
+
+    function renderChoiceTask(task,label){
+      taskLabel.textContent = label;
+      clearBtn.disabled = true;
+      checkBtn.disabled = true;
+      wordWall.classList.add("show");
+
+      if(currentPart === "hunt"){
+        sceneLine1.textContent = "Find the house word!";
+        sceneLine2.textContent = "房间词会点亮房间，单字会进入 Word Wall。";
+      }else{
+        sceneLine1.textContent = "Build my house!";
+        sceneLine2.textContent = "答对一个房间，就解锁一个房间。";
+      }
+
+      answerZh.textContent = task.zh;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+
+      promptMain.classList.remove("english");
+
+      if(currentPromptMode === "easy"){
+        promptMain.innerHTML = `${task.en}<br><span style="font-size:21px;color:#475569;">${task.py}</span>`;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Easy: English + pinyin. Choose the matching Chinese word.";
+      }else if(currentPromptMode === "medium"){
+        promptMain.textContent = task.py;
+        promptSub.textContent = "Medium: Pinyin only.";
+      }else{
+        promptMain.textContent = task.en;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Hard: English only.";
+      }
+
+      renderChoiceButtons(task.options, task.zh, task);
+    }
+
+    function renderChoiceButtons(optionList, answer, task){
+      choices.innerHTML = "";
+
+      shuffle(optionList).forEach(option=>{
+        const vocab = findWord(option);
+
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.dataset.answer = option;
+
+        btn.innerHTML = `
+          <div class="emoji">${vocab.emoji || "🏠"}</div>
+          <div class="zh">${option}</div>
+          <div class="small">${vocab.py || ""}</div>
+        `;
+
+        btn.onclick = ()=>{
+          handleChoice(btn, option, answer, task);
+        };
+
+        choices.appendChild(btn);
+      });
+    }
+
+    function findWord(zh){
+      return VOCAB_TASKS.find(v => v.zh === zh)
+        || BUILD_TASKS.find(v => v.zh === zh)
+        || {zh, py:"", en:"", emoji:"🏠"};
+    }
+
+    function handleChoice(btn, option, answer, task){
+      if(locked) return;
+
+      const correct = option === answer;
+
+      if(correct){
+        locked = true;
+
+        document.querySelectorAll(".choice").forEach(el=>{
+          el.disabled = true;
+          if(el.dataset.answer === answer){
+            el.classList.add("correct");
+          }
+        });
+
+        score += 10;
+        scoreNum.textContent = score;
+        completed.push(answer);
+
+        feedback.className = "feedback good";
+        feedback.textContent = `✅ Correct! ${answer} · ${task.py} · ${task.en}`;
+
+        speakChinese(answer);
+
+        if(task.room){
+          unlockRoom(task.room);
+          flyIconToRoom(btn, task.emoji || "🏠", task.room);
+        }else{
+          flyIconToWordWall(btn, task.emoji || "✨", task.zh);
+        }
+
+        renderDoneList();
+
+        setTimeout(()=>{
+          nextTask();
+        }, 1100);
+      }else{
+        btn.classList.add("wrong");
+        feedback.className = "feedback bad";
+        feedback.textContent = "❌ Not yet. Try again.";
+        setTimeout(()=>btn.classList.remove("wrong"), 520);
+      }
+    }
+
+    function unlockRoom(roomKey){
+      unlockedRooms.add(roomKey);
+      const room = document.getElementById("room-" + roomKey);
+      if(room){
+        room.classList.remove("locked");
+        room.classList.remove("unlocked");
+        void room.offsetWidth;
+        room.classList.add("unlocked");
+      }
+
+      if(currentPart === "build" && unlockedRooms.size >= 6){
+        houseComplete.classList.add("show");
+      }
+    }
+
+    function flyIconToRoom(sourceBtn, emoji, roomKey){
+      const room = document.getElementById("room-" + roomKey);
+      if(!room){
+        flyIconToWordWall(sourceBtn, emoji, "");
+        return;
+      }
+
+      const start = sourceBtn.getBoundingClientRect();
+      const end = room.getBoundingClientRect();
+
+      flyIcon(
+        emoji,
+        start.left + start.width / 2,
+        start.top + start.height / 2,
+        end.left + end.width / 2,
+        end.top + end.height / 2
+      );
+    }
+
+    function flyIconToWordWall(sourceBtn, emoji, text){
+      const start = sourceBtn.getBoundingClientRect();
+      const end = wordWall.getBoundingClientRect();
+
+      flyIcon(
+        emoji,
+        start.left + start.width / 2,
+        start.top + start.height / 2,
+        end.left + end.width / 2,
+        end.top + end.height / 2,
+        () => addWordChip(text)
+      );
+    }
+
+    function flyIcon(emoji,startX,startY,endX,endY,onFinish){
+      const icon = document.createElement("div");
+      icon.className = "flyingIcon";
+      icon.textContent = emoji || "🏠";
+      icon.style.left = startX + "px";
+      icon.style.top = startY + "px";
+      document.body.appendChild(icon);
+
+      const midX = (startX + endX) / 2 + (Math.random() * 80 - 40);
+      const midY = Math.min(startY,endY) - 110;
+
+      icon.animate([
+        {
+          transform:"translate(-50%,-50%) scale(.82) rotate(0deg)",
+          left:startX + "px",
+          top:startY + "px",
+          opacity:1
+        },
+        {
+          transform:"translate(-50%,-50%) scale(1.15) rotate(14deg)",
+          left:midX + "px",
+          top:midY + "px",
+          opacity:1,
+          offset:.52
+        },
+        {
+          transform:"translate(-50%,-50%) scale(.95) rotate(-8deg)",
+          left:endX + "px",
+          top:endY + "px",
+          opacity:1
+        }
+      ],{
+        duration:820,
+        easing:"cubic-bezier(.22,1,.36,1)",
+        fill:"forwards"
+      }).onfinish = ()=>{
+        icon.remove();
+        if(onFinish) onFinish();
+      };
+    }
+
+    function addWordChip(text){
+      if(!text) return;
+      const chip = document.createElement("div");
+      chip.className = "wordChip";
+      chip.textContent = text;
+      wordChips.appendChild(chip);
+    }
+
+    function renderSentenceTask(task){
+      taskLabel.textContent = "Part 3 · Sentence Builder";
+      sceneLine1.textContent = "Build the house sentence.";
+      sceneLine2.textContent = "把词块按顺序点出来，组成完整句子。";
+      builderArea.classList.add("show");
+      choices.innerHTML = "";
+      clearBtn.disabled = false;
+      checkBtn.disabled = false;
+      wordWall.classList.remove("show");
+
+      answerZh.textContent = task.zh;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+
+      promptMain.classList.remove("english");
+
+      if(currentPromptMode === "easy"){
+        promptMain.innerHTML = `${task.en}<br><span style="font-size:21px;color:#475569;">${task.py}</span>`;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Easy: English + pinyin. Build the Chinese sentence.";
+      }else if(currentPromptMode === "medium"){
+        promptMain.textContent = task.en;
+        promptMain.classList.add("english");
+        promptSub.textContent = "Medium: English clue only.";
+      }else{
+        promptMain.textContent = "Build the correct Chinese house sentence.";
+        promptSub.textContent = "Hard: Use the word tiles only.";
+      }
+
+      renderWordTiles(task);
+    }
+
+    function renderWordTiles(task){
+      wordBank.innerHTML = "";
+      sentenceBox.innerHTML = "";
+
+      const shuffled = shuffle(task.tokens.map((token,index)=>({token,index})));
+
+      shuffled.forEach(obj=>{
+        const btn = document.createElement("button");
+        btn.className = "tile";
+        btn.textContent = obj.token;
+
+        btn.onclick = ()=>{
+          if(btn.classList.contains("used")) return;
+
+          selectedTiles.push({
+            token:obj.token,
+            button:btn
+          });
+
+          btn.classList.add("used");
+          renderSentenceBox();
+        };
+
+        wordBank.appendChild(btn);
+      });
+
+      renderSentenceBox();
+    }
+
+    function renderSentenceBox(){
+      sentenceBox.innerHTML = "";
+
+      if(selectedTiles.length === 0){
+        const empty = document.createElement("div");
+        empty.className = "emptyText";
+        empty.textContent = "Tap word tiles to build the sentence.";
+        sentenceBox.appendChild(empty);
+        return;
+      }
+
+      selectedTiles.forEach((item,index)=>{
+        const slot = document.createElement("button");
+        slot.className = "slotTile";
+        slot.textContent = item.token;
+
+        slot.onclick = ()=>{
+          if(item.button){
+            item.button.classList.remove("used");
+          }
+          selectedTiles.splice(index,1);
+          renderSentenceBox();
+        };
+
+        sentenceBox.appendChild(slot);
+      });
+    }
+
+    function checkSentence(){
+      if(currentPart !== "sentence") return;
+
+      const task = currentTask();
+      const answer = selectedTiles.map(x=>x.token).join("");
+      const correct = task.zh.replace(/\s/g,"");
+
+      if(answer === correct){
+        score += 10;
+        scoreNum.textContent = score;
+        completed.push(task.zh);
+
+        feedback.className = "feedback good";
+        feedback.textContent = `✅ Correct! ${task.zh}`;
+
+        speakChinese(task.zh);
+        renderDoneList();
+
+        setTimeout(nextTask,1000);
+      }else{
+        feedback.className = "feedback bad";
+        feedback.textContent = "❌ Not yet. Check the order and try again.";
+      }
+    }
+
+    function clearBuild(){
+      if(currentPart !== "sentence") return;
+
+      selectedTiles.forEach(item=>{
+        if(item.button){
+          item.button.classList.remove("used");
+        }
+      });
+
+      selectedTiles = [];
+      renderSentenceBox();
+      feedback.className = "feedback";
+      feedback.textContent = "Cleared. Try again.";
+    }
+
+    function showPinyin(){
+      const task = currentTask();
+      answerBox.classList.add("show");
+      answerZh.textContent = "???";
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+    }
+
+    function showAnswer(){
+      const task = currentTask();
+      answerBox.classList.add("show");
+      answerZh.textContent = task.zh;
+      answerPy.textContent = task.py;
+      answerEn.textContent = task.en;
+    }
+
+    function readCurrent(){
+      const task = currentTask();
+      speakChinese(task.zh);
+    }
+
+    function nextTask(){
+      if(currentIndex < tasks().length - 1){
+        currentIndex++;
+        renderTask();
+      }else{
+        showWin();
+      }
+    }
+
+    function showWin(){
+      const label =
+        currentPart === "hunt"
+          ? "Room Hunt"
+          : currentPart === "build"
+            ? "Build My House"
+            : "Sentence Builder";
+
+      winText.textContent = `Great job! You completed ${label}. Score: ${score}`;
+      winOverlay.classList.add("show");
+      triggerConfetti();
+    }
+
+    function renderDoneList(){
+      doneList.innerHTML = "";
+
+      completed.slice().reverse().forEach(text=>{
+        const chip = document.createElement("div");
+        chip.className = "doneChip";
+        chip.textContent = text;
+        doneList.appendChild(chip);
+      });
+    }
+
+    function setMode(newMode){
+      mode = newMode;
+
+      document.querySelectorAll(".modeBtn").forEach(btn=>{
+        btn.classList.toggle("active", btn.dataset.mode === mode);
+      });
+
+      renderTask();
+    }
+
+    function speakChinese(text){
+      if(!("speechSynthesis" in window)) return;
+
+      window.speechSynthesis.cancel();
+
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "zh-CN";
+      utter.rate = 0.82;
+      utter.pitch = 1;
+
+      window.speechSynthesis.speak(utter);
+    }
+
+    huntTab.onclick = ()=>startPart("hunt");
+    buildTab.onclick = ()=>startPart("build");
+    sentenceTab.onclick = ()=>startPart("sentence");
+    restartBtn.onclick = restartGame;
+
+    showPinyinBtn.onclick = showPinyin;
+    showAnswerBtn.onclick = showAnswer;
+    readBtn.onclick = readCurrent;
+    clearBtn.onclick = clearBuild;
+    checkBtn.onclick = checkSentence;
+    nextBtn.onclick = nextTask;
+    nextTaskBtn.onclick = nextTask;
+
+    keepPlayingBtn.onclick = ()=>{
+      winOverlay.classList.remove("show");
+    };
+
+    restartWinBtn.onclick = ()=>{
+      winOverlay.classList.remove("show");
+      restartGame();
+    };
+
+    document.querySelectorAll(".modeBtn").forEach(btn=>{
+      btn.onclick = ()=>setMode(btn.dataset.mode);
+    });
+
+    const confettiCanvas = document.getElementById("confettiCanvas");
+    const ctx = confettiCanvas.getContext("2d");
+    let particles = [];
+    let confettiRunning = false;
+
+    function sizeCanvas(){
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+
+    function triggerConfetti(){
+      sizeCanvas();
+      particles = [];
+
+      const colors = ["#60a5fa","#22c55e","#f59e0b","#ec4899","#8b5cf6","#06b6d4"];
+
+      for(let i=0;i<130;i++){
+        particles.push({
+          x:Math.random() * confettiCanvas.width,
+          y:-20 - Math.random() * 80,
+          vx:(Math.random() - .5) * 5,
+          vy:Math.random() * 4 + 2,
+          r:Math.random() * 5 + 3,
+          color:colors[Math.floor(Math.random() * colors.length)],
+          rot:Math.random() * 360,
+          spin:(Math.random() - .5) * 12
+        });
+      }
+
+      if(!confettiRunning){
+        confettiRunning = true;
+        requestAnimationFrame(drawConfetti);
+      }
+    }
+
+    function drawConfetti(){
+      ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+
+      let alive = false;
+
+      particles.forEach(p=>{
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += .06;
+        p.rot += p.spin;
+
+        if(p.y < confettiCanvas.height + 40){
+          alive = true;
+        }
+
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.r,-p.r,p.r * 2,p.r * 2);
+        ctx.restore();
+      });
+
+      if(alive){
+        requestAnimationFrame(drawConfetti);
+      }else{
+        confettiRunning = false;
+        ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+      }
+    }
+
+    window.addEventListener("resize", sizeCanvas);
+
+    restartGame();
+  </script>
+</body>
+</html>
