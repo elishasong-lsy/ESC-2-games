@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="zh-CN">
 <head>
@@ -554,6 +555,17 @@
       animation: serve .55s ease;
     }
 
+    .dish.reward-pop {
+      animation: dishPop .5s ease;
+    }
+
+    @keyframes dishPop {
+      50% {
+        transform: scale(1.2) rotate(4deg);
+        box-shadow: 0 0 0 7px rgba(245,189,69,.4);
+      }
+    }
+
     @keyframes serve {
       from {
         transform: translateY(-100px) rotate(-12deg) scale(.5);
@@ -914,7 +926,7 @@
           <div class="person three">🧍🏻</div>
         </div>
 
-        <div class="table-wrap">
+        <div class="table-wrap" id="tableWrap">
           <div class="table-base"></div>
           <div class="table-top">
             <div class="dish fish" data-dish="fish">🐟<span>蒸鱼</span></div>
@@ -989,18 +1001,18 @@
     ];
 
     const BILL = [
-      { q: "蒸鱼多少钱？", hint: "Find Steamed Fish on the English receipt.", a: "168元", options: ["98元", "128元", "168元", "188元"], speak: "蒸鱼一百六十八元。" },
-      { q: "炸虾多少钱？", hint: "Find Fried Shrimp on the English receipt.", a: "128元", options: ["98元", "128元", "138元5角", "168元"], speak: "炸虾一百二十八元。" },
-      { q: "蒸鱼和炸虾一共多少钱？", hint: "Steamed Fish + Fried Shrimp: 168 + 128 = ?", a: "296元", options: ["266元", "286元", "296元", "306元"], speak: "蒸鱼和炸虾一共二百九十六元。" },
-      { q: "炸虾和烧鸡一共多少钱？", hint: "Fried Shrimp + Roast Chicken: 128 + 98 = ?", a: "226元", options: ["216元", "226元", "236元", "256元"], speak: "炸虾和烧鸡一共二百二十六元。" },
-      { q: "三个炒菜156元，一个炒菜多少钱？", hint: "156 ÷ 3 = ?", a: "52元", options: ["42元", "48元", "52元", "56元"], speak: "一个炒菜五十二元。" },
-      { q: "米饭和红豆汤多少钱？", hint: "Find Rice & Red Bean Soup on the receipt.", a: "138元5角", options: ["128元5角", "135元8角", "138元5角", "158元3角"], speak: "米饭和红豆汤一百三十八元五角。" },
-      { q: "全桌一共花了多少钱？", hint: "Add all five lines on the receipt.", a: "688元5角", options: ["668元5角", "680元5角", "688元5角", "698元5角"], speak: "全桌一共花了六百八十八元五角。" },
-      { q: "给700元，应该找多少钱？", hint: "700元 − 688元5角 = ?", a: "11元5角", options: ["10元5角", "11元5角", "12元5角", "21元5角"], speak: "找你十一元五角。" },
-      { q: "完成句子：我们一共＿＿688元5角。", hint: "Complete the sentence using the lesson pattern.", a: "花了", options: ["花了", "给了", "找了", "卖了"], speak: "我们一共花了六百八十八元五角。" },
-      { q: "688元5角还可以怎么说？", hint: "Change formal money words to informal words.", a: "688块5毛", options: ["688块5毛", "688块5角", "685块8毛", "688元5毛"], speak: "六百八十八元五角，也可以说六百八十八块五毛。" },
-      { q: "如果下次只点蒸鱼和烧鸡，要花多少钱？", hint: "168 + 98 = ?", a: "266元", options: ["256元", "266元", "276元", "286元"], speak: "蒸鱼和烧鸡一共二百六十六元。" },
-      { q: "这家饭店的饭菜怎么样？", hint: "Review the Text 2 sentence.", a: "非常好吃", options: ["非常好吃", "不太好吃", "非常便宜", "没有海鲜"], speak: "这家饭店的饭菜非常好吃。" }
+      { q: "蒸鱼多少钱？", hint: "How much is the steamed fish?", a: "168元", options: ["98元", "128元", "168元", "188元"], speak: "蒸鱼一百六十八元。" },
+      { q: "炸虾多少钱？", hint: "How much are the fried shrimp?", a: "128元", options: ["98元", "128元", "138元5角", "168元"], speak: "炸虾一百二十八元。" },
+      { q: "蒸鱼和炸虾一共多少钱？", hint: "How much are the steamed fish and fried shrimp altogether?", a: "296元", options: ["266元", "286元", "296元", "306元"], speak: "蒸鱼和炸虾一共二百九十六元。" },
+      { q: "炸虾和烧鸡一共多少钱？", hint: "How much are the fried shrimp and roast chicken altogether?", a: "226元", options: ["216元", "226元", "236元", "256元"], speak: "炸虾和烧鸡一共二百二十六元。" },
+      { q: "三个炒菜156元，一个炒菜多少钱？", hint: "Three stir-fried dishes cost 156 yuan. How much is one dish?", a: "52元", options: ["42元", "48元", "52元", "56元"], speak: "一个炒菜五十二元。" },
+      { q: "米饭和红豆汤多少钱？", hint: "How much are the rice and red bean soup?", a: "138元5角", options: ["128元5角", "135元8角", "138元5角", "158元3角"], speak: "米饭和红豆汤一百三十八元五角。" },
+      { q: "全桌一共花了多少钱？", hint: "How much did the whole table cost altogether?", a: "688元5角", options: ["668元5角", "680元5角", "688元5角", "698元5角"], speak: "全桌一共花了六百八十八元五角。" },
+      { q: "给700元，应该找多少钱？", hint: "They pay 700 yuan. How much change should they get?", a: "11元5角", options: ["10元5角", "11元5角", "12元5角", "21元5角"], speak: "找你十一元五角。" },
+      { q: "完成句子：我们一共＿＿688元5角。", hint: "Complete: We spent 688 yuan and 5 jiao altogether.", a: "花了", options: ["花了", "给了", "找了", "卖了"], speak: "我们一共花了六百八十八元五角。" },
+      { q: "688元5角还可以怎么说？", hint: "How can you say this amount informally?", a: "688块5毛", options: ["688块5毛", "688块5角", "685块8毛", "688元5毛"], speak: "六百八十八元五角，也可以说六百八十八块五毛。" },
+      { q: "如果下次只点蒸鱼和烧鸡，要花多少钱？", hint: "How much would steamed fish and roast chicken cost next time?", a: "266元", options: ["256元", "266元", "276元", "286元"], speak: "蒸鱼和烧鸡一共二百六十六元。" },
+      { q: "这家饭店的饭菜怎么样？", hint: "How was the food at this restaurant?", a: "非常好吃", options: ["非常好吃", "不太好吃", "非常便宜", "没有海鲜"], speak: "这家饭店的饭菜非常好吃。" }
     ];
 
     const $ = id => document.getElementById(id);
@@ -1141,9 +1153,13 @@
         button.classList.add("correct");
         score += tab === "bill" ? 150 : 100;
         $("feedback").style.color = "#248f67";
-        $("feedback").textContent = "✓ Correct! 获得一道小吃奖励！";
+        $("feedback").textContent = tab === "words"
+          ? "✓ Correct! 获得一道小吃奖励！"
+          : tab === "kitchen"
+            ? "✓ Correct! 一道菜上桌了！"
+            : "✓ Correct! 收据获得一颗星！";
         speak(item.speak || item.a);
-        if (tab !== "bill") rewardSnack();
+        if (tab === "words") rewardSnack();
         if (tab === "bill") rewardBillStar();
         rewardScene(item);
         confettiBurst();
@@ -1162,6 +1178,7 @@
       $("timeline").classList.toggle("show", tab === "words" && task === "time");
       $("cookingIcons").classList.toggle("show", tab === "kitchen" && task === "cooking");
       $("billCard").classList.toggle("show", tab === "bill");
+      $("tableWrap").style.display = tab === "bill" ? "none" : "block";
       $("family").style.opacity = tab === "words" && task === "time" ? ".25" : "1";
 
       $("lastWeekend").classList.remove("active");
@@ -1248,7 +1265,16 @@
 
     function serveDish(name) {
       const dish = document.querySelector(`[data-dish="${name}"]`);
-      if (!dish || dish.classList.contains("served")) return;
+      if (!dish) return;
+
+      if (dish.classList.contains("served")) {
+        dish.classList.remove("reward-pop");
+        void dish.offsetWidth;
+        dish.classList.add("reward-pop");
+        setTimeout(() => dish.classList.remove("reward-pop"), 550);
+        return;
+      }
+
       dish.classList.add("served");
       dishCount += 1;
       updateStats();
