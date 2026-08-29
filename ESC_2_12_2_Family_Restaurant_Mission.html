@@ -1,0 +1,1326 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ESC-2-12-2 Family Restaurant Mission</title>
+  <style>
+    :root {
+      --ink: #302a43;
+      --muted: #746f86;
+      --paper: #fffdf8;
+      --red: #d94652;
+      --deep-red: #9d2637;
+      --gold: #f5bd45;
+      --purple: #7554bd;
+      --green: #37ad78;
+      --blue: #4a9ed2;
+      --line: #e3dce8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans SC", sans-serif;
+      background:
+        radial-gradient(circle at 8% 8%, rgba(255,255,255,.5) 0 70px, transparent 72px),
+        linear-gradient(145deg, #ffe2a1, #f8b9ae 50%, #c9ddff);
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .app {
+      width: min(1350px, 100%);
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 15px 19px;
+      background: rgba(255,253,248,.96);
+      border: 3px solid white;
+      border-radius: 24px;
+      box-shadow: 0 16px 38px rgba(90,45,52,.18);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(23px, 3vw, 35px);
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      margin-top: 5px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .stats {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      min-width: 88px;
+      padding: 7px 12px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      background: #fff0e1;
+      border-radius: 14px;
+    }
+
+    .stat b {
+      display: block;
+      color: var(--deep-red);
+      font-size: 20px;
+    }
+
+    .progress {
+      height: 12px;
+      margin: 10px 3px;
+      overflow: hidden;
+      background: rgba(255,255,255,.65);
+      border-radius: 99px;
+    }
+
+    #progressFill {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), #ef6f69, var(--purple));
+      transition: width .35s ease;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin: 11px 0;
+    }
+
+    .tab {
+      padding: 12px 8px;
+      color: #716b7d;
+      font-weight: 950;
+      cursor: pointer;
+      background: rgba(255,255,255,.86);
+      border: 0;
+      border-radius: 16px;
+      box-shadow: 0 6px 15px rgba(70,50,60,.1);
+      transition: .18s ease;
+    }
+
+    .tab:hover {
+      transform: translateY(-2px);
+    }
+
+    .tab.active {
+      color: white;
+      background: linear-gradient(105deg, #b92f48, #e76063);
+      box-shadow: 0 8px 18px rgba(185,47,72,.28);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(390px, .86fr) minmax(570px, 1.22fr);
+      gap: 15px;
+    }
+
+    .panel {
+      min-height: 650px;
+      padding: 18px;
+      background: rgba(255,253,248,.97);
+      border: 3px solid white;
+      border-radius: 25px;
+      box-shadow: 0 18px 42px rgba(88,46,52,.2);
+    }
+
+    .task-label {
+      display: inline-block;
+      padding: 6px 12px;
+      color: #9d2637;
+      font-size: 12px;
+      font-weight: 950;
+      background: #ffe5e4;
+      border-radius: 99px;
+    }
+
+    .question-card {
+      min-height: 145px;
+      margin: 13px 0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: linear-gradient(145deg, #fff, #fff5ed);
+      border: 2px solid #efdcd3;
+      border-radius: 20px;
+    }
+
+    .question-icon {
+      margin-bottom: 4px;
+      font-size: 38px;
+      line-height: 1;
+    }
+
+    .prompt {
+      font-size: clamp(24px, 3vw, 37px);
+      font-weight: 950;
+      line-height: 1.2;
+    }
+
+    .hint {
+      margin-top: 7px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .choice {
+      min-height: 66px;
+      padding: 11px;
+      color: var(--ink);
+      font-size: 20px;
+      font-weight: 950;
+      cursor: pointer;
+      background: white;
+      border: 2px solid #dfd9e5;
+      border-radius: 16px;
+      box-shadow: 0 5px 0 #dfd9e5;
+      transition: .12s ease;
+    }
+
+    .choice:hover {
+      transform: translateY(-2px);
+      border-color: #d26872;
+    }
+
+    .choice.correct {
+      color: #167752;
+      background: #dff8eb;
+      border-color: #38b985;
+      box-shadow: 0 5px 0 #8ed7ba;
+    }
+
+    .choice.wrong {
+      color: #b83446;
+      background: #ffe5e9;
+      border-color: #ed6475;
+      box-shadow: 0 5px 0 #efacb5;
+    }
+
+    .feedback {
+      min-height: 34px;
+      margin: 13px 0;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 950;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 9px;
+    }
+
+    .listen,
+    .next,
+    .restart {
+      padding: 12px 15px;
+      font-weight: 950;
+      cursor: pointer;
+      border: 0;
+      border-radius: 14px;
+    }
+
+    .listen {
+      color: #52627b;
+      background: #e9eef5;
+    }
+
+    .next,
+    .restart {
+      flex: 1;
+      color: white;
+      background: linear-gradient(90deg, #cf3f54, #ec6a67);
+    }
+
+    .next:disabled {
+      opacity: .42;
+      cursor: not-allowed;
+    }
+
+    .restaurant {
+      position: relative;
+      min-height: 650px;
+      overflow: hidden;
+      padding: 0;
+      background:
+        linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,.08)),
+        repeating-linear-gradient(90deg, transparent 0 105px, rgba(255,255,255,.08) 105px 108px),
+        linear-gradient(#a52539 0 68%, #653a2c 68% 100%);
+    }
+
+    .ceiling {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 94px;
+      background: #761d30;
+      border-bottom: 7px solid #f0b841;
+    }
+
+    .restaurant-sign {
+      position: absolute;
+      z-index: 5;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 9px 25px;
+      color: #ffe38b;
+      font-size: 27px;
+      font-weight: 950;
+      white-space: nowrap;
+      background: #3f1723;
+      border: 4px solid #e9b843;
+      border-radius: 9px;
+      box-shadow: 0 8px 15px rgba(38,15,22,.3);
+    }
+
+    .lantern {
+      position: absolute;
+      z-index: 4;
+      top: 78px;
+      width: 58px;
+      height: 70px;
+      background: #ef4052;
+      border: 5px solid #8d1d2c;
+      border-radius: 45%;
+      box-shadow: inset 12px 0 rgba(255,177,75,.18), 0 10px 12px rgba(40,15,20,.22);
+    }
+
+    .lantern::before {
+      content: "";
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      width: 4px;
+      height: 24px;
+      background: #f3c45c;
+    }
+
+    .lantern::after {
+      content: "福";
+      position: absolute;
+      inset: 14px 0;
+      color: #ffe174;
+      text-align: center;
+      font-size: 25px;
+      font-weight: 950;
+    }
+
+    .lantern.left {
+      left: 35px;
+    }
+
+    .lantern.right {
+      right: 35px;
+    }
+
+    .stage-message {
+      position: absolute;
+      z-index: 7;
+      top: 104px;
+      left: 115px;
+      right: 115px;
+      padding: 7px 10px;
+      color: #7d2737;
+      text-align: center;
+      font-weight: 950;
+      background: rgba(255,248,223,.94);
+      border: 3px solid #efc86a;
+      border-radius: 12px;
+    }
+
+    .window {
+      position: absolute;
+      top: 174px;
+      left: 36px;
+      right: 36px;
+      height: 205px;
+      overflow: hidden;
+      background: linear-gradient(#89d6ef, #e4f5fa);
+      border: 10px solid #4d1d29;
+      border-radius: 8px;
+      box-shadow: inset 0 0 0 4px #e9b74b;
+    }
+
+    .window::before,
+    .window::after {
+      content: "";
+      position: absolute;
+      z-index: 2;
+      background: #4d1d29;
+    }
+
+    .window::before {
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 8px;
+    }
+
+    .window::after {
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 8px;
+    }
+
+    .skyline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 75px;
+      opacity: .45;
+      background:
+        linear-gradient(90deg, #51788e 0 9%, transparent 9% 13%, #5d7e8d 13% 22%, transparent 22% 27%, #476d83 27% 40%, transparent 40% 45%, #5c8293 45% 58%, transparent 58% 63%, #486c80 63% 74%, transparent 74% 80%, #587989 80% 100%);
+    }
+
+    .timeline {
+      position: absolute;
+      z-index: 8;
+      top: 190px;
+      left: 65px;
+      right: 65px;
+      display: none;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 12px;
+      padding: 18px;
+      color: #4d365a;
+      font-weight: 950;
+      background: rgba(255,255,255,.94);
+      border: 4px solid #f0bd4d;
+      border-radius: 20px;
+      box-shadow: 0 12px 24px rgba(58,25,34,.25);
+    }
+
+    .timeline.show {
+      display: grid;
+    }
+
+    .time-box {
+      padding: 14px 8px;
+      text-align: center;
+      background: #fff2df;
+      border: 3px solid #e19068;
+      border-radius: 14px;
+    }
+
+    .time-box.active {
+      color: white;
+      background: #b9394e;
+      transform: scale(1.06);
+    }
+
+    .time-arrow {
+      font-size: 28px;
+    }
+
+    .family {
+      position: absolute;
+      z-index: 8;
+      left: 50%;
+      bottom: 112px;
+      width: 650px;
+      height: 315px;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .person {
+      position: absolute;
+      bottom: 0;
+      font-size: 108px;
+      filter: drop-shadow(0 7px 4px rgba(40,20,20,.2));
+    }
+
+    .person.one {
+      left: 4px;
+      bottom: 4px;
+      transform: rotate(5deg);
+    }
+
+    .person.two {
+      left: 50%;
+      bottom: 128px;
+      transform: translateX(-50%);
+      font-size: 112px;
+    }
+
+    .person.three {
+      right: 4px;
+      bottom: 4px;
+      transform: rotate(-5deg);
+    }
+
+    .table-wrap {
+      position: absolute;
+      z-index: 9;
+      left: 50%;
+      bottom: 12px;
+      width: 475px;
+      height: 245px;
+      transform: translateX(-50%);
+    }
+
+    .table-top {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 455px;
+      height: 205px;
+      transform: translateX(-50%);
+      background: radial-gradient(circle, #fff9ec 0 49%, #f2d8b2 50% 58%, #a62f42 59% 63%, #7b2432 64%);
+      border-radius: 50%;
+      box-shadow: 0 18px 25px rgba(48,20,20,.35);
+    }
+
+    .table-base {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 145px;
+      height: 76px;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, #6e202d, #bd4556, #6e202d);
+      clip-path: polygon(25% 0, 75% 0, 100% 100%, 0 100%);
+    }
+
+    .dish {
+      position: absolute;
+      z-index: 4;
+      width: 94px;
+      height: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #563d4b;
+      font-size: 26px;
+      font-weight: 950;
+      background: white;
+      border: 6px solid #d9e6ef;
+      border-radius: 50%;
+      box-shadow: 0 8px 10px rgba(74,42,42,.18);
+      opacity: .12;
+      filter: grayscale(1);
+      transform: scale(.72);
+      transition: .4s ease;
+    }
+
+    .dish span {
+      margin-top: -5px;
+      font-size: 12px;
+    }
+
+    .dish.served {
+      opacity: 1;
+      filter: none;
+      transform: scale(1);
+      animation: serve .55s ease;
+    }
+
+    @keyframes serve {
+      from {
+        transform: translateY(-100px) rotate(-12deg) scale(.5);
+      }
+    }
+
+    .dish.fish {
+      left: 180px;
+      top: 55px;
+    }
+
+    .dish.shrimp {
+      left: 72px;
+      top: 62px;
+    }
+
+    .dish.chicken {
+      right: 68px;
+      top: 62px;
+    }
+
+    .dish.veg1 {
+      left: 132px;
+      top: 125px;
+    }
+
+    .dish.veg2 {
+      left: 226px;
+      top: 127px;
+    }
+
+    .dish.veg3 {
+      right: 34px;
+      top: 120px;
+    }
+
+    .dish.rice {
+      left: 15px;
+      top: 120px;
+      width: 76px;
+    }
+
+    .dish.soup {
+      right: 165px;
+      top: 8px;
+      width: 78px;
+    }
+
+    .reward-tray {
+      position: absolute;
+      z-index: 15;
+      left: 50%;
+      bottom: 18px;
+      width: 330px;
+      min-height: 50px;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 5px 10px;
+      pointer-events: none;
+    }
+
+    .reward-food {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 27px;
+      background: white;
+      border: 3px solid #d9e6ef;
+      border-radius: 50%;
+      box-shadow: 0 5px 8px rgba(74,42,42,.2);
+      animation: snackDrop .55s ease;
+    }
+
+    @keyframes snackDrop {
+      from {
+        opacity: 0;
+        transform: translateY(-120px) rotate(-20deg) scale(.3);
+      }
+
+      70% {
+        transform: translateY(5px) rotate(5deg) scale(1.15);
+      }
+    }
+
+    .cooking-icons {
+      position: absolute;
+      z-index: 12;
+      top: 175px;
+      left: 50%;
+      width: 480px;
+      transform: translateX(-50%);
+      display: none;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 9px;
+    }
+
+    .cooking-icons.show {
+      display: grid;
+    }
+
+    .cooker {
+      padding: 12px 5px;
+      text-align: center;
+      font-size: 38px;
+      background: rgba(255,255,255,.94);
+      border: 4px solid #e9b74b;
+      border-radius: 16px;
+      box-shadow: 0 10px 18px rgba(60,25,30,.25);
+    }
+
+    .cooker span {
+      display: block;
+      color: #702d3a;
+      font-size: 16px;
+      font-weight: 950;
+    }
+
+    .bill {
+      position: absolute;
+      z-index: 18;
+      top: 165px;
+      right: 24px;
+      width: 240px;
+      padding: 14px 15px 20px;
+      color: #413a4a;
+      background: #fffef7;
+      border: 2px solid #d8d1c2;
+      box-shadow: 0 14px 28px rgba(45,25,30,.28);
+      transform: translateX(290px) rotate(4deg);
+      transition: .55s ease;
+    }
+
+    .bill.show {
+      transform: translateX(0) rotate(2deg);
+    }
+
+    .bill::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -9px;
+      height: 16px;
+      background: linear-gradient(135deg, #fffef7 8px, transparent 0) 0 0 / 16px 16px repeat-x;
+    }
+
+    .bill h3 {
+      margin: 0 0 8px;
+      text-align: center;
+      color: var(--deep-red);
+    }
+
+    .bill-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 0;
+      font-weight: 800;
+      border-bottom: 1px dashed #cfc6b7;
+    }
+
+    .bill-total {
+      margin-top: 8px;
+      padding-top: 7px;
+      color: var(--deep-red);
+      text-align: center;
+      font-size: 19px;
+      font-weight: 950;
+      border-top: 3px double #9d2637;
+    }
+
+    .bill-stars {
+      min-height: 25px;
+      margin-top: 8px;
+      color: #e2a52c;
+      text-align: center;
+      font-size: 18px;
+      letter-spacing: 2px;
+    }
+
+    .finish {
+      padding: 45px 10px;
+      text-align: center;
+    }
+
+    .finish-icon {
+      font-size: 85px;
+    }
+
+    .finish h2 {
+      margin: 8px;
+      color: var(--deep-red);
+      font-size: 35px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .confetti {
+      position: fixed;
+      z-index: 30;
+      top: -20px;
+      width: 11px;
+      height: 17px;
+      animation: fall 1.9s linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translate(var(--drift), 105vh) rotate(720deg);
+      }
+    }
+
+    @media (max-width: 1030px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .panel,
+      .restaurant {
+        min-height: 650px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app {
+        padding: 8px;
+      }
+
+      .tabs {
+        grid-template-columns: 1fr;
+      }
+
+      .choices {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        padding: 12px;
+      }
+
+      .table-wrap {
+        transform: translateX(-50%) scale(.72);
+        transform-origin: bottom;
+      }
+
+      .family {
+        transform: translateX(-50%) scale(.75);
+      }
+
+      .stage-message {
+        left: 80px;
+        right: 80px;
+        font-size: 13px;
+      }
+
+      .timeline,
+      .cooking-icons {
+        transform: translateX(-50%) scale(.72);
+        transform-origin: top;
+        left: 50%;
+        width: 500px;
+      }
+
+      .restaurant-sign {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div>
+        <h1>🥢 ESC-2-12-2 · Family Restaurant Mission</h1>
+        <div class="subtitle">全家饭店任务｜Word List 2 + Word List 1 Review</div>
+      </div>
+      <div class="stats">
+        <div class="stat">SCORE<b id="score">0</b></div>
+        <div class="stat">DISHES<b id="dishCount">0 🍽️</b></div>
+        <div class="stat">QUESTION<b id="counterText">1 / 1</b></div>
+      </div>
+    </header>
+
+    <div class="progress">
+      <div id="progressFill"></div>
+    </div>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="words">
+        1 · Restaurant Words<br>词汇 + 周末时间
+      </button>
+      <button class="tab" data-tab="kitchen">
+        2 · Chef's Kitchen<br>做菜 + 摆餐桌
+      </button>
+      <button class="tab" data-tab="bill">
+        3 · Bill and Review<br>结账 + 课文复习
+      </button>
+    </nav>
+
+    <section class="layout">
+      <div class="panel">
+        <div id="quizView">
+          <span class="task-label" id="taskLabel">TASK 1 · RESTAURANT WORDS</span>
+          <div class="question-card">
+            <div class="question-icon" id="questionIcon">🥢</div>
+            <div class="prompt" id="prompt"></div>
+            <div class="hint" id="hint"></div>
+          </div>
+          <div class="choices" id="choices"></div>
+          <div class="feedback" id="feedback"></div>
+          <div class="button-row">
+            <button class="listen" id="listenBtn">🔊 Listen</button>
+            <button class="next" id="nextBtn" disabled>Next ▶</button>
+          </div>
+        </div>
+
+        <div class="finish hidden" id="finishView">
+          <div class="finish-icon">🏆🥢🏮</div>
+          <h2>Restaurant Champion!</h2>
+          <p>全家人吃得很开心，五种任务全部完成！</p>
+          <p id="finalScore"></p>
+          <button class="restart" id="restartBtn">Play Again 再玩一次</button>
+        </div>
+      </div>
+
+      <aside class="panel restaurant">
+        <div class="ceiling"></div>
+        <div class="restaurant-sign">广东饭店 · GUANGDONG RESTAURANT</div>
+        <div class="lantern left"></div>
+        <div class="lantern right"></div>
+        <div class="stage-message" id="stageMessage">欢迎全家人来吃晚饭！</div>
+        <div class="window">
+          <div class="skyline"></div>
+        </div>
+
+        <div class="timeline" id="timeline">
+          <div class="time-box" id="lastWeekend">上个周末<br><small>last weekend</small></div>
+          <div class="time-arrow">← 今天 →</div>
+          <div class="time-box" id="nextWeekend">下个周末<br><small>next weekend</small></div>
+        </div>
+
+        <div class="cooking-icons" id="cookingIcons">
+          <div class="cooker">♨️<span>蒸 · steam</span></div>
+          <div class="cooker">🍤<span>炸 · deep-fry</span></div>
+          <div class="cooker">🔥<span>烧 · roast</span></div>
+          <div class="cooker">🥘<span>炒 · stir-fry</span></div>
+        </div>
+
+        <div class="family" id="family">
+          <div class="person one">🧍🏻‍♂️</div>
+          <div class="person two">🧍🏻‍♀️</div>
+          <div class="person three">🧍🏻</div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-base"></div>
+          <div class="table-top">
+            <div class="dish fish" data-dish="fish">🐟<span>蒸鱼</span></div>
+            <div class="dish shrimp" data-dish="shrimp">🍤<span>炸虾</span></div>
+            <div class="dish chicken" data-dish="chicken">🍗<span>烧鸡</span></div>
+            <div class="dish veg1" data-dish="veg1">🥬<span>炒菜 1</span></div>
+            <div class="dish veg2" data-dish="veg2">🥦<span>炒菜 2</span></div>
+            <div class="dish veg3" data-dish="veg3">🥕<span>炒菜 3</span></div>
+            <div class="dish rice" data-dish="rice">🍚<span>米饭</span></div>
+            <div class="dish soup" data-dish="soup">🥣<span>红豆汤</span></div>
+            <div class="reward-tray" id="rewardTray"></div>
+          </div>
+        </div>
+
+        <div class="bill" id="billCard">
+          <h3>GUANGDONG RESTAURANT</h3>
+          <div class="bill-row"><span>Steamed Fish</span><span>¥168.00</span></div>
+          <div class="bill-row"><span>Fried Shrimp</span><span>¥128.00</span></div>
+          <div class="bill-row"><span>Roast Chicken</span><span>¥98.00</span></div>
+          <div class="bill-row"><span>3 Stir-fried Dishes</span><span>¥156.00</span></div>
+          <div class="bill-row"><span>Rice & Red Bean Soup</span><span>¥138.50</span></div>
+          <div class="bill-total">TOTAL: Calculate it!</div>
+          <div class="bill-stars" id="billStars"></div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const WORDS = [
+      { q: "whole", a: "全", options: ["全", "上", "下", "家"], speak: "全", icon: "👨‍👩‍👧" },
+      { q: "whole family", a: "全家人", options: ["全家人", "一家人", "饭店", "饭菜"], speak: "全家人", icon: "👨‍👩‍👧" },
+      { q: "last weekend", a: "上个周末", options: ["上个周末", "下个周末", "这个周末", "今天"], speak: "上个周末", icon: "⬅️" },
+      { q: "a measure word for businesses", a: "家", options: ["家", "店", "个", "条"], speak: "一家饭店", icon: "🏮" },
+      { q: "restaurant", a: "饭店", options: ["商店", "饭店", "菜市场", "家"], speak: "饭店", icon: "🥢" },
+      { q: "dish; vegetable", a: "菜", options: ["米", "菜", "汤", "鸡"], speak: "菜", icon: "🥬" },
+      { q: "meal; food", a: "饭菜", options: ["饭店", "饭菜", "米饭", "炒菜"], speak: "饭菜", icon: "🍽️" },
+      { q: "cooked rice", a: "米饭", options: ["米", "米饭", "红豆", "汤"], speak: "米饭", icon: "🍚" },
+      { q: "red bean soup", a: "红豆汤", options: ["红豆", "米饭", "红豆汤", "炒菜"], speak: "红豆汤", icon: "🥣" },
+      { q: "spend", a: "花", options: ["花", "元", "角", "吃"], speak: "花", icon: "💳" },
+      { q: "yuan; formal unit of money", a: "元", options: ["元", "角", "块", "毛"], speak: "元", icon: "💴" },
+      { q: "jiao; one tenth of a yuan", a: "角", options: ["元", "角", "块", "斤"], speak: "角", icon: "🪙" },
+      { q: "delicious", a: "好吃", options: ["好吃", "喜欢", "全", "饭菜"], speak: "好吃", icon: "😋" },
+      { q: "next weekend", a: "下个周末", options: ["上个周末", "下个周末", "这个周末", "昨天"], speak: "下个周末", icon: "➡️" }
+    ];
+
+    const TIME = [
+      { q: "我们＿＿去了广东饭店。", hint: "We went to the restaurant last weekend.", a: "上个周末", options: ["上个周末", "下个周末"], speak: "我们上个周末去了广东饭店。", time: "last" },
+      { q: "＿＿我们还会去那里吃饭。", hint: "We will go there again next weekend.", a: "下个周末", options: ["上个周末", "下个周末"], speak: "下个周末我们还会去那里吃饭。", time: "next" },
+      { q: "last weekend", hint: "Choose the correct Chinese time phrase.", a: "上个周末", options: ["上个周末", "下个周末"], speak: "上个周末", time: "last" },
+      { q: "next weekend", hint: "Choose the correct Chinese time phrase.", a: "下个周末", options: ["上个周末", "下个周末"], speak: "下个周末", time: "next" }
+    ];
+
+    const COOKING = [
+      { q: "蒸鱼用了什么烹饪方法？", hint: "How is steamed fish cooked?", a: "蒸", options: ["蒸", "炸", "烧", "炒"], speak: "蒸鱼", dish: "fish" },
+      { q: "炸虾用了什么烹饪方法？", hint: "How are fried shrimp cooked?", a: "炸", options: ["蒸", "炸", "烧", "炒"], speak: "炸虾", dish: "shrimp" },
+      { q: "烧鸡用了什么烹饪方法？", hint: "How is roast chicken cooked?", a: "烧", options: ["蒸", "炸", "烧", "炒"], speak: "烧鸡", dish: "chicken" },
+      { q: "炒菜用了什么烹饪方法？", hint: "How are stir-fried dishes cooked?", a: "炒", options: ["蒸", "炸", "烧", "炒"], speak: "炒菜", dish: "veg1" },
+      { q: "steam fish", a: "蒸鱼", options: ["蒸鱼", "炸虾", "烧鸡", "炒菜"], speak: "蒸鱼", dish: "fish" },
+      { q: "fried shrimp", a: "炸虾", options: ["蒸鱼", "炸虾", "烧鸡", "炒菜"], speak: "炸虾", dish: "shrimp" },
+      { q: "roast chicken", a: "烧鸡", options: ["蒸鱼", "炸虾", "烧鸡", "炒菜"], speak: "烧鸡", dish: "chicken" },
+      { q: "stir-fried dish", a: "炒菜", options: ["蒸鱼", "炸虾", "烧鸡", "炒菜"], speak: "炒菜", dish: "veg2" }
+    ];
+
+    const TABLE = [
+      { q: "课文里有几条蒸鱼？", hint: "Match the dish with its quantity.", a: "一条", options: ["一条", "一只", "一碗", "三个"], speak: "一条蒸鱼", dish: "fish" },
+      { q: "课文里有几盘炸虾？", hint: "Match the dish with its quantity.", a: "一盘", options: ["一条", "一盘", "一只", "三个"], speak: "一盘炸虾", dish: "shrimp" },
+      { q: "课文里有几只烧鸡？", hint: "Match the dish with its quantity.", a: "一只", options: ["一条", "一盘", "一只", "三个"], speak: "一只烧鸡", dish: "chicken" },
+      { q: "他们吃了几个炒菜？", hint: "How many stir-fried dishes did they eat?", a: "三个", options: ["一个", "两个", "三个", "四个"], speak: "三个炒菜", dish: "veg3" },
+      { q: "他们还吃了什么主食？", hint: "What staple food did they eat?", a: "米饭", options: ["米饭", "红豆汤", "蒸鱼", "炸虾"], speak: "他们还吃了米饭。", dish: "rice" },
+      { q: "他们喝了什么？", hint: "What did they drink?", a: "红豆汤", options: ["米饭", "红豆汤", "蒸鱼", "炒菜"], speak: "他们喝了红豆汤。", dish: "soup" }
+    ];
+
+    const BILL = [
+      { q: "蒸鱼多少钱？", hint: "Find Steamed Fish on the English receipt.", a: "168元", options: ["98元", "128元", "168元", "188元"], speak: "蒸鱼一百六十八元。" },
+      { q: "炸虾多少钱？", hint: "Find Fried Shrimp on the English receipt.", a: "128元", options: ["98元", "128元", "138元5角", "168元"], speak: "炸虾一百二十八元。" },
+      { q: "蒸鱼和炸虾一共多少钱？", hint: "Steamed Fish + Fried Shrimp: 168 + 128 = ?", a: "296元", options: ["266元", "286元", "296元", "306元"], speak: "蒸鱼和炸虾一共二百九十六元。" },
+      { q: "炸虾和烧鸡一共多少钱？", hint: "Fried Shrimp + Roast Chicken: 128 + 98 = ?", a: "226元", options: ["216元", "226元", "236元", "256元"], speak: "炸虾和烧鸡一共二百二十六元。" },
+      { q: "三个炒菜156元，一个炒菜多少钱？", hint: "156 ÷ 3 = ?", a: "52元", options: ["42元", "48元", "52元", "56元"], speak: "一个炒菜五十二元。" },
+      { q: "米饭和红豆汤多少钱？", hint: "Find Rice & Red Bean Soup on the receipt.", a: "138元5角", options: ["128元5角", "135元8角", "138元5角", "158元3角"], speak: "米饭和红豆汤一百三十八元五角。" },
+      { q: "全桌一共花了多少钱？", hint: "Add all five lines on the receipt.", a: "688元5角", options: ["668元5角", "680元5角", "688元5角", "698元5角"], speak: "全桌一共花了六百八十八元五角。" },
+      { q: "给700元，应该找多少钱？", hint: "700元 − 688元5角 = ?", a: "11元5角", options: ["10元5角", "11元5角", "12元5角", "21元5角"], speak: "找你十一元五角。" },
+      { q: "完成句子：我们一共＿＿688元5角。", hint: "Complete the sentence using the lesson pattern.", a: "花了", options: ["花了", "给了", "找了", "卖了"], speak: "我们一共花了六百八十八元五角。" },
+      { q: "688元5角还可以怎么说？", hint: "Change formal money words to informal words.", a: "688块5毛", options: ["688块5毛", "688块5角", "685块8毛", "688元5毛"], speak: "六百八十八元五角，也可以说六百八十八块五毛。" },
+      { q: "如果下次只点蒸鱼和烧鸡，要花多少钱？", hint: "168 + 98 = ?", a: "266元", options: ["256元", "266元", "276元", "286元"], speak: "蒸鱼和烧鸡一共二百六十六元。" },
+      { q: "这家饭店的饭菜怎么样？", hint: "Review the Text 2 sentence.", a: "非常好吃", options: ["非常好吃", "不太好吃", "非常便宜", "没有海鲜"], speak: "这家饭店的饭菜非常好吃。" }
+    ];
+
+    const $ = id => document.getElementById(id);
+
+    const shuffle = source => {
+      const array = [...source];
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    };
+
+    let tab = "words";
+    let task = "vocab";
+    let index = 0;
+    let score = 0;
+    let dishCount = 0;
+    let snackIndex = 0;
+    let locked = false;
+
+    function currentData() {
+      if (tab === "words") return task === "vocab" ? WORDS : TIME;
+      if (tab === "kitchen") return task === "cooking" ? COOKING : TABLE;
+      return BILL;
+    }
+
+    function taskTitle() {
+      if (tab === "words" && task === "vocab") return "TASK 1 · RESTAURANT WORDS 饭店词汇";
+      if (tab === "words") return "TASK 2 · LAST OR NEXT? 周末时间";
+      if (tab === "kitchen" && task === "cooking") return "TASK 3 · COOKING METHODS 烹饪方法";
+      if (tab === "kitchen") return "TASK 4 · SET THE TABLE 摆好餐桌";
+      return "TASK 5 · RESTAURANT BILL 结账复习";
+    }
+
+    function taskIcon() {
+      if (tab === "words") return task === "vocab" ? "🥢" : "🗓️";
+      if (tab === "kitchen") return task === "cooking" ? "👨🏻‍🍳" : "🍽️";
+      return "🧾";
+    }
+
+    function speak(text) {
+      if (!("speechSynthesis" in window)) return;
+      speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "zh-CN";
+      utterance.rate = .78;
+      speechSynthesis.speak(utterance);
+    }
+
+    function switchTab(nextTab) {
+      tab = nextTab;
+      task = tab === "words" ? "vocab" : tab === "kitchen" ? "cooking" : "bill";
+      index = 0;
+      locked = false;
+
+      clearTableRewards();
+
+      $("finishView").classList.add("hidden");
+      $("quizView").classList.remove("hidden");
+
+      document.querySelectorAll(".tab").forEach(button => {
+        button.classList.toggle("active", button.dataset.tab === tab);
+      });
+
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const data = currentData();
+
+      if (index >= data.length) {
+        if (tab === "words" && task === "vocab") {
+          task = "time";
+          index = 0;
+          renderQuestion();
+          return;
+        }
+
+        if (tab === "kitchen" && task === "cooking") {
+          task = "table";
+          index = 0;
+          renderQuestion();
+          return;
+        }
+
+        if (tab === "bill") {
+          finishGame();
+          return;
+        }
+
+        $("feedback").style.color = "#248f67";
+        $("feedback").textContent = "✓ This tab is complete! 这个部分完成了！";
+        $("nextBtn").disabled = true;
+        $("counterText").textContent = "Done!";
+        $("progressFill").style.width = "100%";
+        return;
+      }
+
+      locked = false;
+      const item = data[index];
+
+      $("taskLabel").textContent = taskTitle();
+      $("questionIcon").textContent = item.icon || taskIcon();
+      $("prompt").textContent = item.q;
+      $("hint").textContent = item.hint || "Choose the correct answer. 选择正确答案。";
+      $("feedback").textContent = "";
+      $("nextBtn").disabled = true;
+      $("counterText").textContent = `${index + 1} / ${data.length}`;
+      $("progressFill").style.width = `${index / data.length * 100}%`;
+
+      const choiceBox = $("choices");
+      choiceBox.innerHTML = "";
+
+      shuffle(item.options).forEach(option => {
+        const button = document.createElement("button");
+        button.className = "choice";
+        button.textContent = option;
+        button.onclick = () => chooseAnswer(button, option);
+        choiceBox.appendChild(button);
+      });
+
+      updateScene(item);
+      updateStats();
+    }
+
+    function chooseAnswer(button, answer) {
+      if (locked) return;
+      locked = true;
+
+      const item = currentData()[index];
+
+      document.querySelectorAll(".choice").forEach(choice => {
+        if (choice.textContent === item.a) choice.classList.add("correct");
+      });
+
+      if (answer === item.a) {
+        button.classList.add("correct");
+        score += tab === "bill" ? 150 : 100;
+        $("feedback").style.color = "#248f67";
+        $("feedback").textContent = "✓ Correct! 获得一道小吃奖励！";
+        speak(item.speak || item.a);
+        if (tab !== "bill") rewardSnack();
+        if (tab === "bill") rewardBillStar();
+        rewardScene(item);
+        confettiBurst();
+      } else {
+        button.classList.add("wrong");
+        $("feedback").style.color = "#d9485c";
+        $("feedback").textContent = `再想一想！正确答案是：${item.a}`;
+      }
+
+      $("nextBtn").disabled = false;
+      $("progressFill").style.width = `${(index + 1) / currentData().length * 100}%`;
+      updateStats();
+    }
+
+    function updateScene(item) {
+      $("timeline").classList.toggle("show", tab === "words" && task === "time");
+      $("cookingIcons").classList.toggle("show", tab === "kitchen" && task === "cooking");
+      $("billCard").classList.toggle("show", tab === "bill");
+      $("family").style.opacity = tab === "words" && task === "time" ? ".25" : "1";
+
+      $("lastWeekend").classList.remove("active");
+      $("nextWeekend").classList.remove("active");
+
+      if (item.time === "last") $("lastWeekend").classList.add("active");
+      if (item.time === "next") $("nextWeekend").classList.add("active");
+
+      if (tab === "words") {
+        $("stageMessage").textContent = task === "vocab"
+          ? "认识饭店里的新词"
+          : "上个周末 ← 今天 → 下个周末";
+      }
+
+      if (tab === "kitchen") {
+        $("stageMessage").textContent = task === "cooking"
+          ? "蒸、炸、烧、炒：选择正确的做菜方法"
+          : "答对一题，把一道菜摆上全家餐桌";
+      }
+
+      if (tab === "bill") {
+        $("stageMessage").textContent = "Read the English receipt · 查价格、算合计、算找钱";
+      }
+    }
+
+    function rewardScene(item) {
+      if (item.dish) {
+        serveDish(item.dish);
+
+        if (task === "table" && item.dish === "veg3") {
+          serveDish("veg1");
+          serveDish("veg2");
+        }
+      }
+
+      if (tab === "bill" && item.a === "非常好吃") {
+        $("stageMessage").textContent = "全家人：这家饭店的饭菜非常好吃！ 😋";
+      }
+    }
+
+    function rewardSnack() {
+      const snacks = [
+        { emoji: "🥟", name: "饺子" },
+        { emoji: "🥠", name: "点心" },
+        { emoji: "🍘", name: "米饼" },
+        { emoji: "🥮", name: "月饼" },
+        { emoji: "🍡", name: "甜点" },
+        { emoji: "🥟", name: "包子" },
+        { emoji: "🍙", name: "饭团" }
+      ];
+
+      const snack = snacks[snackIndex % snacks.length];
+      snackIndex += 1;
+
+      const reward = document.createElement("div");
+      reward.className = "reward-food";
+      reward.textContent = snack.emoji;
+      reward.title = `答题奖励：${snack.name}`;
+      $("rewardTray").appendChild(reward);
+
+      while ($("rewardTray").children.length > 7) {
+        $("rewardTray").firstElementChild.remove();
+      }
+    }
+
+    function rewardBillStar() {
+      if ($("billStars").textContent.length < 12) {
+        $("billStars").textContent += "★";
+      }
+    }
+
+    function clearTableRewards() {
+      $("rewardTray").innerHTML = "";
+      $("billStars").textContent = "";
+      snackIndex = 0;
+      dishCount = 0;
+
+      document.querySelectorAll(".dish").forEach(dish => {
+        dish.classList.remove("served");
+      });
+
+      updateStats();
+    }
+
+    function serveDish(name) {
+      const dish = document.querySelector(`[data-dish="${name}"]`);
+      if (!dish || dish.classList.contains("served")) return;
+      dish.classList.add("served");
+      dishCount += 1;
+      updateStats();
+    }
+
+    function serveAllDishes() {
+      document.querySelectorAll(".dish").forEach(dish => {
+        if (!dish.classList.contains("served")) {
+          dish.classList.add("served");
+        }
+      });
+      dishCount = document.querySelectorAll(".dish.served").length;
+      updateStats();
+    }
+
+    function updateStats() {
+      $("score").textContent = score;
+      $("dishCount").textContent = `${dishCount} 🍽️`;
+    }
+
+    function nextQuestion() {
+      index += 1;
+      renderQuestion();
+    }
+
+    function finishGame() {
+      $("quizView").classList.add("hidden");
+      $("finishView").classList.remove("hidden");
+      $("finalScore").textContent = `Final Score: ${score} · Dishes Served: ${dishCount}`;
+      $("counterText").textContent = "Done!";
+      $("progressFill").style.width = "100%";
+      $("stageMessage").textContent = "账单挑战完成！下个周末我们还会来！";
+
+      for (let i = 0; i < 5; i++) {
+        setTimeout(confettiBurst, i * 350);
+      }
+    }
+
+    function restartGame() {
+      score = 0;
+      clearTableRewards();
+      switchTab("words");
+    }
+
+    function confettiBurst() {
+      const colors = ["#f5bd45", "#d94652", "#37ad78", "#7554bd", "#ffffff"];
+
+      for (let i = 0; i < 25; i++) {
+        const piece = document.createElement("i");
+        piece.className = "confetti";
+        piece.style.left = Math.random() * 100 + "vw";
+        piece.style.background = colors[i % colors.length];
+        piece.style.setProperty("--drift", Math.random() * 180 - 90 + "px");
+        piece.style.animationDelay = Math.random() * .25 + "s";
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 2200);
+      }
+    }
+
+    document.querySelectorAll(".tab").forEach(button => {
+      button.onclick = () => switchTab(button.dataset.tab);
+    });
+
+    $("listenBtn").onclick = () => {
+      const item = currentData()[index];
+      if (item) speak(item.speak || item.q);
+    };
+
+    $("nextBtn").onclick = nextQuestion;
+    $("restartBtn").onclick = restartGame;
+
+    renderQuestion();
+  </script>
+</body>
+</html>
