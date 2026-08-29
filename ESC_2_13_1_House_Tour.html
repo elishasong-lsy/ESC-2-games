@@ -32,7 +32,7 @@
     }
 
     .app{
-      max-width:1320px;
+      max-width:1380px;
       margin:0 auto;
     }
 
@@ -146,7 +146,7 @@
 
     .layout{
       display:grid;
-      grid-template-columns:minmax(570px,1.15fr) minmax(400px,.85fr);
+      grid-template-columns:minmax(420px,.82fr) minmax(560px,1.18fr);
       gap:18px;
       align-items:start;
     }
@@ -162,7 +162,7 @@
 
     .scenePanel{
       padding:18px;
-      min-height:700px;
+      min-height:650px;
       position:relative;
     }
 
@@ -171,7 +171,7 @@
     }
 
     .houseScene{
-      min-height:660px;
+      min-height:615px;
       border-radius:28px;
       background:
         radial-gradient(circle at 16% 9%, rgba(255,255,255,.72) 0 2px, transparent 3px),
@@ -188,7 +188,7 @@
       left:50%;
       top:34px;
       transform:translateX(-50%);
-      min-width:390px;
+      min-width:360px;
       max-width:88%;
       background:rgba(255,255,255,.92);
       border:1px solid rgba(255,255,255,.96);
@@ -217,8 +217,8 @@
       left:50%;
       top:132px;
       transform:translateX(-50%);
-      width:min(90%,700px);
-      height:72px;
+      width:min(90%,640px);
+      height:70px;
       background:linear-gradient(135deg,#ef4444,#b91c1c);
       clip-path:polygon(50% 0%,100% 100%,0% 100%);
       z-index:4;
@@ -230,8 +230,8 @@
       left:50%;
       top:173px;
       transform:translateX(-50%);
-      width:min(88%,700px);
-      height:410px;
+      width:min(88%,640px);
+      height:380px;
       background:
         linear-gradient(90deg,rgba(255,255,255,.20) 0 2px,transparent 2px 100%),
         linear-gradient(180deg,#d6a76a,#b77935);
@@ -282,7 +282,7 @@
     .room.bathroom{background:linear-gradient(135deg,#cffafe,#22d3ee)}
 
     .roomIcon{
-      font-size:42px;
+      font-size:38px;
       line-height:1;
       filter:drop-shadow(0 4px 4px rgba(15,23,42,.10));
       transform:scale(.92);
@@ -292,7 +292,7 @@
 
     .roomZh{
       margin-top:8px;
-      font-size:26px;
+      font-size:24px;
       font-weight:950;
       color:#0f172a;
       text-shadow:0 1px 0 rgba(255,255,255,.42);
@@ -300,7 +300,7 @@
 
     .roomEn{
       margin-top:3px;
-      font-size:13px;
+      font-size:12px;
       font-weight:900;
       color:rgba(15,23,42,.64);
     }
@@ -350,10 +350,10 @@
 
     .windowMini{
       position:absolute;
-      width:42px;
-      height:32px;
-      top:14px;
-      left:14px;
+      width:38px;
+      height:29px;
+      top:12px;
+      left:12px;
       border-radius:8px;
       background:#eff6ff;
       border:3px solid rgba(255,255,255,.82);
@@ -367,7 +367,7 @@
       left:50%;
       bottom:18px;
       transform:translateX(-50%);
-      width:min(88%,700px);
+      width:min(88%,640px);
       background:rgba(255,255,255,.95);
       border:2px solid #bfdbfe;
       border-radius:24px;
@@ -416,9 +416,9 @@
       display:none;
       position:absolute;
       left:50%;
-      top:128px;
+      top:118px;
       transform:translateX(-50%);
-      width:min(88%,700px);
+      width:min(88%,640px);
       min-height:430px;
       z-index:10;
     }
@@ -470,7 +470,7 @@
       border-radius:24px;
       padding:14px 10px;
       text-align:center;
-      min-height:118px;
+      min-height:112px;
       display:flex;
       flex-direction:column;
       align-items:center;
@@ -478,20 +478,20 @@
     }
 
     .numberEmoji{
-      font-size:34px;
+      font-size:32px;
       line-height:1;
     }
 
     .numberZh{
       margin-top:6px;
-      font-size:22px;
+      font-size:21px;
       font-weight:950;
       color:#0f172a;
     }
 
     .numberBig{
       margin-top:4px;
-      font-size:34px;
+      font-size:32px;
       font-weight:950;
       color:#2563eb;
       line-height:1;
@@ -515,7 +515,6 @@
       position:absolute;
       inset:0;
       z-index:11;
-      padding:34px;
     }
 
     .rewardScene.show{display:block}
@@ -525,98 +524,161 @@
       left:50%;
       top:50%;
       transform:translate(-50%,-50%);
-      width:min(88%,720px);
-      min-height:500px;
-      background:rgba(255,255,255,.95);
+      width:min(92%,610px);
+      min-height:520px;
+      background:
+        radial-gradient(circle at 25% 18%,rgba(255,255,255,.8),transparent 22%),
+        linear-gradient(180deg,#ffffff,#eff6ff);
       border:3px solid #bfdbfe;
-      border-radius:34px;
-      padding:26px;
+      border-radius:36px;
+      padding:22px;
       box-shadow:0 20px 42px rgba(15,23,42,.16);
       text-align:center;
       overflow:hidden;
     }
 
-    .rewardBoard::before{
-      content:"";
+    .cartoonHouse{
+      position:relative;
+      width:min(95%,430px);
+      height:300px;
+      margin:10px auto 14px;
+    }
+
+    .houseRoof{
       position:absolute;
-      inset:14px;
-      border:2px dashed #bfdbfe;
-      border-radius:26px;
+      left:50%;
+      top:0;
+      transform:translateX(-50%);
+      width:360px;
+      height:105px;
+      background:linear-gradient(135deg,#ef4444,#b91c1c);
+      clip-path:polygon(50% 0%,100% 100%,0% 100%);
+      filter:drop-shadow(0 10px 14px rgba(15,23,42,.16));
+    }
+
+    .houseBody{
+      position:absolute;
+      left:50%;
+      top:82px;
+      transform:translateX(-50%);
+      width:330px;
+      height:205px;
+      background:linear-gradient(180deg,#fde68a,#fbbf24);
+      border:8px solid #92400e;
+      border-radius:24px;
+      box-shadow:0 20px 35px rgba(15,23,42,.18);
+    }
+
+    .houseDoor{
+      position:absolute;
+      left:50%;
+      bottom:0;
+      transform:translateX(-50%);
+      width:64px;
+      height:92px;
+      background:linear-gradient(180deg,#7c2d12,#451a03);
+      border:4px solid rgba(255,255,255,.65);
+      border-radius:28px 28px 0 0;
+      z-index:3;
+    }
+
+    .houseWindow{
+      position:absolute;
+      width:66px;
+      height:56px;
+      background:#e0f2fe;
+      border:5px solid white;
+      border-radius:16px;
+      box-shadow:inset 0 0 0 3px #93c5fd;
+      z-index:2;
+    }
+
+    .houseWindow.left{left:34px;top:45px}
+    .houseWindow.right{right:34px;top:45px}
+
+    .garden{
+      position:absolute;
+      left:50%;
+      bottom:-3px;
+      transform:translateX(-50%);
+      width:410px;
+      height:58px;
+      background:linear-gradient(180deg,#bbf7d0,#22c55e);
+      border-radius:50% 50% 20px 20px;
+      z-index:-1;
+    }
+
+    .stickerLayer{
+      position:absolute;
+      inset:0;
+      z-index:5;
       pointer-events:none;
     }
 
-    .rewardTitle{
-      font-size:40px;
+    .rewardSticker{
+      position:absolute;
+      width:58px;
+      height:58px;
+      display:grid;
+      place-items:center;
+      border-radius:20px;
+      background:#fff7ed;
+      border:3px solid #fbbf24;
+      box-shadow:0 8px 18px rgba(15,23,42,.18);
+      font-size:31px;
+      opacity:0;
+      transform:scale(.3) rotate(-15deg);
+    }
+
+    .rewardSticker.show{
+      opacity:1;
+      animation:stickerPop .42s cubic-bezier(.22,1,.36,1) forwards;
+    }
+
+    @keyframes stickerPop{
+      0%{opacity:0;transform:scale(.3) rotate(-18deg)}
+      65%{opacity:1;transform:scale(1.18) rotate(6deg)}
+      100%{opacity:1;transform:scale(1) rotate(0)}
+    }
+
+    .rewardProgress{
+      background:rgba(255,255,255,.92);
+      border:2px solid #bfdbfe;
+      border-radius:999px;
+      padding:10px 14px;
+      font-size:18px;
       font-weight:950;
       color:#1e3a8a;
-      margin-top:12px;
-    }
-
-    .rewardSubtitle{
-      margin:8px auto 20px;
-      max-width:560px;
-      font-size:18px;
-      color:#475569;
-      font-weight:850;
-      line-height:1.45;
-    }
-
-    .rewardShelf{
-      position:relative;
-      z-index:2;
-      margin:0 auto;
-      width:min(96%,610px);
-      min-height:230px;
-      background:
-        linear-gradient(180deg,#eff6ff,#ffffff);
-      border:2px solid #bfdbfe;
-      border-radius:28px;
-      padding:18px;
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:12px;
+      display:inline-flex;
       align-items:center;
+      gap:8px;
     }
 
-    .rewardSlot{
-      height:82px;
-      border-radius:22px;
+    .rewardTinyList{
+      margin:16px auto 0;
+      width:min(100%,500px);
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:7px;
+    }
+
+    .rewardDot{
+      width:28px;
+      height:28px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
       background:#f8fafc;
       border:2px dashed #cbd5e1;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:34px;
+      font-size:15px;
       opacity:.55;
-      transition:.25s ease;
     }
 
-    .rewardSlot.filled{
-      background:#fff7ed;
-      border:2px solid #fbbf24;
-      opacity:1;
-      animation:rewardPop .4s ease-out;
-      box-shadow:0 0 18px rgba(251,191,36,.45);
-    }
-
-    @keyframes rewardPop{
-      0%{transform:scale(.78) rotate(-8deg)}
-      60%{transform:scale(1.14) rotate(4deg)}
-      100%{transform:scale(1) rotate(0)}
-    }
-
-    .rewardMessage{
-      position:relative;
-      z-index:2;
-      margin-top:18px;
+    .rewardDot.filled{
       background:#dcfce7;
-      border:1px solid #bbf7d0;
-      color:#166534;
-      border-radius:999px;
-      display:inline-flex;
-      padding:10px 16px;
-      font-size:16px;
-      font-weight:950;
+      border:2px solid #22c55e;
+      opacity:1;
     }
 
     .modeBar{
@@ -1081,8 +1143,8 @@
       .layout{grid-template-columns:1fr}
       .taskPanel{order:-1}
       .scenePanel{min-height:auto}
-      .houseScene{min-height:620px}
-      .floorPlanWrap{top:165px;height:385px}
+      .houseScene{min-height:600px}
+      .floorPlanWrap{top:165px;height:365px}
       .roof{top:126px}
       .factsScene{top:120px}
     }
@@ -1096,7 +1158,7 @@
       .promptMain{font-size:25px;min-height:78px}
       .promptMain.english{font-size:20px}
       .captionCard{min-width:260px;top:26px}
-      .floorPlanWrap{width:95%;top:170px;height:345px;border-width:8px}
+      .floorPlanWrap{width:95%;top:170px;height:330px;border-width:8px}
       .roof{width:98%;top:148px}
       .roomZh{font-size:20px}
       .roomEn{font-size:11px}
@@ -1106,9 +1168,8 @@
       .factsScene{width:95%;top:115px}
       .numberGrid{grid-template-columns:repeat(2,1fr)}
       .numberRoom{min-height:96px}
-      .rewardBoard{width:95%;padding:18px}
-      .rewardTitle{font-size:30px}
-      .rewardShelf{grid-template-columns:repeat(4,1fr)}
+      .rewardBoard{width:95%;padding:18px;min-height:500px}
+      .cartoonHouse{transform:scale(.92);transform-origin:top center;height:280px}
     }
   </style>
 </head>
@@ -1201,7 +1262,7 @@
             <div class="detectiveCard">
               <div class="detectiveHeader">
                 <div class="detectiveTitle">House Detective</div>
-                <div class="detectiveBadge">Use the clues. Don’t just match words.</div>
+                <div class="detectiveBadge">Use the clues.</div>
               </div>
 
               <div class="numberGrid">
@@ -1243,20 +1304,27 @@
               </div>
 
               <div class="detectiveHint">
-                侦探提示：看数字，再换成中文量词。<br>
-                1 = 一个 / 一间，2 = 两个，3 = 三间。
+                1 = 一个 / 一间，2 = 两个，3 = 三间
               </div>
             </div>
           </div>
 
           <div class="rewardScene" id="rewardScene">
             <div class="rewardBoard">
-              <div class="rewardTitle">Sentence Rewards</div>
-              <div class="rewardSubtitle">每组对一个句子，就得到一个 house sticker。</div>
+              <div class="cartoonHouse">
+                <div class="houseRoof"></div>
+                <div class="houseBody">
+                  <div class="houseWindow left"></div>
+                  <div class="houseWindow right"></div>
+                  <div class="houseDoor"></div>
+                </div>
+                <div class="garden"></div>
 
-              <div class="rewardShelf" id="rewardShelf"></div>
+                <div class="stickerLayer" id="stickerLayer"></div>
+              </div>
 
-              <div class="rewardMessage" id="rewardMessage">Build a sentence to earn a sticker!</div>
+              <div class="rewardProgress" id="rewardProgress">🏡 Stickers: 0 / 13</div>
+              <div class="rewardTinyList" id="rewardTinyList"></div>
             </div>
           </div>
 
@@ -1332,8 +1400,8 @@
         <div class="instructions">
           <strong>How to Play:</strong><br>
           Part 1: Choose the correct word and unlock rooms.<br>
-          Part 2: Use the number clues to solve house detective questions.<br>
-          Part 3: Build sentences and collect stickers.
+          Part 2: Use the number clues to solve detective questions.<br>
+          Part 3: Build sentences and decorate the house.
         </div>
       </aside>
     </main>
@@ -1374,188 +1442,49 @@
     ];
 
     const FACT_TASKS = [
-      {
-        type:"how",
-        promptZh:"这家有几间卧室？",
-        en:"How many bedrooms does the house have?",
-        py:"sān jiān wò shì",
-        answer:"三间卧室",
-        options:["一间卧室","两间卧室","三间卧室","四间卧室"]
-      },
-      {
-        type:"how",
-        promptZh:"这家有几个卫生间？",
-        en:"How many bathrooms does the house have?",
-        py:"liǎng ge wèi shēng jiān",
-        answer:"两个卫生间",
-        options:["一个卫生间","两个卫生间","三个卫生间","四个卫生间"]
-      },
-      {
-        type:"how",
-        promptZh:"这家有几个书房？",
-        en:"How many study rooms does the house have?",
-        py:"yí ge shū fáng",
-        answer:"一个书房",
-        options:["没有书房","一个书房","两个书房","三个书房"]
-      },
-      {
-        type:"correct",
-        promptZh:"哪一句是对的？",
-        en:"Which sentence is correct?",
-        py:"yǒu yí ge chú fáng.",
-        answer:"有一个厨房。",
-        options:["有两个厨房。","有一个厨房。","有三个厨房。","没有厨房。"]
-      },
-      {
-        type:"correct",
-        promptZh:"哪一句是对的？",
-        en:"Which sentence is correct?",
-        py:"yǒu yí ge shū fáng hé liǎng ge wèi shēng jiān.",
-        answer:"有一个书房和两个卫生间。",
-        options:["有两个书房和一个卫生间。","有一个书房和两个卫生间。","有三个书房和两个卫生间。","没有书房和卫生间。"]
-      },
-      {
-        type:"not",
-        promptZh:"哪一句不对？",
-        en:"Which sentence is NOT true?",
-        py:"bú duì",
-        answer:"我家有三个书房。",
-        options:["我家有一个厨房。","我家有三间卧室。","我家有两个卫生间。","我家有三个书房。"]
-      },
-      {
-        type:"not",
-        promptZh:"哪一句不对？",
-        en:"Which sentence is NOT true?",
-        py:"bú duì",
-        answer:"我家有一个卫生间。",
-        options:["我家有一个餐厅。","我家有一个卫生间。","我家有一个书房。","我家有一个厨房。"]
-      },
-      {
-        type:"tf",
-        promptZh:"判断：我家有两间卧室。",
-        en:"True or False: The house has two bedrooms.",
-        py:"bù duì",
-        answer:"不对",
-        options:["对","不对"]
-      },
-      {
-        type:"tf",
-        promptZh:"判断：我家有三间卧室。",
-        en:"True or False: The house has three bedrooms.",
-        py:"duì",
-        answer:"对",
-        options:["对","不对"]
-      },
-      {
-        type:"tf",
-        promptZh:"判断：我家有两个卫生间。",
-        en:"True or False: The house has two bathrooms.",
-        py:"duì",
-        answer:"对",
-        options:["对","不对"]
-      },
-      {
-        type:"tf",
-        promptZh:"判断：我家有两个书房。",
-        en:"True or False: The house has two study rooms.",
-        py:"bù duì",
-        answer:"不对",
-        options:["对","不对"]
-      }
+      { type:"how", promptZh:"这家有几间卧室？", en:"How many bedrooms does the house have?", py:"sān jiān wò shì", answer:"三间卧室", options:["一间卧室","两间卧室","三间卧室","四间卧室"] },
+      { type:"how", promptZh:"这家有几个卫生间？", en:"How many bathrooms does the house have?", py:"liǎng ge wèi shēng jiān", answer:"两个卫生间", options:["一个卫生间","两个卫生间","三个卫生间","四个卫生间"] },
+      { type:"how", promptZh:"这家有几个书房？", en:"How many study rooms does the house have?", py:"yí ge shū fáng", answer:"一个书房", options:["没有书房","一个书房","两个书房","三个书房"] },
+      { type:"correct", promptZh:"哪一句是对的？", en:"Which sentence is correct?", py:"yǒu yí ge chú fáng.", answer:"有一个厨房。", options:["有两个厨房。","有一个厨房。","有三个厨房。","没有厨房。"] },
+      { type:"correct", promptZh:"哪一句是对的？", en:"Which sentence is correct?", py:"yǒu yí ge shū fáng hé liǎng ge wèi shēng jiān.", answer:"有一个书房和两个卫生间。", options:["有两个书房和一个卫生间。","有一个书房和两个卫生间。","有三个书房和两个卫生间。","没有书房和卫生间。"] },
+      { type:"not", promptZh:"哪一句不对？", en:"Which sentence is NOT true?", py:"bú duì", answer:"我家有三个书房。", options:["我家有一个厨房。","我家有三间卧室。","我家有两个卫生间。","我家有三个书房。"] },
+      { type:"not", promptZh:"哪一句不对？", en:"Which sentence is NOT true?", py:"bú duì", answer:"我家有一个卫生间。", options:["我家有一个餐厅。","我家有一个卫生间。","我家有一个书房。","我家有一个厨房。"] },
+      { type:"tf", promptZh:"判断：我家有两间卧室。", en:"True or False: The house has two bedrooms.", py:"bù duì", answer:"不对", options:["对","不对"] },
+      { type:"tf", promptZh:"判断：我家有三间卧室。", en:"True or False: The house has three bedrooms.", py:"duì", answer:"对", options:["对","不对"] },
+      { type:"tf", promptZh:"判断：我家有两个卫生间。", en:"True or False: The house has two bathrooms.", py:"duì", answer:"对", options:["对","不对"] },
+      { type:"tf", promptZh:"判断：我家有两个书房。", en:"True or False: The house has two study rooms.", py:"bù duì", answer:"不对", options:["对","不对"] }
     ];
 
     const SENTENCE_TASKS = [
-      {
-        zh:"这是我家的新房子，漂亮吧？",
-        py:"zhè shì wǒ jiā de xīn fáng zi, piào liang ba?",
-        en:"This is my family's new house. Pretty, right?",
-        emoji:"🏠",
-        tokens:["这","是","我家","的","新房子","，","漂亮","吧","？"]
-      },
-      {
-        zh:"我家的房子挺大的。",
-        py:"wǒ jiā de fáng zi tǐng dà de.",
-        en:"My family's house is quite big.",
-        emoji:"🏡",
-        tokens:["我家","的","房子","挺","大","的","。"]
-      },
-      {
-        zh:"有一个大客厅。",
-        py:"yǒu yí ge dà kè tīng.",
-        en:"There is one big living room.",
-        emoji:"🛋️",
-        tokens:["有","一个","大","客厅","。"]
-      },
-      {
-        zh:"有一个餐厅、一个厨房。",
-        py:"yǒu yí ge cān tīng, yí ge chú fáng.",
-        en:"There is one dining room and one kitchen.",
-        emoji:"🍽️",
-        tokens:["有","一个","餐厅","、","一个","厨房","。"]
-      },
-      {
-        zh:"有三间卧室。",
-        py:"yǒu sān jiān wò shì.",
-        en:"There are three bedrooms.",
-        emoji:"🛏️",
-        tokens:["有","三间","卧室","。"]
-      },
-      {
-        zh:"有一个书房和两个卫生间。",
-        py:"yǒu yí ge shū fáng hé liǎng ge wèi shēng jiān.",
-        en:"There is one study and two bathrooms.",
-        emoji:"📚",
-        tokens:["有","一个","书房","和","两个","卫生间","。"]
-      },
-      {
-        zh:"我的房间不大也不小。",
-        py:"wǒ de fáng jiān bú dà yě bù xiǎo.",
-        en:"My room is not big and not small.",
-        emoji:"🚪",
-        tokens:["我的","房间","不大","也","不小","。"]
-      },
-      {
-        zh:"我经常在房间里看书。",
-        py:"wǒ jīng cháng zài fáng jiān lǐ kàn shū.",
-        en:"I often read books in my room.",
-        emoji:"📖",
-        tokens:["我","经常","在","房间","里","看书","。"]
-      },
-      {
-        zh:"我经常在房间里打电话。",
-        py:"wǒ jīng cháng zài fáng jiān lǐ dǎ diàn huà.",
-        en:"I often make phone calls in my room.",
-        emoji:"☎️",
-        tokens:["我","经常","在","房间","里","打电话","。"]
-      },
-      {
-        zh:"我经常在房间里做作业。",
-        py:"wǒ jīng cháng zài fáng jiān lǐ zuò zuò yè.",
-        en:"I often do homework in my room.",
-        emoji:"✏️",
-        tokens:["我","经常","在","房间","里","做作业","。"]
-      },
-      {
-        zh:"我经常在房间里听音乐。",
-        py:"wǒ jīng cháng zài fáng jiān lǐ tīng yīn yuè.",
-        en:"I often listen to music in my room.",
-        emoji:"🎧",
-        tokens:["我","经常","在","房间","里","听音乐","。"]
-      },
-      {
-        zh:"我经常在房间里弹钢琴。",
-        py:"wǒ jīng cháng zài fáng jiān lǐ tán gāng qín.",
-        en:"I often play piano in my room.",
-        emoji:"🎹",
-        tokens:["我","经常","在","房间","里","弹钢琴","。"]
-      },
-      {
-        zh:"我经常在房间里玩儿游戏。",
-        py:"wǒ jīng cháng zài fáng jiān lǐ wánr yóu xì.",
-        en:"I often play games in my room.",
-        emoji:"🎮",
-        tokens:["我","经常","在","房间","里","玩儿","游戏","。"]
-      }
+      { zh:"这是我家的新房子，漂亮吧？", py:"zhè shì wǒ jiā de xīn fáng zi, piào liang ba?", en:"This is my family's new house. Pretty, right?", emoji:"🏠", tokens:["这","是","我家","的","新房子","，","漂亮","吧","？"] },
+      { zh:"我家的房子挺大的。", py:"wǒ jiā de fáng zi tǐng dà de.", en:"My family's house is quite big.", emoji:"🏡", tokens:["我家","的","房子","挺","大","的","。"] },
+      { zh:"有一个大客厅。", py:"yǒu yí ge dà kè tīng.", en:"There is one big living room.", emoji:"🛋️", tokens:["有","一个","大","客厅","。"] },
+      { zh:"有一个餐厅、一个厨房。", py:"yǒu yí ge cān tīng, yí ge chú fáng.", en:"There is one dining room and one kitchen.", emoji:"🍽️", tokens:["有","一个","餐厅","、","一个","厨房","。"] },
+      { zh:"有三间卧室。", py:"yǒu sān jiān wò shì.", en:"There are three bedrooms.", emoji:"🛏️", tokens:["有","三间","卧室","。"] },
+      { zh:"有一个书房和两个卫生间。", py:"yǒu yí ge shū fáng hé liǎng ge wèi shēng jiān.", en:"There is one study and two bathrooms.", emoji:"📚", tokens:["有","一个","书房","和","两个","卫生间","。"] },
+      { zh:"我的房间不大也不小。", py:"wǒ de fáng jiān bú dà yě bù xiǎo.", en:"My room is not big and not small.", emoji:"🚪", tokens:["我的","房间","不大","也","不小","。"] },
+      { zh:"我经常在房间里看书。", py:"wǒ jīng cháng zài fáng jiān lǐ kàn shū.", en:"I often read books in my room.", emoji:"📖", tokens:["我","经常","在","房间","里","看书","。"] },
+      { zh:"我经常在房间里打电话。", py:"wǒ jīng cháng zài fáng jiān lǐ dǎ diàn huà.", en:"I often make phone calls in my room.", emoji:"☎️", tokens:["我","经常","在","房间","里","打电话","。"] },
+      { zh:"我经常在房间里做作业。", py:"wǒ jīng cháng zài fáng jiān lǐ zuò zuò yè.", en:"I often do homework in my room.", emoji:"✏️", tokens:["我","经常","在","房间","里","做作业","。"] },
+      { zh:"我经常在房间里听音乐。", py:"wǒ jīng cháng zài fáng jiān lǐ tīng yīn yuè.", en:"I often listen to music in my room.", emoji:"🎧", tokens:["我","经常","在","房间","里","听音乐","。"] },
+      { zh:"我经常在房间里弹钢琴。", py:"wǒ jīng cháng zài fáng jiān lǐ tán gāng qín.", en:"I often play piano in my room.", emoji:"🎹", tokens:["我","经常","在","房间","里","弹钢琴","。"] },
+      { zh:"我经常在房间里玩儿游戏。", py:"wǒ jīng cháng zài fáng jiān lǐ wánr yóu xì.", en:"I often play games in my room.", emoji:"🎮", tokens:["我","经常","在","房间","里","玩儿","游戏","。"] }
+    ];
+
+    const STICKERS = [
+      { emoji:"🌳", x:18, y:218 },
+      { emoji:"🌷", x:342, y:236 },
+      { emoji:"☀️", x:322, y:8 },
+      { emoji:"🐶", x:82, y:235 },
+      { emoji:"📬", x:330, y:170 },
+      { emoji:"🚗", x:38, y:263 },
+      { emoji:"🪴", x:238, y:208 },
+      { emoji:"⭐", x:184, y:18 },
+      { emoji:"🎈", x:40, y:34 },
+      { emoji:"💡", x:188, y:122 },
+      { emoji:"🎵", x:252, y:64 },
+      { emoji:"📚", x:82, y:115 },
+      { emoji:"🏆", x:188, y:214 }
     ];
 
     let currentPart = "hunt";
@@ -1567,7 +1496,6 @@
     let selectedTiles = [];
     let currentPromptMode = "easy";
     let locked = false;
-    let unlockedRooms = new Set();
     let rewardCount = 0;
 
     const huntTab = document.getElementById("huntTab");
@@ -1602,8 +1530,9 @@
     const wordChips = document.getElementById("wordChips");
     const factsScene = document.getElementById("factsScene");
     const rewardScene = document.getElementById("rewardScene");
-    const rewardShelf = document.getElementById("rewardShelf");
-    const rewardMessage = document.getElementById("rewardMessage");
+    const stickerLayer = document.getElementById("stickerLayer");
+    const rewardProgress = document.getElementById("rewardProgress");
+    const rewardTinyList = document.getElementById("rewardTinyList");
 
     const showPinyinBtn = document.getElementById("showPinyinBtn");
     const showAnswerBtn = document.getElementById("showAnswerBtn");
@@ -1617,8 +1546,6 @@
     const winText = document.getElementById("winText");
     const keepPlayingBtn = document.getElementById("keepPlayingBtn");
     const restartWinBtn = document.getElementById("restartWinBtn");
-
-    const REWARDS = ["🏠","🛋️","🍽️","🍳","🛏️","📚","🚿","🎧","🎹","🎮","⭐","🏡","🎉"];
 
     function shuffle(arr){
       const a = [...arr];
@@ -1654,12 +1581,11 @@
       completed = [];
       selectedTiles = [];
       locked = false;
-      unlockedRooms = new Set();
       rewardCount = 0;
       winOverlay.classList.remove("show");
       clearRooms();
       wordChips.innerHTML = "";
-      buildRewardSlots();
+      buildRewards();
       renderTask();
     }
 
@@ -1670,28 +1596,46 @@
       });
     }
 
-    function buildRewardSlots(){
-      rewardShelf.innerHTML = "";
-      REWARDS.forEach((emoji,i)=>{
-        const slot = document.createElement("div");
-        slot.className = "rewardSlot";
-        slot.dataset.index = i;
-        slot.textContent = "＋";
-        rewardShelf.appendChild(slot);
+    function buildRewards(){
+      stickerLayer.innerHTML = "";
+      rewardTinyList.innerHTML = "";
+
+      STICKERS.forEach((s,i)=>{
+        const sticker = document.createElement("div");
+        sticker.className = "rewardSticker";
+        sticker.id = `sticker-${i}`;
+        sticker.textContent = s.emoji;
+        sticker.style.left = s.x + "px";
+        sticker.style.top = s.y + "px";
+        stickerLayer.appendChild(sticker);
+
+        const dot = document.createElement("div");
+        dot.className = "rewardDot";
+        dot.id = `reward-dot-${i}`;
+        dot.textContent = "＋";
+        rewardTinyList.appendChild(dot);
       });
-      rewardMessage.textContent = "Build a sentence to earn a sticker!";
+
+      rewardProgress.textContent = `🏡 Stickers: 0 / ${STICKERS.length}`;
     }
 
     function addReward(){
-      const slots = document.querySelectorAll(".rewardSlot");
-      if(rewardCount >= slots.length) return;
+      if(rewardCount >= STICKERS.length) return;
 
-      const slot = slots[rewardCount];
-      slot.textContent = REWARDS[rewardCount];
-      slot.classList.add("filled");
+      const sticker = document.getElementById(`sticker-${rewardCount}`);
+      const dot = document.getElementById(`reward-dot-${rewardCount}`);
+
+      if(sticker){
+        sticker.classList.add("show");
+      }
+
+      if(dot){
+        dot.classList.add("filled");
+        dot.textContent = STICKERS[rewardCount].emoji;
+      }
+
       rewardCount++;
-
-      rewardMessage.textContent = `Nice! You earned ${rewardCount} sticker${rewardCount > 1 ? "s" : ""}!`;
+      rewardProgress.textContent = `🏡 Stickers: ${rewardCount} / ${STICKERS.length}`;
     }
 
     function getPromptMode(){
@@ -1921,7 +1865,6 @@
     }
 
     function unlockRoom(roomKey){
-      unlockedRooms.add(roomKey);
       const room = document.getElementById("room-" + roomKey);
       if(room){
         room.classList.remove("locked");
