@@ -1,0 +1,1107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ESC-2-12-1 Market Cashier Challenge</title>
+  <style>
+    :root {
+      --ink: #25334f;
+      --muted: #6e7890;
+      --paper: #fffdf7;
+      --purple: #7954c7;
+      --pink: #f15f85;
+      --orange: #ff9f43;
+      --yellow: #ffd65a;
+      --green: #32bc82;
+      --blue: #47a8dc;
+      --red: #e8505b;
+      --line: #dce4ef;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans SC", sans-serif;
+      background:
+        radial-gradient(circle at 8% 8%, rgba(255, 255, 255, .75) 0 60px, transparent 62px),
+        linear-gradient(145deg, #ffe7a8, #ffc9bd 50%, #c9eafa);
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .app {
+      width: min(1320px, 100%);
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 15px 19px;
+      background: rgba(255, 253, 247, .96);
+      border: 3px solid white;
+      border-radius: 24px;
+      box-shadow: 0 16px 38px rgba(76, 54, 66, .18);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(23px, 3vw, 35px);
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      margin-top: 5px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .stats {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      min-width: 88px;
+      padding: 7px 12px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--muted);
+      background: #f2efff;
+      border-radius: 14px;
+    }
+
+    .stat b {
+      display: block;
+      margin-top: 1px;
+      color: var(--purple);
+      font-size: 20px;
+    }
+
+    .progress {
+      height: 12px;
+      margin: 10px 3px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, .65);
+      border-radius: 99px;
+    }
+
+    #progressFill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--yellow), var(--pink), var(--purple));
+      transition: width .35s ease;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin: 11px 0;
+    }
+
+    .tab {
+      padding: 12px 8px;
+      color: #67738b;
+      font-weight: 950;
+      cursor: pointer;
+      background: rgba(255, 255, 255, .84);
+      border: 0;
+      border-radius: 16px;
+      box-shadow: 0 6px 15px rgba(70, 60, 80, .1);
+      transition: .18s ease;
+    }
+
+    .tab:hover {
+      transform: translateY(-2px);
+    }
+
+    .tab.active {
+      color: white;
+      background: linear-gradient(105deg, #7155ca, #e25a91);
+      box-shadow: 0 8px 18px rgba(113, 85, 202, .28);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(390px, .88fr) minmax(540px, 1.18fr);
+      gap: 15px;
+    }
+
+    .panel {
+      min-height: 620px;
+      padding: 18px;
+      background: rgba(255, 253, 247, .97);
+      border: 3px solid white;
+      border-radius: 25px;
+      box-shadow: 0 18px 42px rgba(76, 54, 66, .2);
+    }
+
+    .task-label {
+      display: inline-block;
+      padding: 6px 12px;
+      color: #6843ad;
+      font-size: 12px;
+      font-weight: 950;
+      background: #eee8ff;
+      border-radius: 99px;
+    }
+
+    .question-card {
+      min-height: 135px;
+      margin: 13px 0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(145deg, #ffffff, #f3f6ff);
+      border: 2px solid #dbe4f2;
+      border-radius: 20px;
+    }
+
+    .question-emoji {
+      font-size: 37px;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+
+    .prompt {
+      font-size: clamp(24px, 3vw, 37px);
+      font-weight: 950;
+      line-height: 1.2;
+    }
+
+    .hint {
+      margin-top: 7px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .choice {
+      min-height: 66px;
+      padding: 11px;
+      color: var(--ink);
+      font-size: 20px;
+      font-weight: 950;
+      cursor: pointer;
+      background: white;
+      border: 2px solid #d5dfeb;
+      border-radius: 16px;
+      box-shadow: 0 5px 0 #d5dfeb;
+      transition: .12s ease;
+    }
+
+    .choice:hover {
+      transform: translateY(-2px);
+      border-color: #9171d0;
+    }
+
+    .choice.correct {
+      color: #167752;
+      background: #dff8eb;
+      border-color: #38b985;
+      box-shadow: 0 5px 0 #8ed7ba;
+    }
+
+    .choice.wrong {
+      color: #b83446;
+      background: #ffe5e9;
+      border-color: #ed6475;
+      box-shadow: 0 5px 0 #efacb5;
+    }
+
+    .feedback {
+      min-height: 34px;
+      margin: 13px 0;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 950;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 9px;
+    }
+
+    .listen,
+    .next,
+    .restart {
+      padding: 12px 15px;
+      font-weight: 950;
+      cursor: pointer;
+      border: 0;
+      border-radius: 14px;
+    }
+
+    .listen {
+      color: #52627b;
+      background: #e9eef5;
+    }
+
+    .next,
+    .restart {
+      flex: 1;
+      color: white;
+      background: linear-gradient(90deg, #27b985, #45c99a);
+    }
+
+    .next:disabled {
+      opacity: .42;
+      cursor: not-allowed;
+    }
+
+    .market-stage {
+      position: relative;
+      min-height: 620px;
+      overflow: hidden;
+      background: linear-gradient(#9de1f5 0 30%, #ffe6a9 30% 100%);
+    }
+
+    .market-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .25;
+      background-image: radial-gradient(#ffffff 2px, transparent 2px);
+      background-size: 34px 34px;
+    }
+
+    .awning {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 76px;
+      z-index: 3;
+      background: repeating-linear-gradient(90deg, #ef5d68 0 72px, #fff6e8 72px 144px);
+      border-bottom: 8px solid #ba3e52;
+      filter: drop-shadow(0 8px 8px rgba(77, 42, 48, .2));
+    }
+
+    .market-sign {
+      position: absolute;
+      z-index: 5;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 9px 24px;
+      color: white;
+      font-size: 25px;
+      font-weight: 950;
+      white-space: nowrap;
+      background: #6843ad;
+      border: 4px solid white;
+      border-radius: 16px;
+      box-shadow: 0 7px 16px rgba(45, 32, 66, .25);
+    }
+
+    .stage-message {
+      position: absolute;
+      z-index: 5;
+      top: 91px;
+      left: 18px;
+      right: 18px;
+      padding: 7px 12px;
+      text-align: center;
+      color: #6843ad;
+      font-weight: 950;
+      background: rgba(255, 255, 255, .86);
+      border-radius: 12px;
+    }
+
+    .vendor {
+      position: absolute;
+      z-index: 3;
+      top: 143px;
+      left: 25px;
+      font-size: 82px;
+      filter: drop-shadow(0 6px 4px rgba(50, 40, 30, .15));
+    }
+
+    .speech {
+      position: absolute;
+      z-index: 4;
+      top: 138px;
+      left: 110px;
+      max-width: 205px;
+      padding: 10px 13px;
+      color: #5b4776;
+      font-weight: 900;
+      background: white;
+      border: 3px solid #ac8bd8;
+      border-radius: 18px;
+    }
+
+    .speech::before {
+      content: "";
+      position: absolute;
+      left: -13px;
+      bottom: 12px;
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-left: 3px solid #ac8bd8;
+      border-bottom: 3px solid #ac8bd8;
+      transform: rotate(45deg);
+    }
+
+    .price-board {
+      position: absolute;
+      z-index: 3;
+      top: 150px;
+      right: 25px;
+      width: 215px;
+      padding: 10px;
+      color: white;
+      text-align: center;
+      background: #355b4e;
+      border: 8px solid #ad7951;
+      border-radius: 8px;
+      box-shadow: 0 8px 14px rgba(50, 42, 30, .22);
+    }
+
+    .price-board strong {
+      display: block;
+      color: #ffe16d;
+      font-size: 24px;
+    }
+
+    .counter {
+      position: absolute;
+      z-index: 2;
+      left: 22px;
+      right: 22px;
+      bottom: 24px;
+      height: 288px;
+      padding: 18px;
+      background: linear-gradient(#f7c77f, #d99b59);
+      border: 9px solid #9b633e;
+      border-radius: 18px 18px 8px 8px;
+      box-shadow: inset 0 10px rgba(255, 255, 255, .22), 0 15px 22px rgba(73, 49, 31, .2);
+    }
+
+    .produce-row {
+      height: 135px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 9px;
+    }
+
+    .produce {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      font-size: 52px;
+      background: #fff4d8;
+      border: 4px solid #b97846;
+      border-radius: 15px;
+      transition: .35s ease;
+    }
+
+    .produce.highlight {
+      transform: translateY(-12px) scale(1.06);
+      border-color: var(--pink);
+      box-shadow: 0 0 0 6px rgba(241, 95, 133, .25);
+    }
+
+    .produce span {
+      margin-top: -2px;
+      font-size: 15px;
+      font-weight: 950;
+    }
+
+    .produce small {
+      color: #806a58;
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .tool-row {
+      display: grid;
+      grid-template-columns: 1.2fr .9fr 1fr;
+      gap: 10px;
+      height: 108px;
+      margin-top: 10px;
+    }
+
+    .basket,
+    .scale,
+    .register {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, .9);
+      border: 3px solid #b77b50;
+      border-radius: 14px;
+    }
+
+    .basket {
+      gap: 2px;
+      padding-top: 26px;
+      font-size: 34px;
+      overflow: hidden;
+      background: repeating-linear-gradient(90deg, #e25d60 0 10px, #f7a8a8 10px 17px);
+      border-color: #ab484d;
+    }
+
+    .basket::before {
+      content: "购物篮";
+      position: absolute;
+      top: 6px;
+      padding: 2px 9px;
+      color: white;
+      font-size: 13px;
+      font-weight: 950;
+      background: #9f3d48;
+      border-radius: 8px;
+    }
+
+    .basket-item {
+      animation: basketPop .4s ease;
+    }
+
+    @keyframes basketPop {
+      from { transform: translateY(-80px) rotate(-15deg); }
+    }
+
+    .scale {
+      flex-direction: column;
+      font-weight: 950;
+    }
+
+    .scale-emoji {
+      font-size: 44px;
+      line-height: .9;
+    }
+
+    .scale-screen {
+      min-width: 80px;
+      margin-top: 5px;
+      padding: 3px 8px;
+      color: #174838;
+      text-align: center;
+      background: #bdf0d2;
+      border: 3px solid #4d796a;
+      border-radius: 7px;
+    }
+
+    .register {
+      flex-direction: column;
+      color: #43516b;
+      font-weight: 950;
+      background: #e6edf5;
+    }
+
+    .register-display {
+      min-width: 92px;
+      padding: 5px 8px;
+      color: #ffe87c;
+      text-align: right;
+      background: #263b38;
+      border-radius: 6px;
+    }
+
+    .money-fly {
+      position: absolute;
+      z-index: 10;
+      right: 60px;
+      bottom: 82px;
+      padding: 7px 12px;
+      color: #9f303d;
+      font-weight: 950;
+      background: #ffd4d8;
+      border: 3px solid #dd6b76;
+      border-radius: 9px;
+      opacity: 0;
+    }
+
+    .money-fly.fly {
+      animation: moneyFly 1.2s ease;
+    }
+
+    @keyframes moneyFly {
+      0% { opacity: 1; transform: translate(140px, 20px) rotate(10deg); }
+      70% { opacity: 1; transform: translate(0, 0) rotate(-5deg); }
+      100% { opacity: 0; transform: translate(-20px, -18px); }
+    }
+
+    .finish {
+      padding: 45px 10px;
+      text-align: center;
+    }
+
+    .finish-icon {
+      font-size: 85px;
+    }
+
+    .finish h2 {
+      margin: 8px;
+      color: var(--purple);
+      font-size: 35px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .confetti {
+      position: fixed;
+      z-index: 30;
+      top: -20px;
+      width: 11px;
+      height: 17px;
+      animation: fall 1.9s linear forwards;
+    }
+
+    @keyframes fall {
+      to { transform: translate(var(--drift), 105vh) rotate(720deg); }
+    }
+
+    @media (max-width: 1000px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .panel,
+      .market-stage {
+        min-height: 620px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .app {
+        padding: 8px;
+      }
+
+      .tabs {
+        grid-template-columns: 1fr;
+      }
+
+      .choices {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        padding: 12px;
+      }
+
+      .produce-row {
+        grid-template-columns: repeat(2, 1fr);
+        height: 215px;
+      }
+
+      .produce {
+        font-size: 39px;
+      }
+
+      .counter {
+        height: 370px;
+      }
+
+      .market-stage {
+        min-height: 700px;
+      }
+
+      .vendor {
+        left: 12px;
+        font-size: 64px;
+      }
+
+      .speech {
+        left: 80px;
+        max-width: 155px;
+        font-size: 13px;
+      }
+
+      .price-board {
+        right: 10px;
+        width: 160px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div>
+        <h1>🧺 ESC-2-12-1 · Market Cashier Challenge</h1>
+        <div class="subtitle">菜市场收银挑战｜New Words 1</div>
+      </div>
+      <div class="stats">
+        <div class="stat">SCORE<b id="score">0</b></div>
+        <div class="stat">COINS<b id="coins">0 🪙</b></div>
+        <div class="stat">QUESTION<b id="counterText">1 / 1</b></div>
+      </div>
+    </header>
+
+    <div class="progress">
+      <div id="progressFill"></div>
+    </div>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="words">
+        1 · Market Words<br>认词 + 买卖动作
+      </button>
+      <button class="tab" data-tab="weigh">
+        2 · Weigh and Price<br>称重 + 计算价格
+      </button>
+      <button class="tab" data-tab="cashier">
+        3 · Cashier Challenge<br>付款 + 找钱
+      </button>
+    </nav>
+
+    <section class="layout">
+      <div class="panel">
+        <div id="quizView">
+          <span class="task-label" id="taskLabel">TASK 1 · MARKET WORD MATCH</span>
+          <div class="question-card">
+            <div class="question-emoji" id="questionEmoji">🏮</div>
+            <div class="prompt" id="prompt"></div>
+            <div class="hint" id="hint"></div>
+          </div>
+          <div class="choices" id="choices"></div>
+          <div class="feedback" id="feedback"></div>
+          <div class="button-row">
+            <button class="listen" id="listenBtn">🔊 Listen</button>
+            <button class="next" id="nextBtn" disabled>Next ▶</button>
+          </div>
+        </div>
+
+        <div class="finish hidden" id="finishView">
+          <div class="finish-icon">🏆🧺🪙</div>
+          <h2>Market Champion!</h2>
+          <p>五种菜市场任务全部完成！</p>
+          <p id="finalScore"></p>
+          <button class="restart" id="restartBtn">Play Again 再玩一次</button>
+        </div>
+      </div>
+
+      <aside class="panel market-stage">
+        <div class="awning"></div>
+        <div class="market-sign">菜市场 · FOOD MARKET</div>
+        <div class="stage-message" id="stageMessage">欢迎来到菜市场！</div>
+        <div class="vendor">👩🏻‍🌾</div>
+        <div class="speech" id="speechBubble">这种鱼怎么卖？</div>
+        <div class="price-board">
+          <span id="boardItem">今日海鲜</span>
+          <strong id="boardPrice">鱼 72块/斤</strong>
+        </div>
+
+        <div class="counter">
+          <div class="produce-row">
+            <div class="produce" data-item="fish">🐟<span>鱼</span><small>72块一斤</small></div>
+            <div class="produce" data-item="shrimp">🦐<span>虾</span><small>68块一斤</small></div>
+            <div class="produce" data-item="apple">🍎<span>苹果</span><small>8块一斤</small></div>
+            <div class="produce" data-item="greens">🥬<span>蔬菜</span><small>5块一斤</small></div>
+          </div>
+          <div class="tool-row">
+            <div class="basket" id="basket"></div>
+            <div class="scale">
+              <div class="scale-emoji">⚖️</div>
+              <div class="scale-screen" id="scaleScreen">0 斤</div>
+            </div>
+            <div class="register">
+              <span>收银机</span>
+              <div class="register-display" id="registerDisplay">¥ 0.00</div>
+            </div>
+          </div>
+        </div>
+        <div class="money-fly" id="moneyFly">人民币 ¥100</div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const WORDS = [
+      { q: "market", a: "市场", options: ["市场", "海鲜", "人民币", "菜"], speak: "市场", emoji: "🏮" },
+      { q: "food market", a: "菜市场", options: ["市场", "菜市场", "海鲜", "人民"], speak: "菜市场", emoji: "🥬" },
+      { q: "buy", a: "买", options: ["买", "卖", "给", "找"], speak: "买", emoji: "🛍️" },
+      { q: "sell", a: "卖", options: ["买", "卖", "给", "找"], speak: "卖", emoji: "🏪" },
+      { q: "seafood", a: "海鲜", options: ["海", "鲜", "海鲜", "市场"], speak: "海鲜", emoji: "🐟" },
+      { q: "kuai; an informal yuan", a: "块", options: ["块", "斤", "毛", "钱"], speak: "块", emoji: "🪙" },
+      { q: "jin; half a kilogram", a: "斤", options: ["块", "斤", "毛", "条"], speak: "斤", emoji: "⚖️" },
+      { q: "RMB; Chinese currency", a: "人民币", options: ["人民", "人民币", "钱", "市场"], speak: "人民币", emoji: "💴" },
+      { q: "shrimp", a: "虾", options: ["鱼", "虾", "鲜", "海"], speak: "虾", emoji: "🦐" },
+      { q: "money", a: "钱", options: ["钱", "块", "毛", "币"], speak: "钱", emoji: "💰" },
+      { q: "mao; one tenth of a yuan", a: "毛", options: ["块", "斤", "毛", "钱"], speak: "毛", emoji: "🪙" },
+      { q: "give", a: "给", options: ["给", "找", "买", "卖"], speak: "给", emoji: "🤲" },
+      { q: "give change", a: "找", options: ["给", "找", "买", "卖"], speak: "找", emoji: "💵" }
+    ];
+
+    const ACTIONS = [
+      { q: "妈妈去菜市场＿＿海鲜。", hint: "Mom goes to the market to buy seafood.", a: "买", options: ["买", "卖", "给", "找"], speak: "妈妈去菜市场买海鲜。", item: "fish" },
+      { q: "阿姨在菜市场＿＿虾。", hint: "The vendor sells shrimp at the market.", a: "卖", options: ["买", "卖", "给", "找"], speak: "阿姨在菜市场卖虾。", item: "shrimp" },
+      { q: "我＿＿她一百块。", hint: "I give her 100 kuai.", a: "给", options: ["给", "找", "买", "卖"], speak: "我给她一百块。", item: "money" },
+      { q: "她＿＿我二十八块。", hint: "She gives me 28 kuai in change.", a: "找", options: ["给", "找", "买", "卖"], speak: "她找我二十八块。", item: "change" },
+      { q: "我是顾客，我来＿＿鱼。", hint: "I am the customer. I come to buy fish.", a: "买", options: ["买", "卖", "给", "找"], speak: "我来买鱼。", item: "fish" },
+      { q: "我是摊主，我来＿＿海鲜。", hint: "I am the vendor. I sell seafood.", a: "卖", options: ["买", "卖", "给", "找"], speak: "我来卖海鲜。", item: "shrimp" }
+    ];
+
+    const WEIGHTS = [
+      { q: "秤上有几斤鱼？", hint: "Look at the market scale.", a: "一斤", options: ["一斤", "两斤", "三斤", "四斤"], speak: "一斤鱼。", item: "fish", weight: 1 },
+      { q: "秤上有几斤虾？", hint: "Look at the market scale.", a: "两斤", options: ["一斤", "两斤", "三斤", "四斤"], speak: "两斤虾。", item: "shrimp", weight: 2 },
+      { q: "妈妈买了三斤苹果。", hint: "Choose the correct weight.", a: "三斤", options: ["一斤", "两斤", "三斤", "四斤"], speak: "三斤苹果。", item: "apple", weight: 3 },
+      { q: "一斤是多重？", hint: "How much is one jin?", a: "半公斤", options: ["半公斤", "一公斤", "两公斤", "五公斤"], speak: "一斤是半公斤。", item: "greens", weight: 1 },
+      { q: "鱼用哪个量词？", hint: "Which measure word is used for fish?", a: "条", options: ["条", "个", "本", "张"], speak: "一条鱼。", item: "fish", weight: 1 },
+      { q: "两条鱼，一共有几条？", hint: "Count the fish.", a: "两条", options: ["一条", "两条", "三条", "四条"], speak: "两条鱼。", item: "fish", weight: 2 }
+    ];
+
+    const PRICES = [
+      { q: "鱼多少钱一斤？", hint: "看右边的价格牌。", a: "72块", options: ["68块", "72块", "80块", "144块"], speak: "鱼七十二块一斤。", item: "fish", weight: 1, unit: 720, total: 720 },
+      { q: "虾多少钱一斤？", hint: "看右边的价格牌。", a: "68块", options: ["58块", "68块", "72块", "136块"], speak: "虾六十八块一斤。", item: "shrimp", weight: 1, unit: 680, total: 680 },
+      { q: "两斤鱼一共多少钱？", hint: "72 × 2 = ?", a: "144块", options: ["72块", "124块", "136块", "144块"], speak: "两斤鱼一共一百四十四块。", item: "fish", weight: 2, unit: 720, total: 1440 },
+      { q: "两斤虾一共多少钱？", hint: "68 × 2 = ?", a: "136块", options: ["68块", "126块", "136块", "146块"], speak: "两斤虾一共一百三十六块。", item: "shrimp", weight: 2, unit: 680, total: 1360 },
+      { q: "三斤苹果一共多少钱？", hint: "8 × 3 = ?", a: "24块", options: ["11块", "16块", "24块", "32块"], speak: "三斤苹果一共二十四块。", item: "apple", weight: 3, unit: 80, total: 240 },
+      { q: "75块5毛应该写成……", hint: "Choose the correct amount.", a: "¥75.50", options: ["¥75.05", "¥75.50", "¥705.00", "¥755.00"], speak: "七十五块五毛。", item: "shrimp", weight: 1, unit: 755, total: 755 }
+    ];
+
+    const CASHIER = [
+      { q: "一共72块，给100块，找多少？", hint: "100 − 72 = ?", a: "28块", options: ["18块", "28块", "32块", "38块"], speak: "找你二十八块。", item: "fish", weight: 1, total: 720, paid: 1000, change: 280 },
+      { q: "一共136块，给200块，找多少？", hint: "200 − 136 = ?", a: "64块", options: ["54块", "64块", "74块", "84块"], speak: "找你六十四块。", item: "shrimp", weight: 2, total: 1360, paid: 2000, change: 640 },
+      { q: "一共24块，给50块，找多少？", hint: "50 − 24 = ?", a: "26块", options: ["16块", "24块", "26块", "36块"], speak: "找你二十六块。", item: "apple", weight: 3, total: 240, paid: 500, change: 260 },
+      { q: "一共75块5毛，给100块，找多少？", hint: "100块 − 75块5毛 = ?", a: "24块5毛", options: ["24块5毛", "25块5毛", "34块5毛", "75块5毛"], speak: "找你二十四块五毛。", item: "shrimp", weight: 1, total: 755, paid: 1000, change: 245 },
+      { q: "一共324块5毛，给400块，找多少？", hint: "400块 − 324块5毛 = ?", a: "75块5毛", options: ["65块5毛", "74块5毛", "75块5毛", "85块5毛"], speak: "找你七十五块五毛。", item: "shrimp", weight: 2, total: 3245, paid: 4000, change: 755 },
+      { q: "一共158块，给200块，找多少？", hint: "200 − 158 = ?", a: "42块", options: ["32块", "35块", "42块", "52块"], speak: "找你四十二块。", item: "fish", weight: 2, total: 1580, paid: 2000, change: 420 },
+      { q: "完成对话：＿＿你七十五块五毛。", hint: "Complete: I give you 75.5 kuai in change.", a: "找", options: ["买", "卖", "给", "找"], speak: "找你七十五块五毛。", item: "change", weight: 0, total: 3245, paid: 4000, change: 755 }
+    ];
+
+    const $ = id => document.getElementById(id);
+
+    const shuffle = source => {
+      const array = [...source];
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    };
+
+    let tab = "words";
+    let task = "vocab";
+    let index = 0;
+    let score = 0;
+    let coins = 0;
+    let locked = false;
+
+    function currentData() {
+      if (tab === "words") return task === "vocab" ? WORDS : ACTIONS;
+      if (tab === "weigh") return task === "weight" ? WEIGHTS : PRICES;
+      return CASHIER;
+    }
+
+    function taskTitle() {
+      if (tab === "words" && task === "vocab") return "TASK 1 · MARKET WORD MATCH 市场词汇";
+      if (tab === "words") return "TASK 2 · BUY OR SELL 买卖动作";
+      if (tab === "weigh" && task === "weight") return "TASK 3 · MARKET SCALE 市场称重";
+      if (tab === "weigh") return "TASK 4 · HOW MUCH? 计算价格";
+      return "TASK 5 · PAY AND MAKE CHANGE 付款找钱";
+    }
+
+    function taskEmoji() {
+      if (tab === "words") return task === "vocab" ? "🏮" : "🛍️";
+      if (tab === "weigh") return task === "weight" ? "⚖️" : "🧮";
+      return "💵";
+    }
+
+    function speak(text) {
+      if (!("speechSynthesis" in window)) return;
+      speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "zh-CN";
+      utterance.rate = .78;
+      speechSynthesis.speak(utterance);
+    }
+
+    function switchTab(nextTab) {
+      tab = nextTab;
+      task = tab === "words" ? "vocab" : tab === "weigh" ? "weight" : "cashier";
+      index = 0;
+      locked = false;
+      $("finishView").classList.add("hidden");
+      $("quizView").classList.remove("hidden");
+
+      document.querySelectorAll(".tab").forEach(button => {
+        button.classList.toggle("active", button.dataset.tab === tab);
+      });
+
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const data = currentData();
+
+      if (index >= data.length) {
+        if (tab === "words" && task === "vocab") {
+          task = "actions";
+          index = 0;
+          renderQuestion();
+          return;
+        }
+
+        if (tab === "weigh" && task === "weight") {
+          task = "prices";
+          index = 0;
+          renderQuestion();
+          return;
+        }
+
+        if (tab === "cashier") {
+          finishGame();
+          return;
+        }
+
+        $("feedback").style.color = "#24966d";
+        $("feedback").textContent = "✓ This tab is complete! 这个部分完成了！";
+        $("nextBtn").disabled = true;
+        $("counterText").textContent = "Done!";
+        $("progressFill").style.width = "100%";
+        return;
+      }
+
+      locked = false;
+      const item = data[index];
+
+      $("taskLabel").textContent = taskTitle();
+      $("questionEmoji").textContent = item.emoji || taskEmoji();
+      $("prompt").textContent = item.q;
+      $("hint").textContent = item.hint || "Choose the correct Chinese word. 选择正确答案。";
+      $("feedback").textContent = "";
+      $("nextBtn").disabled = true;
+      $("counterText").textContent = `${index + 1} / ${data.length}`;
+      $("progressFill").style.width = `${index / data.length * 100}%`;
+
+      const choices = $("choices");
+      choices.innerHTML = "";
+
+      shuffle(item.options).forEach(option => {
+        const button = document.createElement("button");
+        button.className = "choice";
+        button.textContent = option;
+        button.onclick = () => chooseAnswer(button, option);
+        choices.appendChild(button);
+      });
+
+      updateMarket(item);
+      updateStats();
+    }
+
+    function chooseAnswer(button, answer) {
+      if (locked) return;
+      locked = true;
+
+      const item = currentData()[index];
+
+      document.querySelectorAll(".choice").forEach(choice => {
+        if (choice.textContent === item.a) choice.classList.add("correct");
+      });
+
+      if (answer === item.a) {
+        button.classList.add("correct");
+        score += tab === "cashier" ? 150 : 100;
+        coins += 1;
+        $("feedback").style.color = "#24966d";
+        $("feedback").textContent = "✓ Correct! 太棒了，交易成功！";
+        speak(item.speak || item.a);
+        rewardMarket(item);
+        confettiBurst();
+      } else {
+        button.classList.add("wrong");
+        $("feedback").style.color = "#d9485c";
+        $("feedback").textContent = `再想一想！正确答案是：${item.a}`;
+      }
+
+      $("nextBtn").disabled = false;
+      $("progressFill").style.width = `${(index + 1) / currentData().length * 100}%`;
+      updateStats();
+    }
+
+    function updateMarket(item) {
+      document.querySelectorAll(".produce").forEach(product => {
+        product.classList.toggle("highlight", product.dataset.item === item.item);
+      });
+
+      if (tab === "words") {
+        $("stageMessage").textContent = task === "vocab"
+          ? "认识菜市场里的新词"
+          : "顾客买东西，摊主卖东西";
+        $("speechBubble").textContent = item.speak || item.q;
+        $("scaleScreen").textContent = "0 斤";
+        $("registerDisplay").textContent = "¥ 0.00";
+      }
+
+      if (tab === "weigh") {
+        $("stageMessage").textContent = task === "weight"
+          ? "看秤读重量"
+          : "单价 × 重量 = 总价";
+        $("speechBubble").textContent = item.q;
+        $("scaleScreen").textContent = `${item.weight || 0} 斤`;
+        $("registerDisplay").textContent = task === "prices"
+          ? formatMoney(item.total)
+          : "¥ 0.00";
+      }
+
+      if (tab === "cashier") {
+        $("stageMessage").textContent = "总价 → 付款 → 找钱";
+        $("speechBubble").textContent = `给你${moneyChinese(item.paid)}`;
+        $("scaleScreen").textContent = `${item.weight || 0} 斤`;
+        $("registerDisplay").textContent = formatMoney(item.total);
+      }
+
+      updateBoard(item);
+    }
+
+    function updateBoard(item) {
+      const names = {
+        fish: "鱼",
+        shrimp: "虾",
+        apple: "苹果",
+        greens: "蔬菜"
+      };
+
+      const prices = {
+        fish: "72块/斤",
+        shrimp: "68块/斤",
+        apple: "8块/斤",
+        greens: "5块/斤"
+      };
+
+      if (names[item.item]) {
+        $("boardItem").textContent = names[item.item];
+        $("boardPrice").textContent = prices[item.item];
+      } else {
+        $("boardItem").textContent = "今日海鲜";
+        $("boardPrice").textContent = "鱼 72块/斤";
+      }
+    }
+
+    function rewardMarket(item) {
+      if (["fish", "shrimp", "apple", "greens"].includes(item.item)) {
+        const emoji = {
+          fish: "🐟",
+          shrimp: "🦐",
+          apple: "🍎",
+          greens: "🥬"
+        }[item.item];
+
+        const basketItem = document.createElement("span");
+        basketItem.className = "basket-item";
+        basketItem.textContent = emoji;
+        $("basket").appendChild(basketItem);
+
+        while ($("basket").children.length > 5) {
+          $("basket").firstElementChild.remove();
+        }
+      }
+
+      if (tab === "cashier" || item.item === "money" || item.item === "change") {
+        const money = tab === "cashier" ? item.change : item.item === "money" ? 1000 : 280;
+        $("moneyFly").textContent = tab === "cashier"
+          ? `找钱 ${moneyChinese(money)}`
+          : item.item === "money" ? "人民币 ¥100" : "找钱 ¥28";
+        $("moneyFly").classList.remove("fly");
+        void $("moneyFly").offsetWidth;
+        $("moneyFly").classList.add("fly");
+      }
+    }
+
+    function formatMoney(jiao) {
+      if (typeof jiao !== "number") return "¥ 0.00";
+      return `¥ ${(jiao / 10).toFixed(2)}`;
+    }
+
+    function moneyChinese(jiao) {
+      if (typeof jiao !== "number") return "一些钱";
+      const yuan = Math.floor(jiao / 10);
+      const mao = jiao % 10;
+      return mao ? `${yuan}块${mao}毛` : `${yuan}块`;
+    }
+
+    function updateStats() {
+      $("score").textContent = score;
+      $("coins").textContent = `${coins} 🪙`;
+    }
+
+    function nextQuestion() {
+      index += 1;
+      renderQuestion();
+    }
+
+    function finishGame() {
+      $("quizView").classList.add("hidden");
+      $("finishView").classList.remove("hidden");
+      $("finalScore").textContent = `Final Score: ${score} · Coins: ${coins}`;
+      $("counterText").textContent = "Done!";
+      $("progressFill").style.width = "100%";
+      $("stageMessage").textContent = "今天的菜市场任务全部完成！";
+      $("speechBubble").textContent = "谢谢！欢迎下次再来！";
+
+      for (let i = 0; i < 5; i++) {
+        setTimeout(confettiBurst, i * 350);
+      }
+    }
+
+    function restartGame() {
+      score = 0;
+      coins = 0;
+      $("basket").innerHTML = "";
+      updateStats();
+      switchTab("words");
+    }
+
+    function confettiBurst() {
+      const colors = ["#ffd65a", "#f15f85", "#32bc82", "#7954c7", "#47a8dc"];
+
+      for (let i = 0; i < 25; i++) {
+        const piece = document.createElement("i");
+        piece.className = "confetti";
+        piece.style.left = Math.random() * 100 + "vw";
+        piece.style.background = colors[i % colors.length];
+        piece.style.setProperty("--drift", Math.random() * 180 - 90 + "px");
+        piece.style.animationDelay = Math.random() * .25 + "s";
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 2200);
+      }
+    }
+
+    document.querySelectorAll(".tab").forEach(button => {
+      button.onclick = () => switchTab(button.dataset.tab);
+    });
+
+    $("listenBtn").onclick = () => {
+      const item = currentData()[index];
+      if (item) speak(item.speak || item.q);
+    };
+
+    $("nextBtn").onclick = nextQuestion;
+    $("restartBtn").onclick = restartGame;
+
+    renderQuestion();
+  </script>
+</body>
+</html>
