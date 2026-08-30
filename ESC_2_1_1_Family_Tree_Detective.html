@@ -1,0 +1,1200 @@
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ESC-2-1-1 Family Tree Detective</title>
+  <style>
+    :root {
+      --ink: #27314c;
+      --muted: #6e7890;
+      --paper: #fffdf8;
+      --purple: #7558c7;
+      --blue: #4e9dd6;
+      --green: #3cb482;
+      --gold: #f4bd4f;
+      --pink: #e96b8f;
+      --red: #df5965;
+      --line: #dce4ef;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans SC", sans-serif;
+      background:
+        radial-gradient(circle at 10% 8%, rgba(255,255,255,.65) 0 70px, transparent 72px),
+        linear-gradient(145deg, #dff0ff, #eadbff 48%, #ffd9ca);
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .app {
+      width: min(1360px, 100%);
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 15px 19px;
+      background: rgba(255,253,248,.96);
+      border: 3px solid white;
+      border-radius: 24px;
+      box-shadow: 0 16px 38px rgba(60,54,90,.18);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(23px, 3vw, 35px);
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      margin-top: 5px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .stats {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      min-width: 88px;
+      padding: 7px 12px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 12px;
+      font-weight: 900;
+      background: #f1edff;
+      border-radius: 14px;
+    }
+
+    .stat b {
+      display: block;
+      color: var(--purple);
+      font-size: 20px;
+    }
+
+    .progress {
+      height: 12px;
+      margin: 10px 3px;
+      overflow: hidden;
+      background: rgba(255,255,255,.7);
+      border-radius: 99px;
+    }
+
+    #progressFill {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--pink), var(--purple));
+      transition: width .35s ease;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin: 11px 0;
+    }
+
+    .tab {
+      padding: 12px 8px;
+      color: #69738a;
+      font-weight: 950;
+      cursor: pointer;
+      background: rgba(255,255,255,.86);
+      border: 0;
+      border-radius: 16px;
+      box-shadow: 0 6px 15px rgba(65,55,90,.1);
+      transition: .18s ease;
+    }
+
+    .tab:hover {
+      transform: translateY(-2px);
+    }
+
+    .tab.active {
+      color: white;
+      background: linear-gradient(105deg, #6656c8, #9b68d4);
+      box-shadow: 0 8px 18px rgba(102,86,200,.28);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(390px, .84fr) minmax(600px, 1.25fr);
+      gap: 15px;
+    }
+
+    .panel {
+      min-height: 670px;
+      padding: 18px;
+      background: rgba(255,253,248,.97);
+      border: 3px solid white;
+      border-radius: 25px;
+      box-shadow: 0 18px 42px rgba(60,54,90,.2);
+    }
+
+    .task-label {
+      display: inline-block;
+      padding: 6px 12px;
+      color: #6543aa;
+      font-size: 12px;
+      font-weight: 950;
+      background: #eee8ff;
+      border-radius: 99px;
+    }
+
+    .question-card {
+      min-height: 145px;
+      margin: 13px 0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: linear-gradient(145deg, #fff, #f5f3ff);
+      border: 2px solid #e1dcef;
+      border-radius: 20px;
+    }
+
+    .question-icon {
+      margin-bottom: 4px;
+      font-size: 39px;
+      line-height: 1;
+    }
+
+    .prompt {
+      font-size: clamp(24px, 3vw, 37px);
+      font-weight: 950;
+      line-height: 1.2;
+    }
+
+    .hint {
+      margin-top: 7px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .choice {
+      min-height: 66px;
+      padding: 11px;
+      color: var(--ink);
+      font-size: 20px;
+      font-weight: 950;
+      cursor: pointer;
+      background: white;
+      border: 2px solid #dcd9e7;
+      border-radius: 16px;
+      box-shadow: 0 5px 0 #dcd9e7;
+      transition: .12s ease;
+    }
+
+    .choice:hover {
+      transform: translateY(-2px);
+      border-color: #896dcc;
+    }
+
+    .choice.correct {
+      color: #167752;
+      background: #dff8eb;
+      border-color: #38b985;
+      box-shadow: 0 5px 0 #8ed7ba;
+    }
+
+    .choice.wrong {
+      color: #b83446;
+      background: #ffe5e9;
+      border-color: #ed6475;
+      box-shadow: 0 5px 0 #efacb5;
+    }
+
+    .feedback {
+      min-height: 34px;
+      margin: 13px 0;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 950;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 9px;
+    }
+
+    .listen,
+    .next,
+    .restart,
+    .check,
+    .clear {
+      padding: 12px 15px;
+      font-weight: 950;
+      cursor: pointer;
+      border: 0;
+      border-radius: 14px;
+    }
+
+    .listen,
+    .clear {
+      color: #52627b;
+      background: #e9eef5;
+    }
+
+    .next,
+    .restart,
+    .check {
+      flex: 1;
+      color: white;
+      background: linear-gradient(90deg, #6656c8, #9370d7);
+    }
+
+    .next:disabled {
+      opacity: .42;
+      cursor: not-allowed;
+    }
+
+    .sentence-zone {
+      min-height: 92px;
+      margin: 12px 0;
+      padding: 11px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      background: white;
+      border: 3px dashed #8f80ce;
+      border-radius: 16px;
+    }
+
+    .tiles {
+      min-height: 105px;
+      padding: 11px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      background: #eef1f7;
+      border-radius: 16px;
+    }
+
+    .tile {
+      padding: 9px 13px;
+      color: #503b86;
+      font-size: 20px;
+      font-weight: 950;
+      cursor: pointer;
+      background: white;
+      border: 2px solid #9b88d0;
+      border-radius: 11px;
+      box-shadow: 0 3px 0 #c4b8df;
+    }
+
+    .scene {
+      position: relative;
+      min-height: 670px;
+      overflow: hidden;
+      padding: 0;
+      background:
+        linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,.08)),
+        linear-gradient(#e8f7ff 0 67%, #d5b18a 67% 100%);
+    }
+
+    .wall-title {
+      position: absolute;
+      z-index: 8;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 25px;
+      color: white;
+      font-size: 25px;
+      font-weight: 950;
+      white-space: nowrap;
+      background: #6543aa;
+      border: 4px solid white;
+      border-radius: 16px;
+      box-shadow: 0 8px 17px rgba(48,35,78,.24);
+    }
+
+    .stage-message {
+      position: absolute;
+      z-index: 8;
+      top: 88px;
+      left: 25px;
+      right: 25px;
+      padding: 7px 12px;
+      color: #5d468d;
+      text-align: center;
+      font-weight: 950;
+      background: rgba(255,255,255,.9);
+      border: 3px solid #c7b5e9;
+      border-radius: 12px;
+    }
+
+    .tree-shell {
+      position: absolute;
+      z-index: 4;
+      top: 130px;
+      left: 50%;
+      width: 650px;
+      height: 505px;
+      transform: translateX(-50%);
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 36%, rgba(103,177,104,.3) 0 38%, transparent 39%),
+        linear-gradient(90deg, transparent 47%, #9b6d45 47% 53%, transparent 53%);
+      border: 4px solid white;
+      border-radius: 24px;
+      box-shadow: 0 14px 30px rgba(68,63,92,.16);
+    }
+
+    .tree-lines {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .tree-lines path {
+      fill: none;
+      stroke: #7659b4;
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: .6;
+    }
+
+    .family-card {
+      position: absolute;
+      z-index: 3;
+      width: 88px;
+      height: 105px;
+      padding: 6px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #39445d;
+      background: white;
+      border: 4px solid #d9ccef;
+      border-radius: 15px;
+      box-shadow: 0 8px 14px rgba(50,44,72,.18);
+      opacity: .15;
+      filter: grayscale(1);
+      transform: scale(.82);
+      transition: .4s ease;
+    }
+
+    .family-card.revealed {
+      opacity: 1;
+      filter: none;
+      transform: scale(1);
+      animation: photoIn .55s ease;
+    }
+
+    @keyframes photoIn {
+      from {
+        transform: translateY(-70px) rotate(-8deg) scale(.4);
+      }
+    }
+
+    .portrait {
+      font-size: 38px;
+      line-height: 1;
+    }
+
+    .family-card strong {
+      margin-top: 3px;
+      font-size: 14px;
+    }
+
+    .family-card small {
+      color: #778099;
+      font-size: 9px;
+      text-align: center;
+      line-height: 1.05;
+    }
+
+    .grandpa { left: 232px; top: 10px; }
+    .grandma { left: 330px; top: 10px; }
+    .father { left: 42px; top: 205px; }
+    .mother { left: 137px; top: 205px; }
+    .uncle2 { left: 245px; top: 205px; }
+    .aunt2 { left: 340px; top: 205px; }
+    .uncle3 { left: 448px; top: 205px; }
+    .aunt3 { left: 543px; top: 205px; }
+    .me { left: 90px; top: 380px; }
+    .boy { left: 260px; top: 380px; }
+    .girl { left: 355px; top: 380px; }
+
+    .branch-label {
+      position: absolute;
+      z-index: 4;
+      padding: 3px 8px;
+      color: white;
+      font-size: 11px;
+      font-weight: 950;
+      background: #7558c7;
+      border-radius: 99px;
+    }
+
+    .label-parents { left: 78px; top: 322px; }
+    .label-uncle2 { left: 275px; top: 322px; }
+    .label-uncle3 { left: 482px; top: 322px; }
+
+    .album-strip {
+      position: absolute;
+      z-index: 12;
+      left: 20px;
+      right: 20px;
+      bottom: 14px;
+      min-height: 58px;
+      padding: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: rgba(255,255,255,.9);
+      border: 3px solid #cbbce8;
+      border-radius: 15px;
+    }
+
+    .photo-reward {
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 27px;
+      background: white;
+      border: 3px solid #e0d7f1;
+      border-radius: 9px;
+      box-shadow: 0 4px 7px rgba(55,45,75,.17);
+      animation: photoPop .45s ease;
+    }
+
+    @keyframes photoPop {
+      from { transform: translateY(-80px) rotate(-12deg) scale(.3); }
+    }
+
+    .number-badges {
+      position: absolute;
+      z-index: 13;
+      left: 50%;
+      bottom: 13px;
+      width: 575px;
+      transform: translateX(-50%);
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .number-badges.show {
+      display: grid;
+    }
+
+    .number-badge {
+      padding: 9px 5px;
+      color: #5d468d;
+      text-align: center;
+      font-weight: 950;
+      background: white;
+      border: 3px solid #c7b5e9;
+      border-radius: 13px;
+      opacity: .25;
+      transition: .3s ease;
+    }
+
+    .number-badge.on {
+      opacity: 1;
+      color: white;
+      background: #7558c7;
+      transform: translateY(-7px);
+    }
+
+    .time-scene {
+      position: absolute;
+      z-index: 14;
+      top: 150px;
+      left: 50%;
+      width: 590px;
+      transform: translateX(-50%);
+      display: none;
+      padding: 22px;
+      background: rgba(255,255,255,.96);
+      border: 4px solid #c6b3e8;
+      border-radius: 22px;
+      box-shadow: 0 14px 28px rgba(54,43,82,.22);
+    }
+
+    .time-scene.show {
+      display: block;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .year {
+      padding: 12px 5px;
+      text-align: center;
+      font-weight: 950;
+      background: #f1eef8;
+      border: 3px solid #d3cae7;
+      border-radius: 13px;
+    }
+
+    .year.active {
+      color: white;
+      background: #7558c7;
+      transform: translateY(-6px);
+    }
+
+    .meeting-card {
+      margin-top: 18px;
+      padding: 14px;
+      text-align: center;
+      font-size: 21px;
+      font-weight: 950;
+      background: #fff3da;
+      border: 3px solid #efbe55;
+      border-radius: 15px;
+    }
+
+    .sticker-row {
+      min-height: 50px;
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      font-size: 35px;
+    }
+
+    .sticker {
+      animation: stickerIn .45s ease;
+    }
+
+    @keyframes stickerIn {
+      from { transform: scale(0) rotate(-30deg); }
+    }
+
+    .finish {
+      padding: 45px 10px;
+      text-align: center;
+    }
+
+    .finish-icon {
+      font-size: 85px;
+    }
+
+    .finish h2 {
+      margin: 8px;
+      color: var(--purple);
+      font-size: 35px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .confetti {
+      position: fixed;
+      z-index: 30;
+      top: -20px;
+      width: 11px;
+      height: 17px;
+      animation: fall 1.9s linear forwards;
+    }
+
+    @keyframes fall {
+      to { transform: translate(var(--drift), 105vh) rotate(720deg); }
+    }
+
+    @media (max-width: 1050px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .panel,
+      .scene {
+        min-height: 670px;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .app { padding: 8px; }
+      .tabs { grid-template-columns: 1fr; }
+      .choices { grid-template-columns: 1fr; }
+      .panel { padding: 12px; }
+      .scene { min-height: 535px; }
+      .tree-shell {
+        transform: translateX(-50%) scale(.74);
+        transform-origin: top;
+      }
+      .time-scene {
+        transform: translateX(-50%) scale(.76);
+        transform-origin: top;
+      }
+      .number-badges {
+        transform: translateX(-50%) scale(.74);
+        transform-origin: bottom;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div>
+        <h1>🌳 ESC-2-1-1 · Family Tree Detective</h1>
+        <div class="subtitle">亲戚家庭树侦探｜Word List 1</div>
+      </div>
+      <div class="stats">
+        <div class="stat">SCORE<b id="score">0</b></div>
+        <div class="stat">PHOTOS<b id="photoCount">0 📷</b></div>
+        <div class="stat">QUESTION<b id="counterText">1 / 1</b></div>
+      </div>
+    </header>
+
+    <div class="progress"><div id="progressFill"></div></div>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="words">1 · Relative Words<br>词汇 + Who Am I</button>
+      <button class="tab" data-tab="tree">2 · Build the Family Tree<br>家庭关系 + 人数</button>
+      <button class="tab" data-tab="time">3 · Family Time & Meetings<br>去年结婚 + 见面 + 组句</button>
+    </nav>
+
+    <section class="layout">
+      <div class="panel">
+        <div id="quizView">
+          <span class="task-label" id="taskLabel">TASK 1 · RELATIVE WORDS</span>
+          <div class="question-card">
+            <div class="question-icon" id="questionIcon">👪</div>
+            <div class="prompt" id="prompt"></div>
+            <div class="hint" id="hint"></div>
+          </div>
+          <div class="choices" id="choices"></div>
+          <div class="feedback" id="feedback"></div>
+          <div class="button-row">
+            <button class="listen" id="listenBtn">🔊 Listen</button>
+            <button class="next" id="nextBtn" disabled>Next ▶</button>
+          </div>
+        </div>
+
+        <div id="sentenceView" class="hidden">
+          <span class="task-label">TASK 5 · SENTENCE BUILDER 句子挑战</span>
+          <div class="question-card">
+            <div class="question-icon">🧩</div>
+            <div class="prompt">Build the sentence</div>
+            <div class="hint" id="sentenceHint"></div>
+          </div>
+          <div class="sentence-zone" id="answerZone"></div>
+          <div class="tiles" id="tiles"></div>
+          <div class="feedback" id="sentenceFeedback"></div>
+          <div class="button-row">
+            <button class="clear" id="clearBtn">↩ Clear</button>
+            <button class="check" id="checkBtn">✓ Check Answer</button>
+          </div>
+        </div>
+
+        <div id="finishView" class="finish hidden">
+          <div class="finish-icon">🏆🌳📷</div>
+          <h2>Family Tree Champion!</h2>
+          <p>家庭树完成，所有亲戚关系都找对了！</p>
+          <p id="finalScore"></p>
+          <button class="restart" id="restartBtn">Play Again 再玩一次</button>
+        </div>
+      </div>
+
+      <aside class="panel scene">
+        <div class="wall-title">我的家庭树 · MY FAMILY TREE</div>
+        <div class="stage-message" id="stageMessage">答对问题，收集家庭照片！</div>
+
+        <div class="tree-shell" id="treeShell">
+          <svg class="tree-lines" viewBox="0 0 650 505" aria-hidden="true">
+            <path d="M276 62 H374 M325 62 V160 H134 V205 M325 160 H337 V205 M325 160 H540 V205" />
+            <path d="M86 257 H181 M134 257 V350 V380" />
+            <path d="M289 257 H384 M337 257 V350 H304 V380 M337 350 H399 V380" />
+            <path d="M492 257 H587" />
+          </svg>
+
+          <div class="family-card grandpa" data-person="grandpa"><div class="portrait">👴🏻</div><strong>爷爷</strong><small>father's father</small></div>
+          <div class="family-card grandma" data-person="grandma"><div class="portrait">👵🏻</div><strong>奶奶</strong><small>father's mother</small></div>
+          <div class="family-card father" data-person="father"><div class="portrait">👨🏻</div><strong>爸爸</strong><small>father</small></div>
+          <div class="family-card mother" data-person="mother"><div class="portrait">👩🏻</div><strong>妈妈</strong><small>mother</small></div>
+          <div class="family-card uncle2" data-person="uncle2"><div class="portrait">👨🏻‍🦱</div><strong>二叔</strong><small>younger uncle</small></div>
+          <div class="family-card aunt2" data-person="aunt2"><div class="portrait">👩🏻‍🦱</div><strong>二婶</strong><small>uncle's wife</small></div>
+          <div class="family-card uncle3" data-person="uncle3"><div class="portrait">🧔🏻</div><strong>三叔</strong><small>younger uncle</small></div>
+          <div class="family-card aunt3" data-person="aunt3"><div class="portrait">👩🏻</div><strong>三婶</strong><small>uncle's wife</small></div>
+          <div class="family-card me" data-person="me"><div class="portrait">👦🏻</div><strong>我（儿子）</strong><small>me · son</small></div>
+          <div class="family-card boy" data-person="boy"><div class="portrait">🧑🏻‍🦱</div><strong>男孩儿</strong><small>son</small></div>
+          <div class="family-card girl" data-person="girl"><div class="portrait">👧🏻</div><strong>女孩儿</strong><small>daughter</small></div>
+
+          <div class="branch-label label-parents">爸爸家</div>
+          <div class="branch-label label-uncle2">两个孩子</div>
+          <div class="branch-label label-uncle3">去年结婚</div>
+        </div>
+
+        <div class="album-strip" id="albumStrip"><strong>家庭相册：</strong></div>
+
+        <div class="number-badges" id="numberBadges">
+          <div class="number-badge" data-badge="sons">爷爷奶奶：3个儿子</div>
+          <div class="number-badge" data-badge="daughters">爷爷奶奶：0个女儿</div>
+          <div class="number-badge" data-badge="children">二叔二婶：2个孩子</div>
+        </div>
+
+        <div class="time-scene" id="timeScene">
+          <h2 style="margin:0;text-align:center">家庭时间线 · Family Timeline</h2>
+          <div class="timeline">
+            <div class="year" data-year="前年">前年</div>
+            <div class="year" data-year="去年">去年</div>
+            <div class="year" data-year="今年">今年</div>
+            <div class="year" data-year="明年">明年</div>
+          </div>
+          <div class="meeting-card">📅 每个星期天<br>我都跟爷爷、奶奶见面。</div>
+          <div class="sticker-row" id="stickerRow"></div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const WORDS = [
+      { q:"relative", a:"亲戚", options:["亲戚","孩子","见面","结婚"], speak:"亲戚", icon:"👪" },
+      { q:"Nanjing", a:"南京", options:["南京","北京","上海","香港"], speak:"南京", icon:"🏯" },
+      { q:"father's father", a:"爷爷", options:["爷爷","奶奶","叔叔","婶婶"], speak:"爷爷", icon:"👴🏻", person:"grandpa" },
+      { q:"father's mother", a:"奶奶", options:["爷爷","奶奶","叔叔","婶婶"], speak:"奶奶", icon:"👵🏻", person:"grandma" },
+      { q:"son", a:"儿子", options:["儿子","女儿","孩子","男孩儿"], speak:"儿子", icon:"👦🏻" },
+      { q:"daughter", a:"女儿", options:["儿子","女儿","孩子","男孩儿"], speak:"女儿", icon:"👧🏻" },
+      { q:"father's younger brother", a:"叔叔", options:["爷爷","奶奶","叔叔","婶婶"], speak:"叔叔", icon:"👨🏻‍🦱", person:"uncle2" },
+      { q:"wife of father's younger brother", a:"婶婶", options:["爷爷","奶奶","叔叔","婶婶"], speak:"婶婶", icon:"👩🏻‍🦱", person:"aunt2" },
+      { q:"child; children", a:"孩子", options:["亲戚","孩子","儿子","女儿"], speak:"孩子", icon:"🧒🏻" },
+      { q:"boy", a:"男孩儿", options:["男人","男孩儿","儿子们","孩子"], speak:"男孩儿", icon:"👦🏻", person:"boy" },
+      { q:"last year", a:"去年", options:["前年","去年","今年","明年"], speak:"去年", icon:"📅" },
+      { q:"get married", a:"结婚", options:["结婚","见面","亲戚","去年"], speak:"结婚", icon:"💍" },
+      { q:"meet; see", a:"见面", options:["结婚","见面","亲戚","孩子"], speak:"见面", icon:"🤝" }
+    ];
+
+    const WHO = [
+      { q:"我是爸爸的爸爸。我是谁？", hint:"I am Dad's father. Who am I?", a:"爷爷", options:["爷爷","奶奶","叔叔","婶婶"], speak:"我是爷爷。", person:"grandpa" },
+      { q:"我是爸爸的妈妈。我是谁？", hint:"I am Dad's mother. Who am I?", a:"奶奶", options:["爷爷","奶奶","叔叔","婶婶"], speak:"我是奶奶。", person:"grandma" },
+      { q:"我是爸爸的弟弟。我是谁？", hint:"I am Dad's younger brother. Who am I?", a:"叔叔", options:["爷爷","奶奶","叔叔","婶婶"], speak:"我是叔叔。", person:"uncle2" },
+      { q:"我是叔叔的妻子。我是谁？", hint:"I am Uncle's wife. Who am I?", a:"婶婶", options:["爷爷","奶奶","叔叔","婶婶"], speak:"我是婶婶。", person:"aunt2" },
+      { q:"我是爸爸妈妈的男孩子。我是谁？", hint:"I am my parents' male child.", a:"儿子", options:["儿子","女儿","叔叔","亲戚"], speak:"我是儿子。", reveal:["father","mother","me"] },
+      { q:"我是叔叔、婶婶的女孩子。我是谁？", hint:"I am Uncle and Aunt's female child.", a:"女儿", options:["儿子","女儿","奶奶","婶婶"], speak:"我是女儿。", reveal:["uncle2","aunt2","girl"] },
+      { q:"我是去年结婚的叔叔。我是谁？", hint:"I am the uncle who got married last year.", a:"三叔", options:["爸爸","二叔","三叔","爷爷"], speak:"三叔是去年结婚的。", reveal:["uncle3"] },
+      { q:"我是三叔的妻子。我是谁？", hint:"I am Third Uncle's wife. Who am I?", a:"三婶", options:["妈妈","二婶","三婶","奶奶"], speak:"我是三婶。", reveal:["uncle3","aunt3"] }
+    ];
+
+    const TREE = [
+      { q:"爷爷和奶奶在家庭树的哪一层？", hint:"Where do the grandparents belong?", a:"第一层", options:["第一层","第二层","第三层","树外面"], speak:"爷爷和奶奶在第一层。", reveal:["grandpa","grandma"] },
+      { q:"爸爸是谁的儿子？", hint:"Whose son is Dad?", a:"爷爷、奶奶", options:["爷爷、奶奶","叔叔、婶婶","男孩儿、女孩儿","爸爸、妈妈"], speak:"爸爸是爷爷奶奶的儿子。", reveal:["father","mother"] },
+      { q:"二叔和谁结婚？", hint:"Who is married to Second Uncle?", a:"二婶", options:["奶奶","妈妈","二婶","女孩儿"], speak:"二叔和二婶结婚。", reveal:["uncle2","aunt2"] },
+      { q:"三叔是谁的儿子？", hint:"Whose son is Third Uncle?", a:"爷爷、奶奶", options:["爷爷、奶奶","二叔、二婶","爸爸、妈妈","男孩儿、女孩儿"], speak:"三叔是爷爷奶奶的儿子。", reveal:["uncle3","aunt3"] },
+      { q:"男孩儿和女孩儿是谁的孩子？", hint:"Whose children are the boy and girl?", a:"二叔、二婶", options:["爸爸、妈妈","爷爷、奶奶","二叔、二婶","三叔、三婶"], speak:"他们是二叔二婶的孩子。", reveal:["boy","girl"] },
+      { q:"“我”应该放在哪个家庭下面？", hint:"Which branch does “I” belong under?", a:"爸爸、妈妈", options:["爸爸、妈妈","爷爷、奶奶","二叔、二婶","三叔、三婶"], speak:"我在爸爸妈妈下面。", reveal:["me"] }
+    ];
+
+    const NUMBERS = [
+      { q:"爷爷、奶奶有几个儿子？", hint:"How many sons do the grandparents have?", a:"三个", options:["一个","两个","三个","四个"], speak:"爷爷奶奶有三个儿子。", badge:"sons" },
+      { q:"爷爷、奶奶有女儿吗？", hint:"Do the grandparents have a daughter?", a:"没有", options:["有一个","有两个","有三个","没有"], speak:"爷爷奶奶没有女儿。", badge:"daughters" },
+      { q:"二叔和二婶有几个孩子？", hint:"How many children do Second Uncle and Aunt have?", a:"两个", options:["一个","两个","三个","没有"], speak:"二叔二婶有两个孩子。", badge:"children" },
+      { q:"两个孩子是什么？", hint:"Who are the two children?", a:"一个男孩儿、一个女孩儿", options:["两个男孩儿","两个女孩儿","一个男孩儿、一个女孩儿","三个儿子"], speak:"一个男孩儿，一个女孩儿。", badge:"children" },
+      { q:"三个人都是爷爷、奶奶的什么人？", hint:"What are the three men to the grandparents?", a:"儿子", options:["儿子","女儿","叔叔","孩子们的孩子"], speak:"他们都是爷爷奶奶的儿子。", badge:"sons" }
+    ];
+
+    const TIME = [
+      { q:"三叔是什么时候结婚的？", hint:"When did Third Uncle get married?", a:"去年", options:["前年","去年","今年","明年"], speak:"三叔是去年结婚的。", year:"去年" },
+      { q:"谁是去年结婚的？", hint:"Who got married last year?", a:"三叔", options:["爸爸","二叔","三叔","爷爷"], speak:"三叔是去年结婚的。", year:"去年" },
+      { q:"我什么时候跟爷爷、奶奶见面？", hint:"When do I meet Grandpa and Grandma?", a:"每个星期天", options:["每天","每个星期六","每个星期天","每个月"], speak:"我每个星期天跟爷爷奶奶见面。" },
+      { q:"我每个星期天跟谁见面？", hint:"Who do I meet every Sunday?", a:"爷爷、奶奶", options:["爸爸、妈妈","爷爷、奶奶","二叔、二婶","男孩儿、女孩儿"], speak:"我跟爷爷奶奶见面。" },
+      { q:"爷爷、奶奶住在哪里？", hint:"Where do Grandpa and Grandma live?", a:"南京", options:["南京","北京","上海","香港"], speak:"爷爷奶奶住在南京。" }
+    ];
+
+    const SENTENCES = [
+      { words:["我爸爸家的","亲戚","不多","。"], hint:"My father's family does not have many relatives." },
+      { words:["爷爷、奶奶","住在","南京","。"], hint:"Grandpa and Grandma live in Nanjing." },
+      { words:["二叔和二婶","有","两个孩子","。"], hint:"Second Uncle and Aunt have two children." },
+      { words:["三叔","是","去年","结婚","的","。"], hint:"Third Uncle got married last year." },
+      { words:["我","每个星期天","都","跟爷爷、奶奶","见面","。"], hint:"I meet Grandpa and Grandma every Sunday." }
+    ];
+
+    const $ = id => document.getElementById(id);
+    const shuffle = source => {
+      const array = [...source];
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    };
+
+    let tab = "words";
+    let task = "vocab";
+    let index = 0;
+    let score = 0;
+    let photoCount = 0;
+    let locked = false;
+    let sentenceDeck = [];
+    let answer = [];
+
+    function currentData() {
+      if (tab === "words") return task === "vocab" ? WORDS : WHO;
+      if (tab === "tree") return task === "build" ? TREE : NUMBERS;
+      return TIME;
+    }
+
+    function taskTitle() {
+      if (tab === "words" && task === "vocab") return "TASK 1 · RELATIVE WORDS 亲戚词汇";
+      if (tab === "words") return "TASK 2 · WHO AM I? 我是谁";
+      if (tab === "tree" && task === "build") return "TASK 3 · BUILD THE FAMILY TREE 搭建家庭树";
+      if (tab === "tree") return "TASK 4 · NUMBER DETECTIVE 家庭人数";
+      return "TASK 5 · FAMILY TIME 家庭时间";
+    }
+
+    function taskIcon() {
+      if (tab === "words") return task === "vocab" ? "👪" : "🕵🏻";
+      if (tab === "tree") return task === "build" ? "🌳" : "🔢";
+      return "📅";
+    }
+
+    function speak(text) {
+      if (!("speechSynthesis" in window)) return;
+      speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "zh-CN";
+      utterance.rate = .78;
+      speechSynthesis.speak(utterance);
+    }
+
+    function switchTab(nextTab) {
+      tab = nextTab;
+      task = tab === "words" ? "vocab" : tab === "tree" ? "build" : "time";
+      index = 0;
+      locked = false;
+      clearSceneRewards();
+
+      $("finishView").classList.add("hidden");
+      $("sentenceView").classList.add("hidden");
+      $("quizView").classList.remove("hidden");
+
+      document.querySelectorAll(".tab").forEach(button => {
+        button.classList.toggle("active", button.dataset.tab === tab);
+      });
+
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const data = currentData();
+
+      if (index >= data.length) {
+        if (tab === "words" && task === "vocab") {
+          task = "who";
+          index = 0;
+          renderQuestion();
+          return;
+        }
+
+        if (tab === "tree" && task === "build") {
+          task = "numbers";
+          index = 0;
+          renderQuestion();
+          return;
+        }
+
+        if (tab === "time") {
+          showSentenceBuilder();
+          return;
+        }
+
+        if (tab === "words" && task === "who") {
+          revealAllPeople();
+          $("stageMessage").textContent = "第一关完成：全家福已经全部显示！";
+        }
+
+        $("feedback").style.color = "#258f68";
+        $("feedback").textContent = "✓ This tab is complete! 这个部分完成了！";
+        $("nextBtn").disabled = true;
+        $("counterText").textContent = "Done!";
+        $("progressFill").style.width = "100%";
+        return;
+      }
+
+      locked = false;
+      const item = data[index];
+      $("taskLabel").textContent = taskTitle();
+      $("questionIcon").textContent = item.icon || taskIcon();
+      $("prompt").textContent = item.q;
+      $("hint").textContent = item.hint || "Choose the correct answer. 选择正确答案。";
+      $("feedback").textContent = "";
+      $("nextBtn").disabled = true;
+      $("counterText").textContent = `${index + 1} / ${data.length}`;
+      $("progressFill").style.width = `${index / data.length * 100}%`;
+
+      const choiceBox = $("choices");
+      choiceBox.innerHTML = "";
+      shuffle(item.options).forEach(option => {
+        const button = document.createElement("button");
+        button.className = "choice";
+        button.textContent = option;
+        button.onclick = () => chooseAnswer(button, option);
+        choiceBox.appendChild(button);
+      });
+
+      updateScene(item);
+      updateStats();
+    }
+
+    function chooseAnswer(button, answerText) {
+      if (locked) return;
+      locked = true;
+      const item = currentData()[index];
+
+      document.querySelectorAll(".choice").forEach(choice => {
+        if (choice.textContent === item.a) choice.classList.add("correct");
+      });
+
+      if (answerText === item.a) {
+        button.classList.add("correct");
+        score += 100;
+        $("feedback").style.color = "#258f68";
+        $("feedback").textContent = tab === "words"
+          ? "✓ Correct! 获得一张家庭照片！"
+          : tab === "tree"
+            ? "✓ Correct! 家庭树更完整了！"
+            : "✓ Correct! 获得一张家庭贴纸！";
+        speak(item.speak || item.a);
+        rewardScene(item);
+        confettiBurst();
+      } else {
+        button.classList.add("wrong");
+        $("feedback").style.color = "#d9485c";
+        $("feedback").textContent = `再想一想！正确答案是：${item.a}`;
+      }
+
+      $("nextBtn").disabled = false;
+      $("progressFill").style.width = `${(index + 1) / currentData().length * 100}%`;
+      updateStats();
+    }
+
+    function updateScene(item) {
+      const timeMode = tab === "time";
+      $("treeShell").style.display = timeMode ? "none" : "block";
+      $("albumStrip").style.display = tab === "words" ? "flex" : "none";
+      $("numberBadges").classList.toggle("show", tab === "tree" && task === "numbers");
+      $("timeScene").classList.toggle("show", timeMode);
+
+      if (tab === "words") {
+        $("stageMessage").textContent = "答对问题，收集家庭照片卡！";
+      } else if (tab === "tree") {
+        $("stageMessage").textContent = task === "build"
+          ? "从上到下：祖父母 → 三个儿子的家庭 → 孩子"
+          : "仔细看家庭树，找出正确人数";
+      } else {
+        $("stageMessage").textContent = "去年结婚 · 每个星期天见面";
+        document.querySelectorAll(".year").forEach(year => {
+          year.classList.toggle("active", year.dataset.year === item.year);
+        });
+      }
+    }
+
+    function rewardScene(item) {
+      if (tab === "words") {
+        const reward = document.createElement("div");
+        reward.className = "photo-reward";
+        reward.textContent = item.icon || "📷";
+        $("albumStrip").appendChild(reward);
+        while ($("albumStrip").children.length > 9) {
+          $("albumStrip").children[1].remove();
+        }
+        photoCount += 1;
+        if (item.person) revealPeople([item.person]);
+        if (item.reveal) revealPeople(item.reveal);
+      }
+
+      if (tab === "tree") {
+        if (item.reveal) revealPeople(item.reveal);
+        if (item.badge) {
+          const badge = document.querySelector(`[data-badge="${item.badge}"]`);
+          if (badge) badge.classList.add("on");
+        }
+      }
+
+      if (tab === "time") addSticker();
+      updateStats();
+    }
+
+    function revealPeople(people) {
+      people.forEach(person => {
+        const card = document.querySelector(`[data-person="${person}"]`);
+        if (card) card.classList.add("revealed");
+      });
+    }
+
+    function revealAllPeople() {
+      document.querySelectorAll(".family-card").forEach(card => {
+        card.classList.add("revealed");
+      });
+    }
+
+    function addSticker() {
+      const stickers = ["💍","📅","🤝","❤️","📷"];
+      const sticker = document.createElement("span");
+      sticker.className = "sticker";
+      sticker.textContent = stickers[$("stickerRow").children.length % stickers.length];
+      $("stickerRow").appendChild(sticker);
+    }
+
+    function clearSceneRewards() {
+      $("albumStrip").innerHTML = "<strong>家庭相册：</strong>";
+      $("stickerRow").innerHTML = "";
+      photoCount = 0;
+      document.querySelectorAll(".family-card").forEach(card => card.classList.remove("revealed"));
+      document.querySelectorAll(".number-badge").forEach(badge => badge.classList.remove("on"));
+      updateStats();
+    }
+
+    function showSentenceBuilder() {
+      $("quizView").classList.add("hidden");
+      $("sentenceView").classList.remove("hidden");
+      sentenceDeck = shuffle(SENTENCES);
+      index = 0;
+      renderSentence();
+    }
+
+    function renderSentence() {
+      if (index >= sentenceDeck.length) {
+        finishGame();
+        return;
+      }
+
+      answer = [];
+      const sentence = sentenceDeck[index];
+      $("sentenceHint").textContent = sentence.hint;
+      $("sentenceFeedback").textContent = "";
+      $("answerZone").innerHTML = "";
+      $("tiles").innerHTML = "";
+      $("counterText").textContent = `${index + 1} / ${sentenceDeck.length}`;
+      $("progressFill").style.width = `${index / sentenceDeck.length * 100}%`;
+
+      shuffle(sentence.words.map((text, key) => ({ text, key }))).forEach(tile => {
+        addTile(tile, $("tiles"));
+      });
+    }
+
+    function addTile(tile, parent) {
+      const button = document.createElement("button");
+      button.className = "tile";
+      button.textContent = tile.text;
+      button.onclick = () => {
+        const destination = parent === $("tiles") ? $("answerZone") : $("tiles");
+        if (parent === $("tiles")) answer.push(tile);
+        else answer = answer.filter(item => item.key !== tile.key);
+        addTile(tile, destination);
+        button.remove();
+      };
+      parent.appendChild(button);
+    }
+
+    function checkSentence() {
+      const sentence = sentenceDeck[index];
+      const made = answer.map(item => item.text).join("");
+      const correct = sentence.words.join("");
+
+      if (made === correct) {
+        score += 150;
+        $("sentenceFeedback").style.color = "#258f68";
+        $("sentenceFeedback").textContent = "✓ Perfect sentence! 句子完全正确！";
+        speak(correct);
+        addSticker();
+        confettiBurst();
+        updateStats();
+        setTimeout(() => {
+          index += 1;
+          renderSentence();
+        }, 1100);
+      } else {
+        $("sentenceFeedback").style.color = "#d9485c";
+        $("sentenceFeedback").textContent = answer.length < sentence.words.length
+          ? "句子还没有完成哦！"
+          : "顺序不对，再试一次！";
+      }
+    }
+
+    function finishGame() {
+      $("sentenceView").classList.add("hidden");
+      $("finishView").classList.remove("hidden");
+      $("finalScore").textContent = `Final Score: ${score}`;
+      $("counterText").textContent = "Done!";
+      $("progressFill").style.width = "100%";
+      $("stageMessage").textContent = "家庭相册完成！太棒了！";
+      for (let i = 0; i < 5; i++) setTimeout(confettiBurst, i * 350);
+    }
+
+    function updateStats() {
+      $("score").textContent = score;
+      $("photoCount").textContent = `${photoCount} 📷`;
+    }
+
+    function confettiBurst() {
+      const colors = ["#f4bd4f","#e96b8f","#3cb482","#7558c7","#ffffff"];
+      for (let i = 0; i < 25; i++) {
+        const piece = document.createElement("i");
+        piece.className = "confetti";
+        piece.style.left = Math.random() * 100 + "vw";
+        piece.style.background = colors[i % colors.length];
+        piece.style.setProperty("--drift", Math.random() * 180 - 90 + "px");
+        piece.style.animationDelay = Math.random() * .25 + "s";
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 2200);
+      }
+    }
+
+    function restartGame() {
+      score = 0;
+      clearSceneRewards();
+      switchTab("words");
+    }
+
+    document.querySelectorAll(".tab").forEach(button => {
+      button.onclick = () => switchTab(button.dataset.tab);
+    });
+    $("nextBtn").onclick = () => { index += 1; renderQuestion(); };
+    $("listenBtn").onclick = () => {
+      const item = currentData()[index];
+      if (item) speak(item.speak || item.q);
+    };
+    $("clearBtn").onclick = renderSentence;
+    $("checkBtn").onclick = checkSentence;
+    $("restartBtn").onclick = restartGame;
+
+    renderQuestion();
+  </script>
+</body>
+</html>
