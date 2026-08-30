@@ -1,0 +1,1021 @@
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ESC-2-1-2 Maternal Family Mission</title>
+  <style>
+    :root {
+      --ink: #26324c;
+      --muted: #6e7890;
+      --paper: #fffdf8;
+      --teal: #159da4;
+      --deep: #176b78;
+      --blue: #4e9ed2;
+      --green: #37b07d;
+      --gold: #f3bd4f;
+      --pink: #eb7293;
+      --red: #df5965;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans SC", sans-serif;
+      background:
+        radial-gradient(circle at 9% 8%, rgba(255,255,255,.65) 0 70px, transparent 72px),
+        linear-gradient(145deg, #cceef0, #dce5ff 48%, #ffe0cc);
+    }
+
+    button { font: inherit; }
+
+    .app {
+      width: min(1360px, 100%);
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 15px 19px;
+      background: rgba(255,253,248,.96);
+      border: 3px solid white;
+      border-radius: 24px;
+      box-shadow: 0 16px 38px rgba(36,81,89,.18);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(23px, 3vw, 35px);
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      margin-top: 5px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .stats {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      min-width: 88px;
+      padding: 7px 12px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 12px;
+      font-weight: 900;
+      background: #e8f7f6;
+      border-radius: 14px;
+    }
+
+    .stat b {
+      display: block;
+      color: var(--deep);
+      font-size: 20px;
+    }
+
+    .progress {
+      height: 12px;
+      margin: 10px 3px;
+      overflow: hidden;
+      background: rgba(255,255,255,.7);
+      border-radius: 99px;
+    }
+
+    #progressFill {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--pink), var(--teal));
+      transition: width .35s ease;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin: 11px 0;
+    }
+
+    .tab {
+      padding: 12px 8px;
+      color: #69738a;
+      font-weight: 950;
+      cursor: pointer;
+      background: rgba(255,255,255,.86);
+      border: 0;
+      border-radius: 16px;
+      box-shadow: 0 6px 15px rgba(35,80,90,.1);
+      transition: .18s ease;
+    }
+
+    .tab:hover { transform: translateY(-2px); }
+
+    .tab.active {
+      color: white;
+      background: linear-gradient(105deg, #147f8b, #32b4ad);
+      box-shadow: 0 8px 18px rgba(20,127,139,.28);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(390px, .84fr) minmax(600px, 1.25fr);
+      gap: 15px;
+    }
+
+    .panel {
+      min-height: 670px;
+      padding: 18px;
+      background: rgba(255,253,248,.97);
+      border: 3px solid white;
+      border-radius: 25px;
+      box-shadow: 0 18px 42px rgba(36,81,89,.2);
+    }
+
+    .task-label {
+      display: inline-block;
+      padding: 6px 12px;
+      color: #176b78;
+      font-size: 12px;
+      font-weight: 950;
+      background: #dff6f4;
+      border-radius: 99px;
+    }
+
+    .question-card {
+      min-height: 145px;
+      margin: 13px 0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: linear-gradient(145deg, #fff, #eefafa);
+      border: 2px solid #d5e9e9;
+      border-radius: 20px;
+    }
+
+    .question-icon {
+      margin-bottom: 4px;
+      font-size: 39px;
+      line-height: 1;
+    }
+
+    .prompt {
+      font-size: clamp(24px, 3vw, 37px);
+      font-weight: 950;
+      line-height: 1.2;
+    }
+
+    .hint {
+      margin-top: 7px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .choice {
+      min-height: 66px;
+      padding: 11px;
+      color: var(--ink);
+      font-size: 20px;
+      font-weight: 950;
+      cursor: pointer;
+      background: white;
+      border: 2px solid #d8e2e5;
+      border-radius: 16px;
+      box-shadow: 0 5px 0 #d8e2e5;
+      transition: .12s ease;
+    }
+
+    .choice:hover {
+      transform: translateY(-2px);
+      border-color: var(--teal);
+    }
+
+    .choice.correct {
+      color: #167752;
+      background: #dff8eb;
+      border-color: #38b985;
+      box-shadow: 0 5px 0 #8ed7ba;
+    }
+
+    .choice.wrong {
+      color: #b83446;
+      background: #ffe5e9;
+      border-color: #ed6475;
+      box-shadow: 0 5px 0 #efacb5;
+    }
+
+    .feedback {
+      min-height: 34px;
+      margin: 13px 0;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 950;
+    }
+
+    .button-row { display: flex; gap: 9px; }
+
+    .listen, .next, .restart, .check, .clear {
+      padding: 12px 15px;
+      font-weight: 950;
+      cursor: pointer;
+      border: 0;
+      border-radius: 14px;
+    }
+
+    .listen, .clear {
+      color: #52627b;
+      background: #e9eef5;
+    }
+
+    .next, .restart, .check {
+      flex: 1;
+      color: white;
+      background: linear-gradient(90deg, #147f8b, #32b4ad);
+    }
+
+    .next:disabled { opacity: .42; cursor: not-allowed; }
+
+    .sentence-zone, .tiles {
+      min-height: 98px;
+      margin: 11px 0;
+      padding: 11px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      border-radius: 16px;
+    }
+
+    .sentence-zone { background: white; border: 3px dashed #5bb9b4; }
+    .tiles { background: #eef2f5; }
+
+    .tile {
+      padding: 9px 13px;
+      color: #176b78;
+      font-size: 20px;
+      font-weight: 950;
+      cursor: pointer;
+      background: white;
+      border: 2px solid #63b7b5;
+      border-radius: 11px;
+      box-shadow: 0 3px 0 #b6dcda;
+    }
+
+    .scene {
+      position: relative;
+      min-height: 670px;
+      overflow: hidden;
+      padding: 0;
+      background: linear-gradient(#dff6fb 0 67%, #ddbb91 67% 100%);
+    }
+
+    .scene-title {
+      position: absolute;
+      z-index: 8;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 25px;
+      color: white;
+      font-size: 25px;
+      font-weight: 950;
+      white-space: nowrap;
+      background: #176b78;
+      border: 4px solid white;
+      border-radius: 16px;
+      box-shadow: 0 8px 17px rgba(30,75,82,.24);
+    }
+
+    .stage-message {
+      position: absolute;
+      z-index: 8;
+      top: 88px;
+      left: 25px;
+      right: 25px;
+      padding: 7px 12px;
+      color: #176b78;
+      text-align: center;
+      font-weight: 950;
+      background: rgba(255,255,255,.9);
+      border: 3px solid #8ed3d0;
+      border-radius: 12px;
+    }
+
+    .tree-shell {
+      position: absolute;
+      z-index: 4;
+      top: 130px;
+      left: 50%;
+      width: 650px;
+      height: 505px;
+      transform: translateX(-50%);
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 36%, rgba(95,181,128,.3) 0 38%, transparent 39%),
+        linear-gradient(90deg, transparent 47%, #9b6d45 47% 53%, transparent 53%);
+      border: 4px solid white;
+      border-radius: 24px;
+      box-shadow: 0 14px 30px rgba(48,84,86,.16);
+    }
+
+    .tree-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .tree-lines path {
+      fill: none;
+      stroke: #178d98;
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: .65;
+    }
+
+    .family-card {
+      position: absolute;
+      z-index: 3;
+      width: 92px;
+      height: 108px;
+      padding: 6px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #39445d;
+      background: white;
+      border: 4px solid #a9dcd8;
+      border-radius: 15px;
+      box-shadow: 0 8px 14px rgba(42,73,76,.18);
+      opacity: .14;
+      filter: grayscale(1);
+      transform: scale(.82);
+      transition: .4s ease;
+    }
+
+    .family-card.revealed {
+      opacity: 1;
+      filter: none;
+      transform: scale(1);
+      animation: photoIn .55s ease;
+    }
+
+    @keyframes photoIn {
+      from { transform: translateY(-70px) rotate(-8deg) scale(.4); }
+    }
+
+    .portrait { font-size: 39px; line-height: 1; }
+    .family-card strong { margin-top: 3px; font-size: 14px; }
+    .family-card small { color: #778099; font-size: 9px; text-align: center; }
+
+    .grandpa { left: 232px; top: 10px; }
+    .grandma { left: 334px; top: 10px; }
+    .mother { left: 42px; top: 212px; }
+    .father { left: 142px; top: 212px; }
+    .aunt-big { left: 255px; top: 212px; }
+    .uncle-inlaw { left: 355px; top: 212px; }
+    .aunt-small { left: 520px; top: 212px; }
+    .me { left: 92px; top: 385px; }
+
+    .status-card {
+      position: absolute;
+      z-index: 5;
+      padding: 5px 9px;
+      color: white;
+      font-size: 11px;
+      font-weight: 950;
+      background: #178d98;
+      border-radius: 99px;
+      opacity: .25;
+      transition: .3s;
+    }
+
+    .status-card.on { opacity: 1; transform: translateY(-6px); }
+    .status-self { left: 224px; top: 133px; }
+    .status-nochild { left: 285px; top: 335px; }
+    .status-single { left: 515px; top: 335px; }
+
+    .album-strip {
+      position: absolute;
+      z-index: 12;
+      left: 20px;
+      right: 20px;
+      bottom: 14px;
+      min-height: 58px;
+      padding: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: rgba(255,255,255,.91);
+      border: 3px solid #8ed3d0;
+      border-radius: 15px;
+    }
+
+    .photo-reward {
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 27px;
+      background: white;
+      border: 3px solid #bce3e1;
+      border-radius: 9px;
+      box-shadow: 0 4px 7px rgba(42,73,76,.17);
+      animation: photoPop .45s ease;
+    }
+
+    @keyframes photoPop {
+      from { transform: translateY(-80px) rotate(-12deg) scale(.3); }
+    }
+
+    .time-scene {
+      position: absolute;
+      z-index: 14;
+      top: 145px;
+      left: 50%;
+      width: 590px;
+      transform: translateX(-50%);
+      display: none;
+      padding: 22px;
+      background: rgba(255,255,255,.96);
+      border: 4px solid #8ed3d0;
+      border-radius: 22px;
+      box-shadow: 0 14px 28px rgba(30,75,82,.22);
+    }
+
+    .time-scene.show { display: block; }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .year {
+      padding: 12px 5px;
+      text-align: center;
+      font-weight: 950;
+      background: #edf5f5;
+      border: 3px solid #c8dfdf;
+      border-radius: 13px;
+    }
+
+    .year.active { color: white; background: var(--teal); transform: translateY(-6px); }
+
+    .visit-card {
+      margin-top: 18px;
+      padding: 14px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 950;
+      background: #fff3da;
+      border: 3px solid #efbe55;
+      border-radius: 15px;
+    }
+
+    .sticker-row {
+      min-height: 50px;
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      font-size: 35px;
+    }
+
+    .sticker { animation: stickerIn .45s ease; }
+    @keyframes stickerIn { from { transform: scale(0) rotate(-30deg); } }
+
+    .finish { padding: 45px 10px; text-align: center; }
+    .finish-icon { font-size: 85px; }
+    .finish h2 { margin: 8px; color: var(--deep); font-size: 35px; }
+    .hidden { display: none !important; }
+
+    .confetti {
+      position: fixed;
+      z-index: 30;
+      top: -20px;
+      width: 11px;
+      height: 17px;
+      animation: fall 1.9s linear forwards;
+    }
+
+    @keyframes fall { to { transform: translate(var(--drift), 105vh) rotate(720deg); } }
+
+    @media (max-width: 1050px) {
+      .layout { grid-template-columns: 1fr; }
+      .panel, .scene { min-height: 670px; }
+    }
+
+    @media (max-width: 680px) {
+      .app { padding: 8px; }
+      .tabs, .choices { grid-template-columns: 1fr; }
+      .panel { padding: 12px; }
+      .scene { min-height: 535px; }
+      .tree-shell { transform: translateX(-50%) scale(.74); transform-origin: top; }
+      .time-scene { transform: translateX(-50%) scale(.76); transform-origin: top; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div>
+        <h1>🏡 ESC-2-1-2 · Maternal Family Mission</h1>
+        <div class="subtitle">妈妈家的亲戚｜Word List 2</div>
+      </div>
+      <div class="stats">
+        <div class="stat">SCORE<b id="score">0</b></div>
+        <div class="stat">PHOTOS<b id="photoCount">0 📷</b></div>
+        <div class="stat">QUESTION<b id="counterText">1 / 1</b></div>
+      </div>
+    </header>
+
+    <div class="progress"><div id="progressFill"></div></div>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="words">1 · Mother's Family Words<br>词汇 + Who Am I</button>
+      <button class="tab" data-tab="tree">2 · Build Mother's Family Tree<br>家庭关系 + 还没有</button>
+      <button class="tab" data-tab="visit">3 · Time and Visits<br>前年 + 明年 + 见面</button>
+    </nav>
+
+    <section class="layout">
+      <div class="panel">
+        <div id="quizView">
+          <span class="task-label" id="taskLabel">TASK 1 · MOTHER'S FAMILY WORDS</span>
+          <div class="question-card">
+            <div class="question-icon" id="questionIcon">👪</div>
+            <div class="prompt" id="prompt"></div>
+            <div class="hint" id="hint"></div>
+          </div>
+          <div class="choices" id="choices"></div>
+          <div class="feedback" id="feedback"></div>
+          <div class="button-row">
+            <button class="listen" id="listenBtn">🔊 Listen</button>
+            <button class="next" id="nextBtn" disabled>Next ▶</button>
+          </div>
+        </div>
+
+        <div id="sentenceView" class="hidden">
+          <span class="task-label">TASK 5 · SENTENCE BUILDER 句子挑战</span>
+          <div class="question-card">
+            <div class="question-icon">🧩</div>
+            <div class="prompt">Build the sentence</div>
+            <div class="hint" id="sentenceHint"></div>
+          </div>
+          <div class="sentence-zone" id="answerZone"></div>
+          <div class="tiles" id="tiles"></div>
+          <div class="feedback" id="sentenceFeedback"></div>
+          <div class="button-row">
+            <button class="clear" id="clearBtn">↩ Clear</button>
+            <button class="check" id="checkBtn">✓ Check Answer</button>
+          </div>
+        </div>
+
+        <div id="finishView" class="finish hidden">
+          <div class="finish-icon">🏆🏡📷</div>
+          <h2>Mother's Family Champion!</h2>
+          <p>妈妈家的亲戚关系全部找对了！</p>
+          <p id="finalScore"></p>
+          <button class="restart" id="restartBtn">Play Again 再玩一次</button>
+        </div>
+      </div>
+
+      <aside class="panel scene">
+        <div class="scene-title">妈妈家的家庭树 · MOTHER'S FAMILY</div>
+        <div class="stage-message" id="stageMessage">答对问题，收集妈妈家的家庭照片！</div>
+
+        <div class="tree-shell" id="treeShell">
+          <svg class="tree-lines" viewBox="0 0 650 505" aria-hidden="true">
+            <path d="M278 64 H380 M329 64 V166 H91 V212 M329 166 H309 V212 M329 166 H566 V212" />
+            <path d="M88 266 H188 M138 266 V360 V385" />
+            <path d="M301 266 H401" />
+          </svg>
+
+          <div class="family-card grandpa" data-person="grandpa"><div class="portrait">👴🏻</div><strong>外公</strong><small>mother's father</small></div>
+          <div class="family-card grandma" data-person="grandma"><div class="portrait">👵🏻</div><strong>外婆</strong><small>mother's mother</small></div>
+          <div class="family-card mother" data-person="mother"><div class="portrait">👩🏻</div><strong>妈妈</strong><small>mother</small></div>
+          <div class="family-card father" data-person="father"><div class="portrait">👨🏻</div><strong>爸爸</strong><small>father</small></div>
+          <div class="family-card aunt-big" data-person="auntBig"><div class="portrait">👩🏻‍🦱</div><strong>大姨</strong><small>mother's sister</small></div>
+          <div class="family-card uncle-inlaw" data-person="uncleInlaw"><div class="portrait">🧔🏻</div><strong>姨父</strong><small>aunt's husband</small></div>
+          <div class="family-card aunt-small" data-person="auntSmall"><div class="portrait">👩🏻‍🦰</div><strong>小姨</strong><small>mother's sister</small></div>
+          <div class="family-card me" data-person="me"><div class="portrait">👦🏻</div><strong>我</strong><small>me</small></div>
+
+          <div class="status-card status-self" data-status="self">外公外婆自己住</div>
+          <div class="status-card status-nochild" data-status="nochild">还没有孩子</div>
+          <div class="status-card status-single" data-status="single">还没有结婚</div>
+        </div>
+
+        <div class="album-strip" id="albumStrip"><strong>家庭相册：</strong></div>
+
+        <div class="time-scene" id="timeScene">
+          <h2 style="margin:0;text-align:center">西安家庭时间线 · Family Timeline</h2>
+          <div class="timeline">
+            <div class="year" data-year="前年">前年</div>
+            <div class="year" data-year="去年">去年</div>
+            <div class="year" data-year="今年">今年</div>
+            <div class="year" data-year="明年">明年</div>
+          </div>
+          <div class="visit-card">📍 西安<br>我们不常见面，但是我明年去西安看他们。</div>
+          <div class="sticker-row" id="stickerRow"></div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const WORDS = [
+      { q:"mother's side of the family", a:"外", options:["外","公","婆","父"], speak:"外", icon:"👪" },
+      { q:"mother's father", a:"外公", options:["外公","外婆","姨妈","姨父"], speak:"外公", icon:"👴🏻", person:"grandpa" },
+      { q:"mother's mother", a:"外婆", options:["外公","外婆","姨妈","姨父"], speak:"外婆", icon:"👵🏻", person:"grandma" },
+      { q:"mother's sister", a:"姨妈", options:["姨妈","姨父","外婆","妈妈"], speak:"姨妈", icon:"👩🏻‍🦱", person:"auntBig" },
+      { q:"Xi'an", a:"西安", options:["西安","南京","北京","上海"], speak:"西安", icon:"🏯" },
+      { q:"oneself", a:"自己", options:["自己","经常","不常","还"], speak:"自己", icon:"🪞" },
+      { q:"husband of mother's sister", a:"姨父", options:["外公","姨父","叔叔","爸爸"], speak:"姨父", icon:"🧔🏻", person:"uncleInlaw" },
+      { q:"the year before last", a:"前年", options:["前年","去年","今年","明年"], speak:"前年", icon:"📅" },
+      { q:"still; yet", a:"还", options:["还","看","自","经"], speak:"还", icon:"⏳" },
+      { q:"often", a:"经常", options:["经常","不常","自己","明年"], speak:"经常", icon:"🔁" },
+      { q:"not often", a:"不常", options:["经常","不常","没有","自己"], speak:"不常", icon:"📆" },
+      { q:"next year", a:"明年", options:["前年","去年","今年","明年"], speak:"明年", icon:"➡️" },
+      { q:"visit; see", a:"看", options:["看","还","经","住"], speak:"看", icon:"👀" }
+    ];
+
+    const WHO = [
+      { q:"我是妈妈的爸爸。我是谁？", hint:"I am Mom's father.", a:"外公", options:["外公","外婆","姨妈","姨父"], speak:"我是外公。", reveal:["grandpa","mother"] },
+      { q:"我是妈妈的妈妈。我是谁？", hint:"I am Mom's mother.", a:"外婆", options:["外公","外婆","姨妈","姨父"], speak:"我是外婆。", reveal:["grandma","mother"] },
+      { q:"我是妈妈的姐妹。我是谁？", hint:"I am Mom's sister.", a:"姨妈", options:["外婆","姨妈","姨父","奶奶"], speak:"我是姨妈。", reveal:["auntBig"] },
+      { q:"我是姨妈的丈夫。我是谁？", hint:"I am Aunt's husband.", a:"姨父", options:["外公","爸爸","姨父","叔叔"], speak:"我是姨父。", reveal:["auntBig","uncleInlaw"] },
+      { q:"我是还没有结婚的姨妈。我是谁？", hint:"I am the aunt who is not married yet.", a:"小姨", options:["妈妈","大姨","小姨","外婆"], speak:"小姨还没有结婚。", reveal:["auntSmall"] },
+      { q:"我是妈妈的儿子。我是谁？", hint:"I am Mom's son.", a:"我", options:["我","姨父","外公","爸爸"], speak:"我是妈妈的儿子。", reveal:["mother","father","me"] }
+    ];
+
+    const TREE = [
+      { q:"外公、外婆是谁的爸爸妈妈？", hint:"Whose parents are the maternal grandparents?", a:"妈妈和姨妈", options:["爸爸和叔叔","妈妈和姨妈","我和姨父","爷爷和奶奶"], speak:"他们是妈妈和姨妈的爸爸妈妈。", reveal:["grandpa","grandma","mother","auntBig","auntSmall"] },
+      { q:"大姨和谁结婚？", hint:"Who is married to the older aunt?", a:"姨父", options:["外公","爸爸","姨父","叔叔"], speak:"大姨和姨父结婚。", reveal:["auntBig","uncleInlaw"] },
+      { q:"外公、外婆跟谁一起住？", hint:"Who do the grandparents live with?", a:"自己住", options:["跟妈妈住","跟大姨住","跟小姨住","自己住"], speak:"外公外婆自己住。", status:"self" },
+      { q:"大姨和姨父有孩子吗？", hint:"Do the older aunt and her husband have children?", a:"还没有孩子", options:["有一个孩子","有两个孩子","还没有孩子","有三个孩子"], speak:"他们还没有孩子。", status:"nochild" },
+      { q:"小姨结婚了吗？", hint:"Is the younger aunt married?", a:"还没有结婚", options:["前年结婚了","去年结婚了","还没有结婚","明年结婚了"], speak:"小姨还没有结婚。", status:"single" },
+      { q:"妈妈家的亲戚住在哪里？", hint:"Where do Mom's relatives live?", a:"西安", options:["西安","南京","北京","上海"], speak:"妈妈家的亲戚住在西安。" }
+    ];
+
+    const GRAMMAR = [
+      { q:"大姨和姨父＿＿孩子。", hint:"They do not have children yet.", a:"还没有", options:["经常","不常","还没有","自己"], speak:"大姨和姨父还没有孩子。", status:"nochild" },
+      { q:"小姨＿＿结婚。", hint:"The younger aunt is not married yet.", a:"还没有", options:["经常","不常","还没有","自己"], speak:"小姨还没有结婚。", status:"single" },
+      { q:"外公、外婆＿＿住。", hint:"The grandparents live by themselves.", a:"自己", options:["自己","经常","不常","还没有"], speak:"外公外婆自己住。", status:"self" },
+      { q:"我们＿＿见面。", hint:"We do not meet often.", a:"不常", options:["经常","不常","自己","还没有"], speak:"我们不常见面。" },
+      { q:"你经常跟他们见面吗？", hint:"Do you meet them often?", a:"我们不常见面", options:["我们经常见面","我们不常见面","我们自己见面","我们还没有见面"], speak:"我们不常见面。" }
+    ];
+
+    const TIME = [
+      { q:"大姨和姨父是什么时候结婚的？", hint:"When did the older aunt and her husband get married?", a:"前年", options:["前年","去年","今年","明年"], speak:"他们是前年结婚的。", year:"前年" },
+      { q:"谁是前年结婚的？", hint:"Who got married the year before last?", a:"大姨和姨父", options:["外公和外婆","爸爸和妈妈","大姨和姨父","小姨"], speak:"大姨和姨父是前年结婚的。", year:"前年" },
+      { q:"我什么时候去西安看他们？", hint:"When will I visit them in Xi'an?", a:"明年", options:["前年","去年","今年","明年"], speak:"我明年去西安看他们。", year:"明年" },
+      { q:"我明年去哪里看他们？", hint:"Where will I visit them next year?", a:"西安", options:["西安","南京","北京","上海"], speak:"我明年去西安看他们。", year:"明年" },
+      { q:"我经常跟他们见面吗？", hint:"Do I meet them often?", a:"不常见面", options:["经常见面","不常见面","每天见面","还没有见面"], speak:"我们不常见面。" }
+    ];
+
+    const SENTENCES = [
+      { words:["外公、外婆","和两个姨妈","都住在","西安","。"], hint:"My grandparents and two aunts all live in Xi'an." },
+      { words:["外公、外婆","自己","住","。"], hint:"Grandpa and Grandma live by themselves." },
+      { words:["大姨和姨父","是","前年","结婚","的","。"], hint:"The older aunt and her husband got married the year before last." },
+      { words:["小姨","还没有","结婚","。"], hint:"The younger aunt is not married yet." },
+      { words:["我们","不常","见面","。"], hint:"We do not meet often." },
+      { words:["我","明年","去西安","看他们","。"], hint:"I will visit them in Xi'an next year." }
+    ];
+
+    const $ = id => document.getElementById(id);
+    const shuffle = source => {
+      const array = [...source];
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    };
+
+    let tab = "words";
+    let task = "vocab";
+    let index = 0;
+    let score = 0;
+    let photoCount = 0;
+    let locked = false;
+    let sentenceDeck = [];
+    let answer = [];
+
+    function currentData() {
+      if (tab === "words") return task === "vocab" ? WORDS : WHO;
+      if (tab === "tree") return task === "build" ? TREE : GRAMMAR;
+      return TIME;
+    }
+
+    function taskTitle() {
+      if (tab === "words" && task === "vocab") return "TASK 1 · MOTHER'S FAMILY WORDS 妈妈家词汇";
+      if (tab === "words") return "TASK 2 · WHO AM I? 我是谁";
+      if (tab === "tree" && task === "build") return "TASK 3 · BUILD THE FAMILY TREE 搭建家庭树";
+      if (tab === "tree") return "TASK 4 · STILL NOT YET 还没有";
+      return "TASK 5 · TIME AND VISITS 时间与探望";
+    }
+
+    function taskIcon() {
+      if (tab === "words") return task === "vocab" ? "👪" : "🕵🏻";
+      if (tab === "tree") return task === "build" ? "🌳" : "⏳";
+      return "📅";
+    }
+
+    function speak(text) {
+      if (!("speechSynthesis" in window)) return;
+      speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "zh-CN";
+      utterance.rate = .78;
+      speechSynthesis.speak(utterance);
+    }
+
+    function switchTab(nextTab) {
+      tab = nextTab;
+      task = tab === "words" ? "vocab" : tab === "tree" ? "build" : "time";
+      index = 0;
+      locked = false;
+      clearScene();
+      $("finishView").classList.add("hidden");
+      $("sentenceView").classList.add("hidden");
+      $("quizView").classList.remove("hidden");
+      document.querySelectorAll(".tab").forEach(button => {
+        button.classList.toggle("active", button.dataset.tab === tab);
+      });
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const data = currentData();
+      if (index >= data.length) {
+        if (tab === "words" && task === "vocab") {
+          task = "who";
+          index = 0;
+          renderQuestion();
+          return;
+        }
+        if (tab === "tree" && task === "build") {
+          task = "grammar";
+          index = 0;
+          renderQuestion();
+          return;
+        }
+        if (tab === "visit") {
+          showSentences();
+          return;
+        }
+        if (tab === "words") revealAll();
+        $("feedback").style.color = "#258f68";
+        $("feedback").textContent = "✓ This tab is complete! 这个部分完成了！";
+        $("nextBtn").disabled = true;
+        $("counterText").textContent = "Done!";
+        $("progressFill").style.width = "100%";
+        return;
+      }
+
+      locked = false;
+      const item = data[index];
+      $("taskLabel").textContent = taskTitle();
+      $("questionIcon").textContent = item.icon || taskIcon();
+      $("prompt").textContent = item.q;
+      $("hint").textContent = item.hint || "Choose the correct answer. 选择正确答案。";
+      $("feedback").textContent = "";
+      $("nextBtn").disabled = true;
+      $("counterText").textContent = `${index + 1} / ${data.length}`;
+      $("progressFill").style.width = `${index / data.length * 100}%`;
+      $("choices").innerHTML = "";
+      shuffle(item.options).forEach(option => {
+        const button = document.createElement("button");
+        button.className = "choice";
+        button.textContent = option;
+        button.onclick = () => choose(button, option);
+        $("choices").appendChild(button);
+      });
+      updateScene(item);
+      updateStats();
+    }
+
+    function choose(button, answerText) {
+      if (locked) return;
+      locked = true;
+      const item = currentData()[index];
+      document.querySelectorAll(".choice").forEach(choice => {
+        if (choice.textContent === item.a) choice.classList.add("correct");
+      });
+      if (answerText === item.a) {
+        button.classList.add("correct");
+        score += 100;
+        $("feedback").style.color = "#258f68";
+        $("feedback").textContent = tab === "words"
+          ? "✓ Correct! 获得一张家庭照片！"
+          : tab === "tree"
+            ? "✓ Correct! 妈妈家的家庭树更完整了！"
+            : "✓ Correct! 获得一张西安旅行贴纸！";
+        speak(item.speak || item.a);
+        reward(item);
+        burst();
+      } else {
+        button.classList.add("wrong");
+        $("feedback").style.color = "#d9485c";
+        $("feedback").textContent = `再想一想！正确答案是：${item.a}`;
+      }
+      $("nextBtn").disabled = false;
+      $("progressFill").style.width = `${(index + 1) / currentData().length * 100}%`;
+      updateStats();
+    }
+
+    function updateScene(item) {
+      const timeMode = tab === "visit";
+      $("treeShell").style.display = timeMode ? "none" : "block";
+      $("albumStrip").style.display = tab === "words" ? "flex" : "none";
+      $("timeScene").classList.toggle("show", timeMode);
+      if (tab === "words") $("stageMessage").textContent = "答对问题，收集妈妈家的家庭照片！";
+      if (tab === "tree") $("stageMessage").textContent = task === "build"
+        ? "外公外婆 → 妈妈、大姨、小姨 → 我"
+        : "自己住 · 还没有孩子 · 还没有结婚";
+      if (tab === "visit") {
+        $("stageMessage").textContent = "前年结婚 · 不常见面 · 明年去西安看他们";
+        document.querySelectorAll(".year").forEach(year => {
+          year.classList.toggle("active", year.dataset.year === item.year);
+        });
+      }
+    }
+
+    function reward(item) {
+      if (tab === "words") {
+        const photo = document.createElement("div");
+        photo.className = "photo-reward";
+        photo.textContent = item.icon || "📷";
+        $("albumStrip").appendChild(photo);
+        while ($("albumStrip").children.length > 9) $("albumStrip").children[1].remove();
+        photoCount += 1;
+      }
+      if (item.person) reveal([item.person]);
+      if (item.reveal) reveal(item.reveal);
+      if (item.status) {
+        const status = document.querySelector(`[data-status="${item.status}"]`);
+        if (status) status.classList.add("on");
+      }
+      if (tab === "visit") addSticker();
+      updateStats();
+    }
+
+    function reveal(people) {
+      people.forEach(person => {
+        const card = document.querySelector(`[data-person="${person}"]`);
+        if (card) card.classList.add("revealed");
+      });
+    }
+
+    function revealAll() {
+      document.querySelectorAll(".family-card").forEach(card => card.classList.add("revealed"));
+      $("stageMessage").textContent = "第一关完成：妈妈家的全家福已经显示！";
+    }
+
+    function addSticker() {
+      const stickers = ["🏯","🚄","📅","❤️","📷"];
+      const sticker = document.createElement("span");
+      sticker.className = "sticker";
+      sticker.textContent = stickers[$("stickerRow").children.length % stickers.length];
+      $("stickerRow").appendChild(sticker);
+    }
+
+    function clearScene() {
+      $("albumStrip").innerHTML = "<strong>家庭相册：</strong>";
+      $("stickerRow").innerHTML = "";
+      photoCount = 0;
+      document.querySelectorAll(".family-card").forEach(card => card.classList.remove("revealed"));
+      document.querySelectorAll(".status-card").forEach(status => status.classList.remove("on"));
+      updateStats();
+    }
+
+    function showSentences() {
+      $("quizView").classList.add("hidden");
+      $("sentenceView").classList.remove("hidden");
+      sentenceDeck = shuffle(SENTENCES);
+      index = 0;
+      renderSentence();
+    }
+
+    function renderSentence() {
+      if (index >= sentenceDeck.length) {
+        finish();
+        return;
+      }
+      answer = [];
+      const sentence = sentenceDeck[index];
+      $("sentenceHint").textContent = sentence.hint;
+      $("sentenceFeedback").textContent = "";
+      $("answerZone").innerHTML = "";
+      $("tiles").innerHTML = "";
+      $("counterText").textContent = `${index + 1} / ${sentenceDeck.length}`;
+      $("progressFill").style.width = `${index / sentenceDeck.length * 100}%`;
+      shuffle(sentence.words.map((text, key) => ({ text, key }))).forEach(tile => addTile(tile, $("tiles")));
+    }
+
+    function addTile(tile, parent) {
+      const button = document.createElement("button");
+      button.className = "tile";
+      button.textContent = tile.text;
+      button.onclick = () => {
+        const destination = parent === $("tiles") ? $("answerZone") : $("tiles");
+        if (parent === $("tiles")) answer.push(tile);
+        else answer = answer.filter(item => item.key !== tile.key);
+        addTile(tile, destination);
+        button.remove();
+      };
+      parent.appendChild(button);
+    }
+
+    function checkSentence() {
+      const sentence = sentenceDeck[index];
+      const made = answer.map(item => item.text).join("");
+      const correct = sentence.words.join("");
+      if (made === correct) {
+        score += 150;
+        $("sentenceFeedback").style.color = "#258f68";
+        $("sentenceFeedback").textContent = "✓ Perfect sentence! 句子完全正确！";
+        speak(correct);
+        addSticker();
+        burst();
+        updateStats();
+        setTimeout(() => { index += 1; renderSentence(); }, 1100);
+      } else {
+        $("sentenceFeedback").style.color = "#d9485c";
+        $("sentenceFeedback").textContent = answer.length < sentence.words.length
+          ? "句子还没有完成哦！"
+          : "顺序不对，再试一次！";
+      }
+    }
+
+    function finish() {
+      $("sentenceView").classList.add("hidden");
+      $("finishView").classList.remove("hidden");
+      $("finalScore").textContent = `Final Score: ${score}`;
+      $("counterText").textContent = "Done!";
+      $("progressFill").style.width = "100%";
+      $("stageMessage").textContent = "妈妈家的亲戚任务全部完成！";
+      for (let i = 0; i < 5; i++) setTimeout(burst, i * 350);
+    }
+
+    function updateStats() {
+      $("score").textContent = score;
+      $("photoCount").textContent = `${photoCount} 📷`;
+    }
+
+    function burst() {
+      const colors = ["#f3bd4f","#eb7293","#37b07d","#159da4","#ffffff"];
+      for (let i = 0; i < 25; i++) {
+        const piece = document.createElement("i");
+        piece.className = "confetti";
+        piece.style.left = Math.random() * 100 + "vw";
+        piece.style.background = colors[i % colors.length];
+        piece.style.setProperty("--drift", Math.random() * 180 - 90 + "px");
+        piece.style.animationDelay = Math.random() * .25 + "s";
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 2200);
+      }
+    }
+
+    function restart() {
+      score = 0;
+      clearScene();
+      switchTab("words");
+    }
+
+    document.querySelectorAll(".tab").forEach(button => {
+      button.onclick = () => switchTab(button.dataset.tab);
+    });
+    $("nextBtn").onclick = () => { index += 1; renderQuestion(); };
+    $("listenBtn").onclick = () => {
+      const item = currentData()[index];
+      if (item) speak(item.speak || item.q);
+    };
+    $("clearBtn").onclick = renderSentence;
+    $("checkBtn").onclick = checkSentence;
+    $("restartBtn").onclick = restart;
+
+    renderQuestion();
+  </script>
+</body>
+</html>
